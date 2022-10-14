@@ -44,14 +44,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Extern\CProcessing\inc;$(SolutionDir)Inc</IncludePath>
-    <LibraryPath>$(SolutionDir)Extern\CProcessing\lib\x64</LibraryPath>
+    <IncludePath>$(SolutionDir)Extern\CProcessing\inc;$(SolutionDir)Inc;$(IncludePath);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Extern\CProcessing\lib\x64;$(LibraryPath);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Extern\CProcessing\inc;$(SolutionDir)Inc</IncludePath>
-    <LibraryPath>$(SolutionDir)Extern\CProcessing\lib\x64</LibraryPath>
+    <IncludePath>$(SolutionDir)Extern\CProcessing\inc;$(SolutionDir)Inc;;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Extern\CProcessing\lib\x64;;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir).tmp\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
