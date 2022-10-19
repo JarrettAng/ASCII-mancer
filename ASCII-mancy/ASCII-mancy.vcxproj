@@ -103,6 +103,7 @@ xcopy "$(SolutionDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q
     <ClInclude Include="..\Inc\splashscreen.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Src\Grid.c" />
     <ClCompile Include="..\Src\main.c" />
     <ClCompile Include="..\Src\splashscreen.c" />
   </ItemGroup>
