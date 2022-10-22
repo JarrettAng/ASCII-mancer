@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Inc\ColorTable.h" />
     <ClInclude Include="Inc\Grid.h" />
     <ClInclude Include="Inc\splashscreen.h" />
   </ItemGroup>

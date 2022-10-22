@@ -1,35 +1,31 @@
 #include "cprocessing.h"
 #include "SplashScreen.h"
+#include "ColorTable.h"
 
-const float FADE_IN_DURATION = 2.0f;
+#include "grid.h"	// TODO: Use scene manager instead.
+
+const float FADE_IN_DURATION = 3.0f;
 
 float fade = 0;	// Current fade timer
 CP_Image logo;	// Digipen splash screen logo
 
 #pragma region SPLASH_SCREEN_STATE
 
-void Splash_screen_init() {
+void SplashScreenInit() {
 	// Intialize logo
-	logo = CP_Image_Load("Assets/DigiPen_BLACK.png");
-	// Set window size to fit logo
+	logo = CP_Image_Load("Assets/DigiPen_RED.png");
+
 	CP_System_Fullscreen();
-	// Initialize settings for circle so no need call every update frame
-	CP_Settings_StrokeWeight(0);
-	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+
+	CP_Graphics_ClearBackground(CP_Color_Create(WHITE));
 }
 
-void Splash_screen_update() {
-	// Refresh screen
-	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
-
+void SplashScreenUpdate() {
 	// Fade in the digipen logo
 	FadeInLogo();
-
-	// Draw a circle that follows the mouse position
-	DrawCircleFollowMouse();
 }
 
-void Splash_screen_exit() {
+void SplashScreenExit() {
 	CP_Image_Free(&logo);
 }
 
@@ -40,16 +36,10 @@ void FadeInLogo() {
 	// Increment timer.
 	fade += CP_System_GetDt() / FADE_IN_DURATION;
 
-	// Reset fade
+	// Change state when finish fading in.
 	if (fade > 1) {
-		fade = 0;
+		CP_Engine_SetNextGameState(test_init, test_update, test_exit);
 	}
-}
-
-void DrawCircleFollowMouse() {
-	// Create a red circle that follows the mouse.
-	// Draw red circle above logo
-	CP_Graphics_DrawCircle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 20.0f);
 }
 
 #pragma endregion
