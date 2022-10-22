@@ -15,18 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Inc\splashscreen.h">
+    <ClInclude Include="Inc\splashscreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\main.c">
+    <ClCompile Include="Src\Grid.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\splashscreen.c">
+    <ClCompile Include="Src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Grid.c">
+    <ClCompile Include="Src\splashscreen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,6 +10,15 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Inc\Grid.h" />
+    <ClInclude Include="Inc\splashscreen.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Grid.c" />
+    <ClCompile Include="Src\main.c" />
+    <ClCompile Include="Src\splashscreen.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -99,14 +108,6 @@ xcopy "$(SolutionDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Inc\splashscreen.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Src\Grid.c" />
-    <ClCompile Include="..\Src\main.c" />
-    <ClCompile Include="..\Src\splashscreen.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
