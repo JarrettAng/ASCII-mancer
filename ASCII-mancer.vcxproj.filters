@@ -24,6 +24,9 @@
     <ClInclude Include="Inc\ColorTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\EnemyStats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -33,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\splashscreen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\EnemyStats.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
