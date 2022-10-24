@@ -1,5 +1,5 @@
 #include "cprocessing.h"
-#include "splashscreen.h"
+#include "Splashscreen.h"
 
 int main(void)
 {

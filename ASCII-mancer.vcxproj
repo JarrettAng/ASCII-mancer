@@ -14,13 +14,17 @@
     <ClInclude Include="Inc\ColorTable.h" />
     <ClInclude Include="Inc\EnemyStats.h" />
     <ClInclude Include="Inc\Grid.h" />
-    <ClInclude Include="Inc\splashscreen.h" />
+    <ClInclude Include="Inc\MainMenu.h" />
+    <ClInclude Include="Inc\Splashscreen.h" />
+    <ClInclude Include="Inc\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\EnemyStats.c" />
     <ClCompile Include="Src\Grid.c" />
     <ClCompile Include="Src\main.c" />
-    <ClCompile Include="Src\splashscreen.c" />
+    <ClCompile Include="Src\MainMenu.c" />
+    <ClCompile Include="Src\Splashscreen.c" />
+    <ClCompile Include="Src\UIManager.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

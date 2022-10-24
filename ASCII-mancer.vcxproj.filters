@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Inc\splashscreen.h">
+    <ClInclude Include="Inc\Splashscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Inc\Grid.h">
@@ -27,6 +27,12 @@
     <ClInclude Include="Inc\EnemyStats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\UIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -35,10 +41,16 @@
     <ClCompile Include="Src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\splashscreen.c">
+    <ClCompile Include="Src\Splashscreen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\EnemyStats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MainMenu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UIManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

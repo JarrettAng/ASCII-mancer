@@ -1,5 +1,6 @@
 #include "cprocessing.h"
 #include "SplashScreen.h"
+#include "MainMenu.h"
 #include "ColorTable.h"
 
 #include "grid.h"	// TODO: Use scene manager instead.
@@ -38,7 +39,7 @@ void FadeInLogo() {
 
 	// Change state when finish fading in.
 	if (fade > 1) {
-		CP_Engine_SetNextGameState(test_init, test_update, test_exit);
+		CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 	}
 }
 
