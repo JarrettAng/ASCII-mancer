@@ -29,4 +29,5 @@ void SetEnemy()
 		break;
 	}
 	enemy_Index++;
+	}
 }
