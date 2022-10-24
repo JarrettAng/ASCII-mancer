@@ -15,18 +15,19 @@ float grid_OffsetValue = 200.f;
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
 
 
-void test_init(void){
+void test_init(void) {
+	CP_Settings_StrokeWeight(1);
 	CP_System_SetWindowSize(WINDOWLENGTH, WINDOWHEIGHT);
 	cube_Length = cube_Height = 100;
 	CreatePlayingSpace();
 }
-void CreatePlayingSpace(){
+void CreatePlayingSpace() {
 	for (int y = total_Y_grid; y >= 0; y--)
 	{
 		for (int x = total_X_grid; x > 0; x--)
 		{
 			//NEED TO MAKE IT MODULOR
-			space[x][y].x_pos = (float)((x * cube_Length + grid_OffsetValue/2 + 40.f));
+			space[x][y].x_pos = (float)((x * cube_Length + grid_OffsetValue / 2 + 40.f));
 			space[x][y].y_pos = (float)((y * cube_Height + grid_OffsetValue) + 60.f);
 			CP_Settings_TextSize(50.f);
 			CP_Font_DrawText("Z", space[x][y].x_pos, space[x][y].y_pos);
@@ -40,7 +41,7 @@ void DrawLineGrid()
 
 	int grid_ToDraw = total_Y_grid / 2;
 	int grid_CenterLine = grid_ToDraw + 1;
-	
+
 	//RMD:1 GRID = 100
 	//RMB TO REMOVE UNWANTED LINE IF WISH TO CHAGE AMOUNT OF GRID IN SCENE
 	float grid_CurrentIndex = 0;
@@ -70,9 +71,9 @@ void DrawLineGrid()
 		}
 	}
 	//Control XGrid
-	for (float x = 0; x <= total_X_grid-1; x++)
+	for (float x = 0; x <= total_X_grid - 1; x++)
 	{
-		CP_Graphics_DrawLine((float)x * cube_Length + grid_OffsetValue, (float)WINDOWHEIGHTCENTER + grid_CenterLine * cube_Height, (float)x * cube_Length+ grid_OffsetValue, (float)WINDOWHEIGHTCENTER - grid_CenterLine * cube_Height);
+		CP_Graphics_DrawLine((float)x * cube_Length + grid_OffsetValue, (float)WINDOWHEIGHTCENTER + grid_CenterLine * cube_Height, (float)x * cube_Length + grid_OffsetValue, (float)WINDOWHEIGHTCENTER - grid_CenterLine * cube_Height);
 	}
 
 }

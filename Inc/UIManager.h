@@ -42,6 +42,6 @@ void DrawButtons(void);
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
 void CheckForButtonClick(void);
-_Bool IsAreaClicked(CP_POSITION_MODE mode, float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY);
+_Bool IsAreaClicked(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
 
 #endif

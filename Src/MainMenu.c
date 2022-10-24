@@ -62,8 +62,7 @@ void InitializeButtons(void) {
 	};
 
 	textData.text = "Start";
-	startBtn.callBack = StartGame;
-	InitializeButton(&startBtn, startBtnRect, graphicData, textData);
+	InitializeButton(&startBtn, startBtnRect, graphicData, textData, StartGame);
 
 	/*=========================Quit button=============================*/
 	Rect quitBtnRect = {
@@ -74,8 +73,7 @@ void InitializeButtons(void) {
 	};
 
 	textData.text = "Quit";
-	exitBtn.callBack = ExitGame;
-	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData);
+	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData, ExitGame);
 }
 
 void StartGame(void) {
