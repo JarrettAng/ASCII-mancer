@@ -23,14 +23,13 @@ void MainMenuInit(void) {
 void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(CP_Color_Create(MENU_BLACK));
 
-	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, CP_Image_GetWidth(title), CP_Image_GetHeight(title), 255);
+	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title), (float)CP_Image_GetHeight(title), 255);
 
 	DrawButtons();
 	CheckForButtonClick();
 }
 
 void MainMenuExit(void) {
-	// Reset settings.
 	CP_Image_Free(&title);
 }
 
@@ -39,18 +38,22 @@ void InitializeButtons(void) {
 	float yPos = (float)CP_System_GetWindowHeight() / 2;
 
 	/*==============Button Graphics & Text Settings===================*/
-	// Currently all buttons are using this graphic & text setting
+	// Currently all buttons in menu are using this graphic & text setting
+
 	GraphicData graphicData = {
-	.color = BLACK,
+	.color = TRANSPERANT,
 	.strokeWeigth = 0,
+	// Draw from top left corner so menu button aligns.
 	.imagePosMode = CP_POSITION_CORNER
 	};
 
 	TextData textData = {
 	.color = MENU_WHITE,
 	.textSize = 100,
+	// Text will be drawn on the X Y pos of btn rect (which is top left corner),
+	// So we shift text to top left.
 	.hAlign = CP_TEXT_ALIGN_H_LEFT,
-	.vAlign = CP_TEXT_ALIGN_V_TOP
+	.vAlign = CP_TEXT_ALIGN_V_TOP,
 	};
 
 	/*========================Start button============================*/

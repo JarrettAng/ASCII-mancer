@@ -13,6 +13,22 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 	btns[btnsCount++] = btn;
 }
 
+/// <summary>
+/// Require button to be intialized before drawing.
+/// </summary>
+void DrawButton(Button* btn){
+	// Draw rect
+	SetGraphicSetting(btn->graphicData);
+	CP_Graphics_DrawRect(btn->transform.x, btn->transform.y, btn->transform.width, btn->transform.heigth);
+
+	// Draw text
+	SetTextSetting(btn->textData);
+	CP_Font_DrawText(btn->textData.text, btn->transform.x, btn->transform.y);
+}
+
+/// <summary>
+/// Draw all buttons cached in btns array.
+/// </summary>
 void DrawButtons() {
 	for (int i = 0; i < btnsCount; i++) {
 		// Draw rect
@@ -25,6 +41,9 @@ void DrawButtons() {
 	}
 }
 
+/// <summary>
+/// For updating engine graphic settings before drawing an UI element.
+/// </summary>
 void SetGraphicSetting(GraphicData data) {
 	CP_Settings_RectMode(data.imagePosMode);
 	CP_Settings_ImageFilterMode(data.imageFilterMode);
@@ -32,6 +51,10 @@ void SetGraphicSetting(GraphicData data) {
 	CP_Settings_StrokeWeight(data.strokeWeigth);
 }
 
+
+/// <summary>
+/// For updating engine text settings before drawing an UI element.
+/// </summary>
 void SetTextSetting(TextData data) {
 	CP_Settings_TextSize(data.textSize);
 	CP_Settings_Fill(data.color);
@@ -48,10 +71,15 @@ void CheckForButtonClick() {
 
 		for (int i = 0; (i < btnsCount && callBack == NULL); i++) {
 			if (IsAreaClicked(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+				// Cache callback to be triggered after the conditional statement.
+				// Will cause error if callback is triggered here.
 				callBack = btns[i]->callBack;
+				// Stop checking for buttons once a button is clicked.
+				break;
 			}
 		}
 
+		// Trigger onclick event if needed.
 		if (callBack != NULL) {
 			callBack();
 		}

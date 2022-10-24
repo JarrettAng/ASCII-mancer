@@ -37,7 +37,12 @@ typedef struct Button {
 	Callback callBack;
 }Button;
 
-void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData);
+typedef struct Text {
+	Rect transform;
+	TextData textData;
+}Text;
+
+void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack);
 void DrawButtons(void);
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
