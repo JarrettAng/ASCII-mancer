@@ -81,7 +81,7 @@ void RadialParticle(float x, float y){
         float randomForceVariance = CP_Random_RangeFloat(8.f,15.f);
         float angle = (float)(360/randomParticleCount)*i;
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),randomForceVariance);
-        CreateParticle(x,y,0.8f,55.f,CP_Color_Create(MENU_RED),forceDirection);
+        CreateParticle(x,y,0.8f,55.f,MENU_RED,forceDirection);
     }
 
 }
@@ -107,7 +107,7 @@ void DrawParticle(Particle* particlePointer){
 
 //Function that is required to be called to update all particles. If particles don't work, check that this is in update loop.
 void UpdateEffects(void){
-    //Testing radial particle
+    //Testing radial particle. Not sure if input should be checked here. Maybe it should be.
     if(CP_Input_MouseClicked()){
         RadialParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
     }

@@ -39,6 +39,9 @@
     <ClInclude Include="Inc\GameOver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\gamelevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -63,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\GameOver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\gamelevel.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
