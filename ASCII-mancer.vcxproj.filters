@@ -36,6 +36,9 @@
     <ClInclude Include="Inc\Particles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Particles.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameOver.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

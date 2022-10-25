@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="Inc\ColorTable.h" />
     <ClInclude Include="Inc\EnemyStats.h" />
+    <ClInclude Include="Inc\GameOver.h" />
     <ClInclude Include="Inc\Grid.h" />
     <ClInclude Include="Inc\MainMenu.h" />
     <ClInclude Include="Inc\Particles.h" />
@@ -21,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\EnemyStats.c" />
+    <ClCompile Include="Src\GameOver.c" />
     <ClCompile Include="Src\Grid.c" />
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\MainMenu.c" />
