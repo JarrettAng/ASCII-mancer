@@ -12,6 +12,7 @@ typedef struct GraphicData {
 }GraphicData;
 
 typedef struct TextData {
+	CP_Font font;
 	float textSize;
 	CP_Color color;
 	CP_TEXT_ALIGN_HORIZONTAL hAlign;
@@ -49,5 +50,7 @@ void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
 void CheckForButtonClick(void);
 _Bool IsAreaClicked(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
+Button* CheckForButtonHover(void);
+void FreeButton();
 
 #endif

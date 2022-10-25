@@ -3,8 +3,6 @@
 #include "MainMenu.h"
 #include "ColorTable.h"
 
-#include "grid.h"	// TODO: Use scene manager instead.
-
 const float FADE_IN_DURATION = 3.0f;
 
 float fade = 0;	// Current fade timer
@@ -17,6 +15,7 @@ void SplashScreenInit() {
 	logo = CP_Image_Load("Assets/DigiPen_RED.png");
 
 	CP_System_Fullscreen();
+	//CP_System_SetWindowSize(1280, 720);
 
 	CP_Graphics_ClearBackground(WHITE);
 }

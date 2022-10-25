@@ -61,9 +61,19 @@ void SetGraphicSetting(GraphicData data) {
 /// For updating engine text settings before drawing an UI element.
 /// </summary>
 void SetTextSetting(TextData data) {
+	CP_Font_Set(data.font);
 	CP_Settings_TextSize(data.textSize);
 	CP_Settings_Fill(data.color);
 	CP_Settings_TextAlignment(data.hAlign, data.vAlign);
+}
+
+/// <summary>
+/// Empty button array when exiting a scene, so that next scene can reuse the array.
+/// </summary>
+void FreeButton(){
+	// Empty array so next scene can use.
+	memset(btns, 0, sizeof(btns));
+	btnsCount = 0;
 }
 
 
@@ -92,6 +102,18 @@ void CheckForButtonClick() {
 			callBack();
 		}
 	}
+}
+
+Button* CheckForButtonHover(){
+	float xPos = CP_Input_GetMouseX();
+	float yPos = CP_Input_GetMouseY();
+
+	for (int i = 0; i < btnsCount; i++) {
+		if (IsAreaClicked(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+			return btns[i];
+		}
+	}
+	return NULL;
 }
 
 _Bool IsAreaClicked(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE areaMode)
