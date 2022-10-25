@@ -1,9 +1,13 @@
 #include <cprocessing.h>
 #include "UIManager.h"
+#include "ColorTable.h"
 
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
 
+/// <summary>
+/// Intialize button with the given data. Also store btn address in array so it manager can draw them all at once.
+/// </summary>
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack) {
 	btn->transform = transform;
 	btn->graphicData = graphicsData;
@@ -48,7 +52,8 @@ void SetGraphicSetting(GraphicData data) {
 	CP_Settings_RectMode(data.imagePosMode);
 	CP_Settings_ImageFilterMode(data.imageFilterMode);
 	CP_Settings_Fill(data.color);
-	CP_Settings_StrokeWeight(data.strokeWeigth);
+	CP_Settings_Stroke(data.strokeColor);
+	CP_Settings_StrokeWeight(data.strokeWeight);
 }
 
 
@@ -60,6 +65,9 @@ void SetTextSetting(TextData data) {
 	CP_Settings_Fill(data.color);
 	CP_Settings_TextAlignment(data.hAlign, data.vAlign);
 }
+
+
+#pragma region UI_INTERACTION
 
 void CheckForButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
@@ -105,3 +113,5 @@ _Bool IsAreaClicked(float areaX, float areaY, float areaWidth, float areaHeigth,
 
 	return FALSE;
 }
+
+#pragma endregion

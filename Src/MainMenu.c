@@ -21,7 +21,7 @@ void MainMenuInit(void) {
 }
 
 void MainMenuUpdate(void) {
-	CP_Graphics_ClearBackground(CP_Color_Create(MENU_BLACK));
+	CP_Graphics_ClearBackground(MENU_BLACK);
 
 	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title), (float)CP_Image_GetHeight(title), 255);
 
@@ -42,7 +42,8 @@ void InitializeButtons(void) {
 
 	GraphicData graphicData = {
 	.color = TRANSPERANT,
-	.strokeWeigth = 0,
+	.strokeColor = TRANSPERANT,
+	.strokeWeight = 0,
 	// Draw from top left corner so menu button aligns.
 	.imagePosMode = CP_POSITION_CORNER
 	};
@@ -65,6 +66,8 @@ void InitializeButtons(void) {
 	};
 
 	textData.text = "Start";
+	// Intialize button in UI manager.
+	// Onclick: Start game.
 	InitializeButton(&startBtn, startBtnRect, graphicData, textData, StartGame);
 
 	/*=========================Quit button=============================*/
@@ -76,6 +79,8 @@ void InitializeButtons(void) {
 	};
 
 	textData.text = "Quit";
+	// Intialize button in UI manager.
+	// Onclick: Exit game.
 	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData, ExitGame);
 }
 

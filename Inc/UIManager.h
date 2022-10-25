@@ -7,7 +7,8 @@ typedef struct GraphicData {
 	CP_POSITION_MODE imagePosMode;
 	CP_IMAGE_FILTER_MODE imageFilterMode;
 	CP_Color color;
-	float strokeWeigth;
+	CP_Color strokeColor;
+	float strokeWeight;
 }GraphicData;
 
 typedef struct TextData {

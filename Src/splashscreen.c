@@ -18,7 +18,7 @@ void SplashScreenInit() {
 
 	CP_System_Fullscreen();
 
-	CP_Graphics_ClearBackground(CP_Color_Create(WHITE));
+	CP_Graphics_ClearBackground(WHITE);
 }
 
 void SplashScreenUpdate() {
