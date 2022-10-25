@@ -103,9 +103,7 @@ void GameOverInit(void) {
 	InitializeButtonsGameOverScreen();
 	Game_Over_Title = CreateText("GAME OVER! :(", HeaderFontSize);
 	Enemies_Killed = CreateText("ZOMBOIYOS KILLED : 10", 50.f);
-	Enemies_Killed_Number = CreateText((char)EnemiesKilled[1], 50.f);
 	Turns_Made = CreateText("TURNS MADE : 7", 50.f);
-	Turns_Made_Number = CreateText((char)TurnsMade[1], 50.f);
 }
 
 void GameOverUpdate(void) {
