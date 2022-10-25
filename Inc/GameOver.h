@@ -10,29 +10,19 @@
 //------------------------------
 
 // Making the struct of text
-typedef struct Text {
+typedef struct TextOnly {
 	float font_size;
 	CP_Color color;
 	char* words;
-} Text;
-
-// Making the struct of a button
-typedef struct Button {
-	float width;
-	float height;
-	float pos_x;
-	float pos_y;
-	CP_Color color;
-	Text text;
-} Button;
+} TextOnly;
 
 //-------------------------------
 
-Text CreateText(char* words, float size);
-void RenderText(Text Rendered_Text, float pos_x, float pos_y, CP_Color color);
-Button CreateButtonWithText(Text text, float width, float height, float pos_x, float pos_y);
-void RenderButtonWithText(Button Rendered_Button, CP_Color color, CP_Color stroke_color, float stroke_weight, CP_Color text_color);
-int IsButtonPressed(Button Button_Check);
+TextOnly CreateText(char* words, float size);
+void RenderText(TextOnly Rendered_Text, float pos_x, float pos_y, CP_Color color);
+
+void InitializeButtonsGameOverScreen(void);
+void BackToMainMenu(void);
 
 //-------------------------------
 
