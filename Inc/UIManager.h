@@ -23,6 +23,7 @@ typedef struct TextData {
 typedef struct Rect {
 	float x;
 	float y;
+	CP_Vector cachedPos;
 	float width;
 	float heigth;
 }Rect;
@@ -51,6 +52,6 @@ void SetTextSetting(TextData data);
 void CheckForButtonClick(void);
 _Bool IsAreaClicked(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
 Button* CheckForButtonHover(void);
-void FreeButton();
+void FreeButton(void);
 
 #endif

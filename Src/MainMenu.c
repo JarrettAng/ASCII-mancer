@@ -88,7 +88,7 @@ void InitializeButtons(void) {
 
 	textData.text = "SETTINGS";
 	// Intialize button in UI manager.
-	// Onclick: Start game.
+	// Onclick: Settings screen.
 	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, Settings);
 
 	/*========================Credits Button============================*/
@@ -101,7 +101,7 @@ void InitializeButtons(void) {
 
 	textData.text = "CREDITS";
 	// Intialize button in UI manager.
-	// Onclick: Start game.
+	// Onclick: Credits screen.
 	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, Credits);
 
 	/*=========================Exit Button=============================*/
@@ -141,7 +141,6 @@ void DrawSelectPointer(){
 	// Image scale has to be 2:3 for its X and Y because pixel data is 2,3.
 	// TODO: CLEAN UP
 	CP_Image_Draw(selectPointer, hoverBtn->transform.x - 40, hoverBtn->transform.y + 40, 30, 45, 255);
-	hoverBtn->transform.x += 5;
 }
 
 void StartGame(void) {

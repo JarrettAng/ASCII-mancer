@@ -36,8 +36,8 @@ void CreatePlayingSpace() {
 }
 void DrawLineGrid()
 {
-	CP_Graphics_ClearBackground(CP_Color_Create(BLACK));
-	CP_Settings_Stroke(CP_Color_Create(GREEN));
+	CP_Graphics_ClearBackground(BLACK);
+	CP_Settings_Stroke(GREEN);
 
 	int grid_ToDraw = total_Y_grid / 2;
 	int grid_CenterLine = grid_ToDraw + 1;

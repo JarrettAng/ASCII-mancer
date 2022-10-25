@@ -10,6 +10,8 @@ int btnsCount = 0;
 /// </summary>
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack) {
 	btn->transform = transform;
+	// Initialized position.
+	btn->transform.cachedPos = CP_Vector_Set(btn->transform.x, btn->transform.y);
 	btn->graphicData = graphicsData;
 	btn->textData = textData;
 	btn->callBack = callBack;
