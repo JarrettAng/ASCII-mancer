@@ -3,7 +3,7 @@
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
 @date     26/10/2022
 @brief    TManager's header file handles the interfacing of Tetris pieces and any other files in the project; 
-          This source file
+          This source file contains the implementation of those functions.
 ________________________________________________________________________________________________________*/
 
 #include <stdlib.h> // For srand & rand
@@ -46,7 +46,7 @@ void TManagerInit(int rand_seed) {
 TetrisPiece DrawFromBag(void) {
     PieceType drawn_piece = pieces_bag[current_bag][current_index++];
 
-    // If the queue is running low, shuffle in more pieces.
+    // If the queue is running low, swap bags and shuffle in more pieces.
     if (current_index > TOTAL_PIECES - 1) {
         ShuffleBag(current_bag);
         current_bag = !current_bag;

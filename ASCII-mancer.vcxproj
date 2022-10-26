@@ -21,6 +21,7 @@
     <ClInclude Include="Inc\Splashscreen.h" />
     <ClInclude Include="Inc\TManager.h" />
     <ClInclude Include="Inc\TPiece.h" />
+    <ClInclude Include="Inc\TPlayer.h" />
     <ClInclude Include="Inc\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
