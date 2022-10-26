@@ -19,6 +19,8 @@
     <ClInclude Include="Inc\MainMenu.h" />
     <ClInclude Include="Inc\Particles.h" />
     <ClInclude Include="Inc\Splashscreen.h" />
+    <ClInclude Include="Inc\TManager.h" />
+    <ClInclude Include="Inc\TPiece.h" />
     <ClInclude Include="Inc\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +32,8 @@
     <ClCompile Include="Src\MainMenu.c" />
     <ClCompile Include="Src\Particles.c" />
     <ClCompile Include="Src\Splashscreen.c" />
+    <ClCompile Include="Src\TManager.c" />
+    <ClCompile Include="Src\TPlayer.c" />
     <ClCompile Include="Src\UIManager.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

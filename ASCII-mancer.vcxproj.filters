@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Tetris Pieces">
+      <UniqueIdentifier>{76506801-30b0-46a2-83b7-73233abb2d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tetris Pieces">
+      <UniqueIdentifier>{712493fe-4908-4a7b-b947-2a3ae88d052f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Splashscreen.h">
@@ -42,6 +48,12 @@
     <ClInclude Include="Inc\gamelevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\TManager.h">
+      <Filter>Header Files\Tetris Pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\TPiece.h">
+      <Filter>Header Files\Tetris Pieces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -70,6 +82,12 @@
     </ClCompile>
     <ClCompile Include="Src\gamelevel.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TManager.c">
+      <Filter>Source Files\Tetris Pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TPlayer.c">
+      <Filter>Source Files\Tetris Pieces</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
