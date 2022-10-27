@@ -14,6 +14,7 @@
     <ClInclude Include="Inc\ColorTable.h" />
     <ClInclude Include="Inc\EnemyStats.h" />
     <ClInclude Include="Inc\gamelevel.h" />
+    <ClInclude Include="Inc\GameLoop.h" />
     <ClInclude Include="Inc\GameOver.h" />
     <ClInclude Include="Inc\Grid.h" />
     <ClInclude Include="Inc\MainMenu.h" />
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ClCompile Include="Src\EnemyStats.c" />
     <ClCompile Include="Src\gamelevel.c" />
+    <ClCompile Include="Src\GameLoop.c" />
     <ClCompile Include="Src\GameOver.c" />
     <ClCompile Include="Src\Grid.c" />
     <ClCompile Include="Src\main.c" />
