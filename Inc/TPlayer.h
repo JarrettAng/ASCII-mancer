@@ -20,13 +20,13 @@ float hand_total_height;
 float hand_bottom_buffer;
 
 float hand_total_length;
-float hand_edge_buffer;
+float hand_left_buffer;
+float hand_left_extra_buffer;
 float hand_slot_length;
 float hand_slot_spacing;
-float hand_left_extra_buffer;
 
 float peek_total_length;
-float peek_edge_buffer;
+float peek_right_buffer;
 float peek_slot_length;
 float peek_slot_spacing;
 
@@ -35,6 +35,7 @@ float hand_tile_stroke;
 
 float peek_tile_length;
 float peek_tile_stroke;
+float text_peek_size;
 
 /*______________________________________________________________
 @brief Needs to be called at the start of the game level (and after the Tetris Pieces

@@ -49,7 +49,7 @@ TetrisPiece DrawFromBag(void) {
     // If the queue is running low, swap bags and shuffle in more pieces.
     if (current_index > TOTAL_PIECES - 1) {
         ShuffleBag(current_bag);
-        current_bag = !current_bag;
+        current_bag = (current_bag + 1) % TOTAL_BAGS;
         current_index = 0;
     }
 
@@ -105,7 +105,7 @@ int RandInt(int min, int max) {
 @return TetrisPiece - The new tetris piece, warranty not included.
 */
 TetrisPiece CreatePiece(PieceType type) {
-    TetrisPiece new_piece = { .color = WHITE, .rotation = 0, .type = type, .shape = { 0 } };
+    TetrisPiece new_piece = { .color = WHITE, .rotation = 0, .type = type, .x_length = 0, .y_length = 0, .shape = { 0 } };
     
     // Set shape data for the new piece
     char *shape_data = "";
@@ -124,12 +124,18 @@ TetrisPiece CreatePiece(PieceType type) {
     while (*current != '\0') {
         switch(*current) {
         case '#': new_piece.shape[index_x][index_y] = 1; ++index_x; break;
-        case '\n': index_y++; index_x = 0; break;
+        case '\n': ++index_y;
+                   new_piece.x_length = (new_piece.x_length > index_x) ? new_piece.x_length : index_x;
+                   index_x = 0; break;
         default: ++index_x;
         }
 
         ++current;
     }
+
+    // Update the length of the piece
+    new_piece.x_length = (new_piece.x_length > index_x) ? new_piece.x_length : index_x;
+    new_piece.y_length = index_y + 1;
 
     return new_piece;
 }

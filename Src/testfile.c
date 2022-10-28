@@ -8,7 +8,12 @@
 #include "TPlayer.h"
 
 void TTestInit(void) {
-	CP_System_SetWindowSize(1920, 1080);
+	/* ISTG do not fullscreen the game while debugging, serious, 
+	   everytime the game breaks and it fking pauses making me stuck in fullscreen
+	   and requiring me to restart my com, a baby dies. The blood is on your
+	   hands CProcessing, I hope you are proud of yourself. */
+	CP_System_SetWindowSize(1920, 1080); 
+
 	GameLoopInit();
 	TManagerInit(DEFAULT_SPAWN_SEED);
 	TPlayerInit();

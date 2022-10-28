@@ -25,12 +25,14 @@ typedef enum {
 
 //______________________________________________________________
 // Tetris Piece 
-#define SHAPE_BOUNDS 5 // The maximum size of pieces (e.g. if set to 5, maximum size of a piece is a 5x5 block)
+#define SHAPE_BOUNDS 6 // The maximum size of pieces (e.g. if set to 5, maximum size of a piece is a 5x5 block)
 typedef struct {
 	PieceType type;
 
 	int shape[SHAPE_BOUNDS][SHAPE_BOUNDS];
 	int rotation;
+
+	int x_length, y_length;
 
 	CP_Color color;
 

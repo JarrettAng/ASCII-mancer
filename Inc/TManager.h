@@ -12,13 +12,15 @@ ________________________________________________________________________________
 
 //______________________________________________________________
 // Tetris Spawn settings
-#define TOTAL_BAGS 2
+/* Each bag contains 1 of each piece, meaning if there are 2 bags and 7 total pieces, only 14 pieces will be in play at a time, 
+   DO NOT set the sizes of the hand and peek to be larger than the size of all the bags */
+#define TOTAL_BAGS 2 
 #define DEFAULT_SPAWN_SEED 42069 // Useful for debugging by removing the randomness
 
 //______________________________________________________________
 // Player hand settings
 #define HAND_SIZE 3
-#define PEEK_SIZE 2
+#define PEEK_SIZE 1
 
 /*______________________________________________________________
 @brief TManager needs to be initialized at the start of the game level so that 
