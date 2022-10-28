@@ -3,7 +3,8 @@
 #include "MainMenu.h"
 #include "ColorTable.h"
 
-const float FADE_IN_DURATION = 3.0f;
+// TODO: For change back to 3f before release
+const float FADE_IN_DURATION = .1f;
 
 float fade = 0;	// Current fade timer
 CP_Image logo;	// Digipen splash screen logo

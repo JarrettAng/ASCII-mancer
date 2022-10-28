@@ -105,10 +105,31 @@ int RandInt(int min, int max) {
 @return TetrisPiece - The new tetris piece, warranty not included.
 */
 TetrisPiece CreatePiece(PieceType type) {
-    TetrisPiece new_piece = { .color = WHITE, .rotation = 0, .type = type };
+    TetrisPiece new_piece = { .color = WHITE, .rotation = 0, .type = type, .shape = { 0 } };
     
-    // JARRETT TODO: actually add in the shape functionality later
-    // new_piece.shape = I_PIECE_SHAPE;
+    // Set shape data for the new piece
+    char *shape_data = "";
+    switch (type) {
+    case I_PIECE: shape_data = I_PIECE_SHAPE; break;
+    case O_PIECE: shape_data = O_PIECE_SHAPE; break;
+    case T_PIECE: shape_data = T_PIECE_SHAPE; break;
+    case L_PIECE: shape_data = L_PIECE_SHAPE; break;
+    case J_PIECE: shape_data = J_PIECE_SHAPE; break;
+    case Z_PIECE: shape_data = Z_PIECE_SHAPE; break;
+    case S_PIECE: shape_data = S_PIECE_SHAPE; break;
+    }
+
+    int index_x = 0, index_y = 0;
+    char *current = shape_data;
+    while (*current != '\0') {
+        switch(*current) {
+        case '#': new_piece.shape[index_x][index_y] = 1; ++index_x; break;
+        case '\n': index_y++; index_x = 0; break;
+        default: ++index_x;
+        }
+
+        ++current;
+    }
 
     return new_piece;
 }

@@ -7,14 +7,41 @@ ________________________________________________________________________________
 
 #pragma once // Only include this header file once
 
+#include "cprocessing.h"
+
+typedef struct {
+    CP_Vector pos;
+    TetrisPiece piece;
+} PlayerHandSlot;
+
 //______________________________________________________________
 // Tetris Rendering settings
-#define PIECE_TILE_SIZE 50
-#define PIECE_SPACING 50
-#define EDGE_BUFFER 50
+float hand_total_height;
+float hand_bottom_buffer;
+
+float hand_total_length;
+float hand_edge_buffer;
+float hand_slot_length;
+float hand_slot_spacing;
+float hand_left_extra_buffer;
+
+float peek_total_length;
+float peek_edge_buffer;
+float peek_slot_length;
+float peek_slot_spacing;
+
+float hand_tile_length;
+float hand_tile_stroke;
+
+float peek_tile_length;
+float peek_tile_stroke;
 
 /*______________________________________________________________
 @brief Needs to be called at the start of the game level (and after the Tetris Pieces
        has been initialized) so that the player has pieces to play with.
 */
 void TPlayerInit(void);
+
+void PickUpPiece(void);
+
+void RenderHand(void);

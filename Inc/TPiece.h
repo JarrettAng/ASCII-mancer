@@ -33,6 +33,8 @@ typedef struct {
 	int rotation;
 
 	CP_Color color;
+
+	CP_Vector draw_pos; // The screen pos of the piece (Anchored on the top left)
 } TetrisPiece;
 
 //______________________________________________________________
@@ -42,30 +44,30 @@ typedef struct {
 			#
 			#
 			# */
-#define I_PIECE_SHAPE = "#\n#\n#\n#";
+#define I_PIECE_SHAPE "#\n#\n#\n#"
 
 /* Preview: ##
 			## */
-#define O_PIECE_SHAPE = "##\n##";
+#define O_PIECE_SHAPE "##\n##"
 
 /* Preview: ###
 			 # */
-#define T_PIECE_SHAPE = "###\n0#0";
+#define T_PIECE_SHAPE "###\n0#"
 
 /* Preview: ##
 			 #
 			 # */
-#define L_PIECE_SHAPE = "##\n0#\n0#";
+#define L_PIECE_SHAPE "##\n0#\n0#"
 
 /* Preview: ##
 			#
 			# */
-#define J_PIECE_SHAPE = "##\n#\n#";
+#define J_PIECE_SHAPE "##\n#\n#"
 
 /* Preview: ##
 			 ## */
-#define Z_PIECE_SHAPE = "##\n0##";
+#define Z_PIECE_SHAPE "##\n0##"
 
 /* Preview:  ##
 			## */
-#define S_PIECE_SHAPE = "0##\n##";
+#define S_PIECE_SHAPE "0##\n##"

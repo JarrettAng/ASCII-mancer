@@ -13,7 +13,7 @@ ________________________________________________________________________________
 //______________________________________________________________
 // Tetris Spawn settings
 #define TOTAL_BAGS 2
-#define DEFAULT_SPAWN_SEED 1 // Useful for debugging by removing the randomness
+#define DEFAULT_SPAWN_SEED 42069 // Useful for debugging by removing the randomness
 
 //______________________________________________________________
 // Player hand settings
