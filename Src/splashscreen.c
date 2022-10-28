@@ -15,14 +15,15 @@ void SplashScreenInit() {
 	logo = CP_Image_Load("Assets/DigiPen_RED.png");
 
 	CP_System_Fullscreen();
-	//CP_System_SetWindowSize(1280, 720);
-
-	CP_Graphics_ClearBackground(WHITE);
+	//CP_System_FullscreenAdvanced(1920,1080);
+	//CP_System_SetWindowSize(1920, 1080);
+	CP_System_SetFrameRate(60.f);
 }
 
 void SplashScreenUpdate() {
 	// Fade in the digipen logo
 	FadeInLogo();
+	CP_Graphics_ClearBackground(WHITE);
 }
 
 void SplashScreenExit() {
