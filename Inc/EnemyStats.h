@@ -4,7 +4,7 @@
 
 typedef struct EnemyInfo
 {
-	int CreditCost;
+	int Cost;
 	int MovementSpeed;
 	int Health;
 
@@ -14,7 +14,7 @@ typedef struct EnemyInfo
 
 EnemyInfo Enemy[ENEMYPOOL];
 
-int enemy_index;
+int enemyIndex;
 //Set how many types are there
 int enemy_TotalType = 3;
 

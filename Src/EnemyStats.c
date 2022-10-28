@@ -12,26 +12,23 @@ void SetEnemy(EnemyInfo* Enemy,int Type)
 	{
 		case 0://Normal
 		{
-			Enemy->CreditCost = 1;
+			Enemy->Cost = 1;
 			Enemy->Health = 1;
 			Enemy->MovementSpeed = 1;
-			//INSERT MINUS ENEMY CREDIT HERE
 			break;
 		}
 		case 1://Normal
 		{
-			Enemy->CreditCost = 2;
+			Enemy->Cost = 2;
 			Enemy->Health = 2;
 			Enemy->MovementSpeed = 1;
-			//INSERT MINUS ENEMY CREDIT HERE
 			break;
 		}
 		case 2://Normal
 		{
-			Enemy->CreditCost = 3;
+			Enemy->Cost = 3;
 			Enemy->Health = 3;
 			Enemy->MovementSpeed = 1;
-			//INSERT MINUS ENEMY CREDIT HERE
 			break;
 		}
 	}
@@ -45,14 +42,14 @@ void SpawnEnemy()
 	for (int i = 0; i < ENEMYPOOL; i++)
 	{
 		//Check pool to see which enemy element is free
-		if (Enemy[enemy_index].is_Alive == FALSE)
+		if (Enemy[enemyIndex].is_Alive == FALSE)
 		{
-			SetEnemy(&Enemy[enemy_index], enemy_Type);//Spawn random type of enemy
+			SetEnemy(&Enemy[enemyIndex], enemy_Type);//Spawn random type of enemy
 			break;
 		}
 	}
 }
-void KillEnemy()
+void EnemyDeath()
 {
 	//Check every time an enemy is kill. If theres a low enough enemy count, the next wave will start
 	UpdateWaveStatus();
