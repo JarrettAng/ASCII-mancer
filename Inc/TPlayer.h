@@ -7,8 +7,14 @@ ________________________________________________________________________________
 
 #pragma once // Only include this header file once
 
+//______________________________________________________________
+// Tetris Rendering settings
+#define PIECE_TILE_SIZE 50
+#define PIECE_SPACING 50
+#define EDGE_BUFFER 50
+
 /*______________________________________________________________
 @brief Needs to be called at the start of the game level (and after the Tetris Pieces
        has been initialized) so that the player has pieces to play with.
 */
-void FillHand(void);
+void TPlayerInit(void);

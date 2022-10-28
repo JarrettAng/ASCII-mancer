@@ -6,9 +6,12 @@
 ________________________________________________________________________________________________________*/
 
 #include "TManager.h" 
+#include "TPlayer.h" 
 
 TetrisPiece hand[HAND_SIZE];
 TetrisPiece peek_hand[PEEK_SIZE];
+
+CP_Vector hand_top_left, peek_top_left;
 
 #pragma region
 void PlayPiece(int played_index);
@@ -21,7 +24,10 @@ void PlayPiece(int played_index);
 @brief Needs to be called at the start of the game level (and after the Tetris Pieces
        has been initialized) so that the player has pieces to play with.
 */
-void FillHand(void) {
+void TPlayerInit(void) {
+    hand_top_left = CP_Vector_Set(CP_System_GetWindowWidth() / 2 - (HAND_SIZE * SHAPE_BOUNDS * PIECE_TILE_SIZE + HAND_SIZE / 2 * PIECE_SPACING) / 2, CP_System_GetWindowHeight() - EDGE_BUFFER);
+    peek_top_left = CP_Vector_Set(hand_top_left.x + HAND_SIZE * SHAPE_BOUNDS * PIECE_TILE_SIZE + HAND_SIZE / 2 * PIECE_SPACING, hand_top_left.y);
+
     // First, fill the player's hand
     for (int index = 0; index < HAND_SIZE; ++index) {
         hand[index] = DrawFromBag();
@@ -43,7 +49,7 @@ void PickUpPiece(void) {
 
 // JARRETT TODO: Finish render hand stub function
 void RenderHand(void) {
-
+    
 }
 
 //______________________________________________________________

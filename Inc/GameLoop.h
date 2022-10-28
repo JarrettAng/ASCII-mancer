@@ -7,6 +7,11 @@ ________________________________________________________________________________
 
 #pragma once // Only include this header file once
 
+typedef enum {
+	TURN_PLAYER,
+	TURN_ZOMBIE
+} TurnType;
+
 /*______________________________________________________________
 @brief Needs to be called at the start of the game level to handle the turns between
 	   the player and the zombies

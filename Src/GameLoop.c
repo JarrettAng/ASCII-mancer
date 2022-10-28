@@ -5,6 +5,15 @@
 @brief    This source file 
 ________________________________________________________________________________________________________*/
 
+#include "GameLoop.h"
+
+TurnType current_turn;
+
+#pragma region
+void PlayerTurn(void);
+void ZombieTurn(void);
+#pragma endregion Forward Declarations
+
 //______________________________________________________________
 // All "public" functions (Basically those in the GameLoop.h)
 
@@ -18,6 +27,23 @@ void GameLoopInit(void) {
 }
 
 void GameLoopUpdate(void) {
-	// JARRETT TODO: Do something depending on whether it's the player or zombie's turn
+	switch (current_turn) {
+	case TURN_PLAYER: PlayerTurn(); break;
+	case TURN_ZOMBIE: ZombieTurn(); break;
+	}
+}
+
+//______________________________________________________________
+// Game turn functions
+
+void SetTurn(TurnType next) {
+	current_turn = next;
+}
+
+void PlayerTurn(void) {
+	// JARRETT TODO: Check input
+}
+
+void ZombieTurn(void) {
 
 }
