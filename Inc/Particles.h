@@ -18,6 +18,7 @@ typedef struct Particle{
     float cachedLifeTime;   //Used for calculating time particle has been alive for.
     float size;             //NOTE!! FONT SIZE GOTTA BE BIG! OR CAN'T SEE SHITTT!! At least like, Min 15.f
     CP_Vector force;        //force that is acting on particle. Cummulative and will be calculated in UpdateParticles.
+    char* animString;
     CP_Color color;
      
     //BOOL isActive;        //Returns false if the lifeTime is zero. If that's the case then just check against lifeTime?
@@ -31,6 +32,7 @@ void ResetParticle(Particle* particlePointer);
 void UpdateEffects(void);
 //Temp function for testing
 void RadialParticle(float x, float y);
-
+//Temp function for zombie despawn particle
+void ZombieDeathParticle(float x, float y);
 //Move this to utils!!
 CP_Vector AngleToVector(float degreeAngle);
