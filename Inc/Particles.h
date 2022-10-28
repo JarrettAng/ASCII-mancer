@@ -5,6 +5,8 @@
 #include <string.h>
 
 #define VECTOR_UP CP_Vector_Set(0,-1)
+#define VECTOR_DOWN CP_Vector_Set(0,1)
+#define PARTICLECOUNT 1000
 
 typedef struct Particle{
     int UID;                //Particle's uniqueIdentifier to search out the specific particle
@@ -19,7 +21,7 @@ typedef struct Particle{
     CP_Color color;
      
     //BOOL isActive;        //Returns false if the lifeTime is zero. If that's the case then just check against lifeTime?
-    //float gravityScale    //Maybe have gravity? Might be nice because it makes it curve
+    float gravityScale;    //Maybe have gravity? Might be nice because it makes it curve
 } Particle;
 
 void CreateParticle(float xPos, float yPos, float lifeTime, float size, CP_Color color, CP_Vector force);

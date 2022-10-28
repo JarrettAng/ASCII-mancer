@@ -3,7 +3,8 @@
 #include "ColorTable.h"
 #include "UIManager.h"
 #include "Grid.h"
-
+#include "gamelevel.h"
+#include "testfile.h"
 CP_Image title;
 
 Button startBtn;
@@ -31,6 +32,7 @@ void MainMenuUpdate(void) {
 	DrawButtons();
 	CheckForButtonClick();
 	DrawSelectPointer();
+
 }
 
 void MainMenuExit(void) {
@@ -144,7 +146,7 @@ void DrawSelectPointer(){
 }
 
 void StartGame(void) {
-	CP_Engine_SetNextGameState(test_init, test_update, test_exit);
+	CP_Engine_SetNextGameState(gameLevelInit, gameLevelUpdate, gameLevelExit);
 }
 
 void Settings(void) {
