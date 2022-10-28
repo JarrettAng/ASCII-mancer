@@ -2,7 +2,8 @@
 #include <cprocessing.h>
 
 
-int enemy_Left;
-
-void UpdateWaveStatus();
-void NextWave();
+void InitWaveSystem(void);
+void GenerateWave(void);
+void UpdateWave(void);
+void NextWave(void);
+void ClearWaveArray(void);

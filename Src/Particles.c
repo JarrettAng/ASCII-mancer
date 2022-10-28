@@ -30,10 +30,10 @@ void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gra
     newParticle.animString = animString;
     newParticle.gravityScale =0.f;
 
-    //If the index happens to be >=MAXPARTICLES-1, then loop back and start reusing particles from index 0 onwards.
+    //If the index happens to be >=MAXPARTICLES, then loop back and start reusing particles from index 0 onwards.
     //I don't think I should even need to check if the particle is still alive since it's a Queue sort of thing.  
 
-    particleArray[particleIndex%(PARTICLECOUNT-1)] = newParticle;
+    particleArray[particleIndex%(PARTICLECOUNT)] = newParticle;
     particleIndex++;
 
 }
