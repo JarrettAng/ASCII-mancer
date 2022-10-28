@@ -15,6 +15,10 @@ Button exitBtn;
 // Visual pointer to select menu option.
 CP_Image selectPointer;
 
+//___________________________________________________________________
+// TODO: For debugging, remove before release
+void Jarrett(void);
+
 void MainMenuInit(void) {
 	title = CP_Image_Load("Assets/MenuTitle.png");
 
@@ -33,6 +37,11 @@ void MainMenuUpdate(void) {
 	CheckForButtonClick();
 	DrawSelectPointer();
 
+	//___________________________________________________________________
+	// TODO: For debugging, remove before release
+	if (CP_Input_KeyTriggered(KEY_F10)) {
+		Jarrett();
+	}
 }
 
 void MainMenuExit(void) {
