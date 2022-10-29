@@ -1,8 +1,8 @@
 #include <cprocessing.h>
 #include "Utils.h"
 
-float heightScale = WINDOW_HEIGHT;
-float widthScale = WINDOW_WIDTH;
+float widthScale = BASE_WINDOW_WIDTH;
+float heightScale = BASE_WINDOW_HEIGHT;
 
 #pragma region USER_INTERFACE
 
@@ -11,9 +11,20 @@ float widthScale = WINDOW_WIDTH;
 /// Use this when changing window size.
 /// </summary>
 void UpdateUIScale(){
-	widthScale = (float)CP_System_GetWindowWidth() / WINDOW_WIDTH;
-	heightScale = (float)CP_System_GetWindowHeight() / WINDOW_HEIGHT;
+	widthScale = (float)CP_System_GetWindowWidth() / BASE_WINDOW_WIDTH;
+	heightScale = (float)CP_System_GetWindowHeight() / BASE_WINDOW_HEIGHT;
 }
+
+float GetWindowWidth()
+{
+	return (float)CP_System_GetWindowWidth();
+}
+
+float GetWindowHeight()
+{
+	return (float)CP_System_GetWindowHeight();
+}
+
 
 float GetHeightScale()
 {

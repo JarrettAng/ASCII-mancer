@@ -43,7 +43,7 @@ void MainMenuInit(void) {
 
 void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
-
+	// Drawn 25% from top.
 	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
 
 	DrawButtons();
@@ -65,11 +65,14 @@ void MainMenuExit(void) {
 
 void InitializeButtons(void) {
 	// Starting position to draw the menu buttons.
+	// Drawn 11% from left.
+	// Drawn 50% from top.
 	float xPos = (float)CP_System_GetWindowWidth() / 9;
 	float yPos = (float)CP_System_GetWindowHeight() / 2;
+	//float offSet =
 
-	/*==============Button Graphics & Text Settings===================*/
-	// Currently all buttons in menu are using this graphic & text setting
+		/*==============Button Graphics & Text Settings===================*/
+		// Currently all buttons in menu are using this graphic & text setting
 
 	GraphicData graphicData = {
 	.color = TRANSPERANT,
