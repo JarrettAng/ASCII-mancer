@@ -18,12 +18,22 @@ Button exitBtn;
 
 // Visual pointer to select menu option.
 CP_Image selectPointer;
+// How much to scale up the pointer from a 2x3 pixel.
+int pointerScale = 15;
+// How much pixel to offset from button.
+int pointerOffset = 40;
+
+// Transition
+_Bool isTrasitioning = FALSE;
+float delay = 3;
+float blinkInterval = 0.3;
 
 //___________________________________________________________________
 // TODO: For debugging, remove before release
 void Jarrett(void);
 
-// Forward declarations
+#pragma region Forward Declarations
+
 void InitializeButtons(void);
 void IntializeSelectPointer(void);
 void DrawSelectPointer(void);
@@ -31,6 +41,8 @@ void StartGame(void);
 void Settings(void);
 void Credits(void);
 void ExitGame(void);
+
+#pragma endregion
 
 void MainMenuInit(void) {
 	title = CP_Image_Load("Assets/MenuTitle.png");
@@ -44,11 +56,18 @@ void MainMenuInit(void) {
 void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
 	// Drawn 25% from top.
-	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
+	CP_Image_Draw(title, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
 
 	DrawButtons();
-	HandleButtonClick();
+
 	DrawSelectPointer();
+
+	if (isTrasitioning){
+		HandleTransition();
+		return;
+	}
+
+	HandleButtonClick();
 
 	//___________________________________________________________________
 	// TODO: For debugging, remove before release
@@ -67,12 +86,13 @@ void InitializeButtons(void) {
 	// Starting position to draw the menu buttons.
 	// Drawn 11% from left.
 	// Drawn 50% from top.
-	float xPos = (float)CP_System_GetWindowWidth() / 9;
-	float yPos = (float)CP_System_GetWindowHeight() / 2;
-	//float offSet =
+	float xPos = GetWindowWidth() / 9;
+	float yPos = GetWindowHeight() / 2;
+	// Buttons have an offset of 11% of window height.
+	float offSet = GetWindowHeight() / 9;
 
-		/*==============Button Graphics & Text Settings===================*/
-		// Currently all buttons in menu are using this graphic & text setting
+	/*==============Button Graphics & Text Settings===================*/
+	// Currently all buttons in menu are using this graphic & text setting
 
 	GraphicData graphicData = {
 	.color = TRANSPERANT,
@@ -96,7 +116,7 @@ void InitializeButtons(void) {
 	Rect startBtnRect = {
 	.x = xPos,
 	.y = yPos,
-	.heigth = 80 * GetHeightScale(),
+	.heigth = textData.textSize * GetHeightScale(),
 	.width = 400 * GetWidthScale(),
 	};
 
@@ -108,8 +128,8 @@ void InitializeButtons(void) {
 	/*========================Settings Button============================*/
 	Rect settingsBtnRect = {
 	.x = xPos,
-	.y = yPos + (120 * GetHeightScale()),
-	.heigth = 80 * GetHeightScale(),
+	.y = yPos + (offSet * GetHeightScale()),
+	.heigth = textData.textSize * GetHeightScale(),
 	.width = 700 * GetWidthScale(),
 	};
 
@@ -121,8 +141,8 @@ void InitializeButtons(void) {
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
 	.x = xPos,
-	.y = yPos + (240 * GetHeightScale()),
-	.heigth = 80 * GetHeightScale(),
+	.y = yPos + (offSet * 2 * GetHeightScale()),
+	.heigth = textData.textSize * GetHeightScale(),
 	.width = 600 * GetWidthScale(),
 	};
 
@@ -134,8 +154,8 @@ void InitializeButtons(void) {
 	/*=========================Exit Button=============================*/
 	Rect quitBtnRect = {
 	.x = xPos,
-	.y = yPos + (360 * GetHeightScale()),
-	.heigth = 80 * GetHeightScale(),
+	.y = yPos + (offSet * 3 * GetHeightScale()),
+	.heigth = textData.textSize * GetHeightScale(),
 	.width = 300 * GetWidthScale(),
 	};
 
@@ -166,8 +186,15 @@ void DrawSelectPointer(){
 	}
 
 	// Image scale has to be 2:3 for its X and Y because pixel data is 2,3.
-	// TODO: CLEAN UP
-	CP_Image_Draw(selectPointer, hoverBtn->transform.x - (40 * GetWidthScale()), hoverBtn->transform.y + (40 * GetHeightScale()), 30 * GetWidthScale(), 45 * GetHeightScale(), 255);
+	CP_Image_Draw(selectPointer, hoverBtn->transform.x - (pointerOffset * GetWidthScale()), hoverBtn->transform.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
+}
+
+void HandleTransition(){
+	delay -= CP_System_GetDt();
+
+	if (delay = 0) return;
+
+
 }
 
 void StartGame(void) {

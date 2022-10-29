@@ -5,6 +5,7 @@
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
 
+
 /// <summary>
 /// Intialize button with the given data. Also store btn address in array so it manager can draw them all at once.
 /// </summary>
@@ -126,23 +127,23 @@ Button* GetButtonHover(){
 	return NULL;
 }
 
-_Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE areaMode)
+_Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float mouseX, float mouseY, CP_POSITION_MODE areaMode)
 {
+	// If image is drawn from the corner, click detection will be different from image drawn from center.
+	if (areaMode == CP_POSITION_CORNER) {
+		if ((mouseX < areaX + areaWidth) && (mouseX > areaX) && (mouseY < areaY + areaHeigth) && (mouseY > areaY)) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
 	float halfWidth = areaWidth / 2;
 	float halfHeigth = areaHeigth / 2;
 
-	// If image is drawn from the corner, click detection will be different from image drawn from center.
-	if (areaMode == CP_POSITION_CORNER) {
-		if (clickX < areaX + areaWidth && clickX > areaX && clickY < areaY + areaHeigth && clickY > areaY) {
-			return TRUE;
-		}
-	}
-
 	// Image drawn from center.
-	if (clickX > areaX - halfWidth && clickX < areaX + halfWidth && clickY < areaY + halfHeigth && clickY > areaY - halfHeigth) {
+	if (mouseX > areaX - halfWidth && mouseX < areaX + halfWidth && mouseY < areaY + halfHeigth && mouseY > areaY - halfHeigth) {
 		return TRUE;
 	}
-
 	return FALSE;
 }
 

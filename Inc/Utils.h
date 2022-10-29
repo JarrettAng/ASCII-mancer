@@ -7,5 +7,9 @@
 
 void UpdateUIScale();
 
-float GetHeightScale();
+float GetWindowWidth();
+float GetWindowHeight();
+
 float GetWidthScale();
+float GetHeightScale();
+
