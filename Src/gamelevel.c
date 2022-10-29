@@ -2,13 +2,13 @@
 #include "Grid.h"
 #include "Particles.h"
 #include "WaveSystem.h"
-
+#include "Screenshake.h"
 void gameLevelInit(void){
     test_init();
     InitWaveSystem();
 }
 void gameLevelUpdate(void){
-
+    UpdateCameraShaker();
     //MAIN GAME LOOP GOES HERE
     UpdateWave();
 

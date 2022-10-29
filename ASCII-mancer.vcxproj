@@ -20,6 +20,7 @@
     <ClInclude Include="Inc\Grid.h" />
     <ClInclude Include="Inc\MainMenu.h" />
     <ClInclude Include="Inc\Particles.h" />
+    <ClInclude Include="Inc\Screenshake.h" />
     <ClInclude Include="Inc\Settings.h" />
     <ClInclude Include="Inc\Splashscreen.h" />
     <ClInclude Include="Inc\testfile.h" />
@@ -40,6 +41,7 @@
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\MainMenu.c" />
     <ClCompile Include="Src\Particles.c" />
+    <ClCompile Include="Src\Screenshake.c" />
     <ClCompile Include="Src\Settings.c" />
     <ClCompile Include="Src\Splashscreen.c" />
     <ClCompile Include="Src\testfile.c" />

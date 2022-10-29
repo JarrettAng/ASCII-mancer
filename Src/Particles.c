@@ -1,6 +1,6 @@
 #include "Particles.h"
 #include "testfile.h"
-
+#include "Screenshake.h"
 //Particle Array. Will use some form of Object Pooling.
 //Probably do a #define for MAXPARTICLES = 1000 or something
 Particle particleArray[PARTICLECOUNT];
@@ -16,19 +16,31 @@ char* ZombieDeathAnimString = "Z Z Z ZNzncu*\'`\0";
 //Function that handles creating of particle.
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString){
 
-    Particle newParticle;
-    newParticle.x = xPos;
-    newParticle.y = yPos;
-    newParticle.lifeTime = lifeTime;
-    newParticle.cachedLifeTime = lifeTime;
-    newParticle.size = size;
-    newParticle.gravityScale = gravityScale;
-    newParticle.color = color;
-    newParticle.xVelocity=0;
-    newParticle.yVelocity=0;
-    newParticle.force = force;
-    newParticle.animString = animString;
-    newParticle.gravityScale =0.f;
+    Particle newParticle={
+        .x = xPos,
+        .y = yPos,
+        .lifeTime = lifeTime,
+        .cachedLifeTime = lifeTime,
+        .size = size,
+        .gravityScale = gravityScale,
+        .color = color,
+        .xVelocity = 0,
+        .yVelocity = 0,
+        .force = force,
+        .animString = animString,
+    };
+    // newParticle.x = xPos;
+    // newParticle.y = yPos;
+    // newParticle.lifeTime = lifeTime;
+    // newParticle.cachedLifeTime = lifeTime;
+    // newParticle.size = size;
+    // newParticle.gravityScale = gravityScale;
+    // newParticle.color = color;
+    // newParticle.xVelocity=0;
+    // newParticle.yVelocity=0;
+    // newParticle.force = force;
+    // newParticle.animString = animString;
+    // newParticle.gravityScale =0.f;
 
     //If the index happens to be >=MAXPARTICLES, then loop back and start reusing particles from index 0 onwards.
     //I don't think I should even need to check if the particle is still alive since it's a Queue sort of thing.  
@@ -46,14 +58,14 @@ void UpdateParticles(Particle* particlePointer){
         //Add velocity first THEN add position for SI Euler. 
         //Doing the other way around is Explicit Euler and inaccurate!
         //There will be NO COLLISIONS. These are simple particles.
-        // particlePointer->force.y += particlePointer->gravityScale * 9.81f;
         particlePointer->xVelocity= particlePointer->force.x;
-        particlePointer->yVelocity=particlePointer->force.y+(9.81f*particlePointer->gravityScale);
+        particlePointer->yVelocity= particlePointer->force.y;//+(9.81f*particlePointer->gravityScale);
 
         particlePointer->x += particlePointer->xVelocity;
         particlePointer->y += particlePointer->yVelocity;
 
         particlePointer->lifeTime -= CP_System_GetDt();
+        particlePointer->force.y += particlePointer->gravityScale * 9.81f*CP_System_GetDt();
         //Deduct life time
         //Animate particle over lifetime
         //if Lifetime = 0, hide, particle, reset pos
@@ -86,16 +98,19 @@ void RadialParticle(float x, float y){
     //CP_Vector gravity = CP_Vector_Scale(VECTOR_DOWN,9.81f);
     for(short i = 0;i<(short)randomParticleCount;++i)
     {
-        float randomForceVariance = CP_Random_RangeFloat(8.f,15.f);
+        // float randomForceVariance = CP_Random_RangeFloat(8.f,15.f);
+        //Tweak the force here. For a proper circle, do not include variance. Will change this later
+        float randomForceVariance = CP_Random_RangeFloat(2.f,8.f);
         float angle = (float)(360/randomParticleCount)*i+(CP_Random_Gaussian()*2.f);
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),randomForceVariance);
         //forceDirection = CP_Vector_Add(forceDirection,gravity);
-        CreateParticle(x,y,0.5f, 55.f,3.f, MENU_RED, forceDirection,SparkleAnimString);
+        CreateParticle(x,y,1.5f, 55.f,1.f, MENU_RED, forceDirection,SparkleAnimString);
     }
 
 }
 void ZombieDeathParticle(float x, float y){
     CreateParticle(x,y,1.2f,50.f,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString);
+    trauma+=1.f;
 }
 
 
@@ -136,13 +151,13 @@ void UpdateEffects(void){
     {
          RadialParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
     }
-
     //Main loop for handling particle movement and rendering.
     for(short i =0; i< particleIndex%PARTICLECOUNT; ++i){
         //Maybe I can just check if lifetime>0 here so I don't have to check twice? 
         UpdateParticles(&particleArray[i]);
         DrawParticle(&particleArray[i]);
     }
+   // UpdateCameraShaker();
 }
 
 

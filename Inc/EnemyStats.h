@@ -32,7 +32,6 @@ void SpawnEnemy(EnemyInfo* enemy, int x, int y);
 void MoveEnemy(EnemyInfo* enemy);
 void OnDeath(void);
 
-void MoveEnemy(EnemyInfo* enemy);
 void DrawEnemy(EnemyInfo* enemy);
 
 //Helper functions
