@@ -43,6 +43,6 @@ float text_peek_size;
 */
 void TPlayerInit(void);
 
-void PickUpPiece(void);
+void TPlayerProcessInput(void);
 
 void RenderHand(void);

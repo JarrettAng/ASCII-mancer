@@ -27,9 +27,6 @@ Turn zombie_turn;
 	   the player and the zombies
 */
 void GameLoopInit(void) {
-	// Set everything just in case
-	UnsubscribeAllEvents();
-
 	// Set the turn to start as player
 	current_turn_type = TURN_PLAYER;
 	current_turn = &player_turn;

@@ -16,7 +16,7 @@ ________________________________________________________________________________
 																 /_/						Read below \/
 
 ________________________________________________________________
-@brief PLAYER'S TURN EVENTS, if you need a function called when during this turn, pass your function here.
+@brief PLAYER'S TURN EVENTS, if you need a function called during this turn, pass your function here.
 	   ONLY VOID FUNCTION(VOID) (Functions that return nothing and have no parameters) allowed.
 	   START - Called when first swapping to this turn
 	   UPDATE - Called every update during this turn
@@ -29,7 +29,7 @@ void Subscribe_PlayerTurnUpdate(void(*function_pointer)(void));
 void Subscribe_PlayerTurnEnd(void(*function_pointer)(void));
 
 /*______________________________________________________________
-@brief ZOMBIE'S TURN EVENTS, if you need a function called when during this turn, pass your function here.
+@brief ZOMBIE'S TURN EVENTS, if you need a function called during this turn, pass your function here.
 	   ONLY VOID FUNCTION(VOID) (Functions that return nothing and have no parameters) allowed.
 	   START - Called when first swapping to this turn
 	   UPDATE - Called every update during this turn

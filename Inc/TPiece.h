@@ -33,8 +33,10 @@ typedef struct {
 	int rotation;
 
 	int x_length, y_length;
+	float x_screen_length, y_screen_length;
 
 	CP_Color color;
+	CP_Color color_stroke;
 
 	CP_Vector draw_pos; // The screen pos of the piece (Anchored on the top left)
 } TetrisPiece;
