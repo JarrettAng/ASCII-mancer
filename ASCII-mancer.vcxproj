@@ -27,6 +27,7 @@
     <ClInclude Include="Inc\TPiece.h" />
     <ClInclude Include="Inc\TPlayer.h" />
     <ClInclude Include="Inc\UIManager.h" />
+    <ClInclude Include="Inc\Utils.h" />
     <ClInclude Include="Inc\WaveSystem.h" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +46,7 @@
     <ClCompile Include="Src\TManager.c" />
     <ClCompile Include="Src\TPlayer.c" />
     <ClCompile Include="Src\UIManager.c" />
+    <ClCompile Include="Src\Utils.c" />
     <ClCompile Include="Src\WaveSystem.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

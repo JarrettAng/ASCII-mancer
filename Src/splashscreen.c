@@ -2,6 +2,7 @@
 #include "SplashScreen.h"
 #include "MainMenu.h"
 #include "ColorTable.h"
+#include "Utils.h"
 
 // TODO: For change back to 3f before release
 const float FADE_IN_DURATION = .1f;
@@ -16,9 +17,12 @@ void SplashScreenInit() {
 	logo = CP_Image_Load("Assets/DigiPen_RED.png");
 
 	CP_System_Fullscreen();
-	//CP_System_FullscreenAdvanced(1920,1080);
-	//CP_System_SetWindowSize(1920, 1080);
+	// Update the scale for the UI elements based on window size.
+	UpdateUIScale();
+
 	CP_System_SetFrameRate(60.f);
+
+	CP_System_SetWindowTitle("ASCII-mancer");
 }
 
 void SplashScreenUpdate() {

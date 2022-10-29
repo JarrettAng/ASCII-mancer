@@ -7,6 +7,8 @@
 #include "Grid.h"
 #include "gamelevel.h"
 #include "testfile.h"
+#include "Utils.h"
+
 CP_Image title;
 
 Button startBtn;
@@ -42,7 +44,7 @@ void MainMenuInit(void) {
 void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
-	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title), (float)CP_Image_GetHeight(title), 255);
+	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
 
 	DrawButtons();
 	HandleButtonClick();
@@ -80,7 +82,7 @@ void InitializeButtons(void) {
 	TextData textData = {
 	.color = MENU_WHITE,
 	.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
-	.textSize = 80,
+	.textSize = 80 * GetHeightScale(),
 	// Text will be drawn on the X Y pos of btn rect (which is top left corner),
 	// So we shift text to top left.
 	.hAlign = CP_TEXT_ALIGN_H_LEFT,
@@ -91,8 +93,8 @@ void InitializeButtons(void) {
 	Rect startBtnRect = {
 	.x = xPos,
 	.y = yPos,
-	.heigth = 80,
-	.width = 400,
+	.heigth = 80 * GetHeightScale(),
+	.width = 400 * GetWidthScale(),
 	};
 
 	textData.text = "START";
@@ -103,9 +105,9 @@ void InitializeButtons(void) {
 	/*========================Settings Button============================*/
 	Rect settingsBtnRect = {
 	.x = xPos,
-	.y = yPos + 120,
-	.heigth = 80,
-	.width = 700,
+	.y = yPos + (120 * GetHeightScale()),
+	.heigth = 80 * GetHeightScale(),
+	.width = 700 * GetWidthScale(),
 	};
 
 	textData.text = "SETTINGS";
@@ -116,9 +118,9 @@ void InitializeButtons(void) {
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
 	.x = xPos,
-	.y = yPos + 240,
-	.heigth = 80,
-	.width = 600,
+	.y = yPos + (240 * GetHeightScale()),
+	.heigth = 80 * GetHeightScale(),
+	.width = 600 * GetWidthScale(),
 	};
 
 	textData.text = "CREDITS";
@@ -129,9 +131,9 @@ void InitializeButtons(void) {
 	/*=========================Exit Button=============================*/
 	Rect quitBtnRect = {
 	.x = xPos,
-	.y = yPos + 360,
-	.heigth = 80,
-	.width = 300,
+	.y = yPos + (360 * GetHeightScale()),
+	.heigth = 80 * GetHeightScale(),
+	.width = 300 * GetWidthScale(),
 	};
 
 	textData.text = "EXIT";
@@ -162,7 +164,7 @@ void DrawSelectPointer(){
 
 	// Image scale has to be 2:3 for its X and Y because pixel data is 2,3.
 	// TODO: CLEAN UP
-	CP_Image_Draw(selectPointer, hoverBtn->transform.x - 40, hoverBtn->transform.y + 40, 30, 45, 255);
+	CP_Image_Draw(selectPointer, hoverBtn->transform.x - (40 * GetWidthScale()), hoverBtn->transform.y + (40 * GetHeightScale()), 30 * GetWidthScale(), 45 * GetHeightScale(), 255);
 }
 
 void StartGame(void) {

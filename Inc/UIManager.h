@@ -1,5 +1,4 @@
-#ifndef _UI_MANAGER_H_
-#define _UI_MANAGER_H_
+#pragma once
 
 #define MAX_UI_BUTTONS 20
 
@@ -53,5 +52,3 @@ void HandleButtonClick(void);
 _Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
 Button* GetButtonHover(void);
 void FreeButton(void);
-
-#endif
