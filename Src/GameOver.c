@@ -120,7 +120,7 @@ void GameOverUpdate(void) {
 
 	// Draw buttons
 	DrawButtons();
-	CheckForButtonClick();
+	HandleButtonClick();
 
 	if (CP_Input_KeyTriggered(KEY_Z) == 1) {
 		CP_Engine_Terminate();

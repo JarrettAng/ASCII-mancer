@@ -81,7 +81,7 @@ void FreeButton(){
 
 #pragma region UI_INTERACTION
 
-void CheckForButtonClick() {
+void HandleButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
 		Callback callBack = NULL;
@@ -89,13 +89,17 @@ void CheckForButtonClick() {
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
 
-		for (int i = 0; (i < btnsCount && callBack == NULL); i++) {
-			if (IsAreaClicked(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+		// Loop through all buttons initialized in this scene.
+		for (int i = 0; i < btnsCount; i++) {
+			// Check if player is clicking a button.
+			if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				// Cache callback to be triggered after the conditional statement.
 				// Will cause error if callback is triggered here.
 				callBack = btns[i]->callBack;
 				// Stop checking for buttons once a button is clicked.
-				break;
+				// Make sure the button has a onClick event before breaking loop.
+				// In an event where 2 buttons are overlapping, and one button doesnt have a callback, the other button callback will still be triggered.
+				if (callBack != NULL) break;
 			}
 		}
 
@@ -106,19 +110,23 @@ void CheckForButtonClick() {
 	}
 }
 
-Button* CheckForButtonHover(){
+Button* GetButtonHover(){
 	float xPos = CP_Input_GetMouseX();
 	float yPos = CP_Input_GetMouseY();
 
+	// Loop through all buttons initialized in this scene.
 	for (int i = 0; i < btnsCount; i++) {
-		if (IsAreaClicked(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+		// Check if player is hovering a button.
+		if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+			// Break loop and return the button the player is hovering.
 			return btns[i];
 		}
 	}
+	// Player not hovering on a button.
 	return NULL;
 }
 
-_Bool IsAreaClicked(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE areaMode)
+_Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE areaMode)
 {
 	float halfWidth = areaWidth / 2;
 	float halfHeigth = areaHeigth / 2;

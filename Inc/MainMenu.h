@@ -1,10 +1,3 @@
 void MainMenuInit(void);
 void MainMenuUpdate(void);
 void MainMenuExit(void);
-void InitializeButtons(void);
-void IntializeSelectPointer(void);
-void DrawSelectPointer(void);
-void StartGame(void);
-void Settings(void);
-void Credits(void);
-void ExitGame(void);

@@ -1,5 +1,7 @@
 #include <cprocessing.h>
 #include "MainMenu.h"
+#include "Settings.h"
+#include "Credits.h"
 #include "ColorTable.h"
 #include "UIManager.h"
 #include "Grid.h"
@@ -19,6 +21,15 @@ CP_Image selectPointer;
 // TODO: For debugging, remove before release
 void Jarrett(void);
 
+// Forward declarations
+void InitializeButtons(void);
+void IntializeSelectPointer(void);
+void DrawSelectPointer(void);
+void StartGame(void);
+void Settings(void);
+void Credits(void);
+void ExitGame(void);
+
 void MainMenuInit(void) {
 	title = CP_Image_Load("Assets/MenuTitle.png");
 
@@ -34,7 +45,7 @@ void MainMenuUpdate(void) {
 	CP_Image_Draw(title, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 4, (float)CP_Image_GetWidth(title), (float)CP_Image_GetHeight(title), 255);
 
 	DrawButtons();
-	CheckForButtonClick();
+	HandleButtonClick();
 	DrawSelectPointer();
 
 	//___________________________________________________________________
@@ -143,7 +154,7 @@ void DrawSelectPointer(){
 
 	Button* hoverBtn = NULL;
 
-	hoverBtn = CheckForButtonHover();
+	hoverBtn = GetButtonHover();
 
 	if (hoverBtn == NULL){
 		return;
@@ -159,9 +170,11 @@ void StartGame(void) {
 }
 
 void Settings(void) {
+	CP_Engine_SetNextGameState(SettingsInit, SettingsUpdate, SettingsExit);
 }
 
 void Credits(void) {
+	CP_Engine_SetNextGameState(CreditsInit, CreditsUpdate, CreditsExit);
 }
 
 void ExitGame(void) {
