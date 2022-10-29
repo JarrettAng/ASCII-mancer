@@ -14,9 +14,11 @@ void TTestInit(void) {
 	   hands CProcessing, I hope you are proud of yourself. */
 	CP_System_SetWindowSize(1920, 1080); 
 
-	GameLoopInit();
 	TManagerInit(DEFAULT_SPAWN_SEED);
 	TPlayerInit();
+
+	// Initialize game loop last, after all the events have been subscribed
+	GameLoopInit();
 }
 
 int Render(void) {
@@ -26,11 +28,14 @@ int Render(void) {
 
 void TTestUpdate(void) {
 	GameLoopUpdate();
-
 	Render();
 }
 
+void TTestExit(void) {
+	UnsubscribeAllEvents();
+}
+
 void Jarrett() {
-	CP_Engine_SetNextGameState(TTestInit, TTestUpdate, NULL);
+	CP_Engine_SetNextGameState(TTestInit, TTestUpdate, TTestExit);
 	GameLoopInit();
 }

@@ -11,8 +11,8 @@ ________________________________________________________________________________
 #include "ColorTable.h"
 
 // Markers for which piece is the next piece in queue
-int current_bag = 0;
-int current_index = 0;
+int current_bag;
+int current_index;
 
 PieceType pieces_bag[TOTAL_BAGS][TOTAL_PIECES]; // The Tetris Pieces queue
 
@@ -30,6 +30,8 @@ TetrisPiece CreatePiece(PieceType type);
 @brief Please initialize this at the start of the game level so there'll actually be Tetris Pieces to use.
 */
 void TManagerInit(int rand_seed) {
+    current_bag = current_index = 0;
+
     srand(rand_seed);
 
     for (int index = 0; index < TOTAL_BAGS; ++index) {
@@ -105,7 +107,7 @@ int RandInt(int min, int max) {
 @return TetrisPiece - The new tetris piece, warranty not included.
 */
 TetrisPiece CreatePiece(PieceType type) {
-    TetrisPiece new_piece = { .color = WHITE, .rotation = 0, .type = type, .x_length = 0, .y_length = 0, .shape = { 0 } };
+    TetrisPiece new_piece = { .color = WHITE, .rotation = 0, .type = type, .x_length = 0, .y_length = 0, .shape = { 0 } , .draw_pos = { 0 } };
     
     // Set shape data for the new piece
     char *shape_data = "";

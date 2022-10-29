@@ -16,6 +16,7 @@ PlayerHandSlot peek_hand[PEEK_SIZE];
 CP_Vector text_peek_pos;
 
 #pragma region
+void RecalculateHandRenderPositions(void);
 void PlayPiece(int played_index);
 #pragma endregion Forward Declarations
 
@@ -28,61 +29,22 @@ void PlayPiece(int played_index);
 */
 void TPlayerInit(void) {
     //______________________________________________________________
-    // Initialize player hand positions
-    hand_total_height = (float)CP_System_GetWindowHeight() * .2f; // The hand queue takes up 25% of the height
-    hand_bottom_buffer = hand_total_height * .2f; // The bottom buffer takes up 10% of the hand height
-
-    float total_width = (float)CP_System_GetWindowWidth();
-    hand_total_length = total_width * .65f; // The hand queue takes up 65% of the width
-    hand_left_buffer = hand_total_length *.1f; // The hand edge buffers takes up 10% of the hand queue
-    hand_slot_length = min(hand_total_height, (hand_total_length - hand_left_buffer) * .9f / HAND_SIZE); // The length of each slot depends on whether height or 90% of the hand queue width is shorter
-    hand_slot_spacing = (hand_total_length - hand_left_buffer - (hand_slot_length * HAND_SIZE)) / HAND_SIZE; // The spacing of each slot is the remaining space
-
-    // If the spacing between slots are too wide (more than 33% the length of a slot), add more padding to the left
-    if ((hand_slot_spacing - hand_slot_length / 3.0f) > 0) {
-        hand_left_extra_buffer = (hand_slot_spacing - hand_slot_length / 3.0f) * HAND_SIZE;
-        hand_slot_spacing = hand_slot_length / 3.0f;
-    }
-
-    hand_tile_length = hand_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
-    hand_tile_stroke = hand_tile_length * 0.15f; // The stroke of each tile is 15% of the width of the tile
-
-    //______________________________________________________________
-    // Initialize peek hand positions
-    peek_total_length = total_width - hand_total_length; // The peek queue takes up the remaining width
-    peek_right_buffer = peek_total_length * .25f; // The peek edge buffer takes up 25% of the peek queue
-    peek_slot_length = min(hand_total_height * .6f, (peek_total_length - peek_right_buffer) * .9f / PEEK_SIZE); // The length of each slot depends on whether height or 90% of the peek queue width is shorter;
-    peek_slot_spacing = ((peek_total_length - peek_right_buffer) - peek_slot_length * PEEK_SIZE) / (PEEK_SIZE - 1); // The spacing of each slot is the remaining space
-
-    // If the spacing between slots are too wide (more than 33% the length of a slot), reduce the spacing
-    if ((peek_slot_spacing - peek_slot_length / 3.0f) > 0) {
-        peek_slot_spacing = peek_slot_length / 3.0f;
-    }
-
-    peek_tile_length = peek_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
-    peek_tile_stroke = peek_tile_length * 0.15f; // The stroke of each tile is 15% of the width of the tile
-
-    text_peek_pos = CP_Vector_Set(hand_total_length, (float)CP_System_GetWindowHeight() - hand_total_height - hand_bottom_buffer);
-    text_peek_size = hand_total_height * 0.25f; 
-
-    //______________________________________________________________
     // Fill the player's hand and peek queue
     // First, fill the player's hand
     PlayerHandSlot *current;
     for (int index = 0; index < HAND_SIZE; ++index) {
         current = &hand[index];
         current->piece = DrawFromBag();
-        current->pos.x = hand_left_buffer + hand_left_extra_buffer + (hand_slot_length + hand_slot_spacing) * index;
-        current->pos.y = (float)CP_System_GetWindowHeight() - hand_slot_length - hand_bottom_buffer;
     }
 
     // Second, fill the peek's queue (Basically the upcoming pieces)
     for (int index = 0; index < PEEK_SIZE; ++index) {
         current = &peek_hand[index];
         current->piece = DrawFromBag();
-        current->pos.x = hand_total_length + (peek_slot_length + peek_slot_spacing) * index;
-        current->pos.y = (float)CP_System_GetWindowHeight() - peek_slot_length - hand_bottom_buffer;
     }
+
+    // Update the positions to draw all the slots
+    RecalculateHandRenderPositions();
 }
 
 // JARRETT TODO: Finish pick up piece stub function
@@ -93,10 +55,12 @@ void PickUpPiece(void) {
     // JARRETT TODO: If piece is dropped onto hand, return it and carry on
 }
 
+/*______________________________________________________________
+@brief Renders the panel at the bottom of the panel, consisting of the player's hand, peek queue, and
+       supporting text like "NEXT"
+*/
 void RenderHand(void) {
     PlayerHandSlot *current;
-
-    CP_Vector piece_top_left; // Centre the piece in the box by moving the anchor of the top left by the piece bounds
 
     //______________________________________________________________
     // Render each piece in the player's hand
@@ -113,15 +77,11 @@ void RenderHand(void) {
         // Settings for tile rendering
         CP_Settings_Fill(WHITE);
         CP_Settings_Stroke(BLACK);
-
         // Render each tile in the Tetris Piece
-        piece_top_left.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * hand_tile_length;
-        piece_top_left.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * hand_tile_length;
-
         for (int index_x = 0; index_x < SHAPE_BOUNDS; ++index_x) {
             for (int index_y = 0; index_y < SHAPE_BOUNDS; ++index_y) {
                 if (current->piece.shape[index_x][index_y]) {
-                    CP_Graphics_DrawRect(piece_top_left.x + index_x * hand_tile_length, piece_top_left.y + index_y * hand_tile_length, hand_tile_length, hand_tile_length);
+                    CP_Graphics_DrawRect(current->piece.draw_pos.x + index_x * hand_tile_length, current->piece.draw_pos.y + index_y * hand_tile_length, hand_tile_length, hand_tile_length);
                 }
             }
         }
@@ -145,19 +105,79 @@ void RenderHand(void) {
         // Settings for tile rendering
         CP_Settings_Fill(WHITE);
         CP_Settings_Stroke(BLACK);
-
-        // Render each tile in the Tetris Piece
-        piece_top_left.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * peek_tile_length;
-        piece_top_left.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * peek_tile_length;
-
         // Render each tile in the Tetris Piece
         for (int index_x = 0; index_x < SHAPE_BOUNDS; ++index_x) {
             for (int index_y = 0; index_y < SHAPE_BOUNDS; ++index_y) {
                 if (current->piece.shape[index_x][index_y]) {
-                    CP_Graphics_DrawRect(piece_top_left.x + index_x * peek_tile_length, piece_top_left.y + index_y * peek_tile_length, peek_tile_length, peek_tile_length);
+                    CP_Graphics_DrawRect(current->piece.draw_pos.x + index_x * peek_tile_length, current->piece.draw_pos.y + index_y * peek_tile_length, peek_tile_length, peek_tile_length);
                 }
             }
         }
+    }
+}
+
+//______________________________________________________________
+// More initialization functions
+
+/*______________________________________________________________
+@brief Recalculate the position scaling factors and stores them
+*/
+void RecalculateHandRenderPositions(void) {
+    //______________________________________________________________
+    // Initialize player hand factors
+    hand_total_height = (float)CP_System_GetWindowHeight() * .15f; // The hand queue takes up 15% of the height
+    hand_bottom_buffer = hand_total_height * .2f; // The bottom buffer takes up 10% of the hand height
+
+    float total_width = (float)CP_System_GetWindowWidth();
+    hand_total_length = total_width * .65f; // The hand queue takes up 65% of the width
+    hand_left_buffer = hand_total_length * .1f; // The hand edge buffers takes up 10% of the hand queue
+    hand_slot_length = min(hand_total_height, (hand_total_length - hand_left_buffer) * .9f / HAND_SIZE); // The length of each slot depends on whether height or 90% of the hand queue width is shorter
+    hand_slot_spacing = (hand_total_length - hand_left_buffer - (hand_slot_length * HAND_SIZE)) / HAND_SIZE; // The spacing of each slot is the remaining space
+
+    // If the spacing between slots are too wide (more than 33% the length of a slot), add more padding to the left
+    if ((hand_slot_spacing - hand_slot_length / 3.0f) > 0) {
+        hand_left_extra_buffer = (hand_slot_spacing - hand_slot_length / 3.0f) * HAND_SIZE;
+        hand_slot_spacing = hand_slot_length / 3.0f;
+    }
+
+    hand_tile_length = hand_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
+    hand_tile_stroke = hand_tile_length * 0.15f; // The stroke of each tile is 15% of the width of the tile
+
+    //______________________________________________________________
+    // Initialize peek hand factors
+    peek_total_length = total_width - hand_total_length; // The peek queue takes up the remaining width
+    peek_right_buffer = peek_total_length * .25f; // The peek edge buffer takes up 25% of the peek queue
+    peek_slot_length = min(hand_total_height * .6f, (peek_total_length - peek_right_buffer) * .9f / PEEK_SIZE); // The length of each slot depends on whether height or 90% of the peek queue width is shorter;
+    peek_slot_spacing = ((peek_total_length - peek_right_buffer) - peek_slot_length * PEEK_SIZE) / (PEEK_SIZE - 1); // The spacing of each slot is the remaining space
+
+    // If the spacing between slots are too wide (more than 33% the length of a slot), reduce the spacing
+    if ((peek_slot_spacing - peek_slot_length / 3.0f) > 0) {
+        peek_slot_spacing = peek_slot_length / 3.0f;
+    }
+
+    peek_tile_length = peek_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
+    peek_tile_stroke = peek_tile_length * 0.15f; // The stroke of each tile is 15% of the width of the tile
+
+    text_peek_pos = CP_Vector_Set(hand_total_length, (float)CP_System_GetWindowHeight() - hand_total_height - hand_bottom_buffer);
+    text_peek_size = hand_total_height * 0.25f;
+
+    //______________________________________________________________
+    // Update the positions
+    PlayerHandSlot* current;
+    for (int index = 0; index < HAND_SIZE; ++index) {
+        current = &hand[index];
+        current->pos.x = hand_left_buffer + hand_left_extra_buffer + (hand_slot_length + hand_slot_spacing) * index;
+        current->pos.y = (float)CP_System_GetWindowHeight() - hand_slot_length - hand_bottom_buffer;
+        current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * hand_tile_length;
+        current->piece.draw_pos.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * hand_tile_length;
+    }
+
+    for (int index = 0; index < PEEK_SIZE; ++index) {
+        current = &peek_hand[index];
+        current->pos.x = hand_total_length + (peek_slot_length + peek_slot_spacing) * index;
+        current->pos.y = (float)CP_System_GetWindowHeight() - peek_slot_length - hand_bottom_buffer;
+        current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * peek_tile_length;
+        current->piece.draw_pos.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * peek_tile_length;
     }
 }
 
