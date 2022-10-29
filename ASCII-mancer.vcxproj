@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\ColorTable.h" />
+    <ClInclude Include="Inc\Credits.h" />
     <ClInclude Include="Inc\EnemyStats.h" />
     <ClInclude Include="Inc\gamelevel.h" />
     <ClInclude Include="Inc\GameLoop.h" />
@@ -19,6 +20,7 @@
     <ClInclude Include="Inc\Grid.h" />
     <ClInclude Include="Inc\MainMenu.h" />
     <ClInclude Include="Inc\Particles.h" />
+    <ClInclude Include="Inc\Settings.h" />
     <ClInclude Include="Inc\Splashscreen.h" />
     <ClInclude Include="Inc\testfile.h" />
     <ClInclude Include="Inc\TManager.h" />
@@ -28,6 +30,7 @@
     <ClInclude Include="Inc\WaveSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Credits.c" />
     <ClCompile Include="Src\EnemyStats.c" />
     <ClCompile Include="Src\gamelevel.c" />
     <ClCompile Include="Src\GameLoop.c" />
@@ -36,6 +39,7 @@
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\MainMenu.c" />
     <ClCompile Include="Src\Particles.c" />
+    <ClCompile Include="Src\Settings.c" />
     <ClCompile Include="Src\Splashscreen.c" />
     <ClCompile Include="Src\testfile.c" />
     <ClCompile Include="Src\TManager.c" />
