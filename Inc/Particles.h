@@ -17,7 +17,8 @@ typedef struct Particle{
     float lifeTime;         //Current lifetime remaining for particle. Disappears when <0
     float cachedLifeTime;   //Used for calculating time particle has been alive for.
     float size;             //NOTE!! FONT SIZE GOTTA BE BIG! OR CAN'T SEE SHITTT!! At least like, Min 15.f
-    CP_Vector force;        //force that is acting on particle. Cummulative and will be calculated in UpdateParticles.
+    BOOL isRGB;
+    CP_Vector force;        //force that is acting on particle. Cummulative and will be calculated in UpdateParticle.
     char* animString;
     CP_Color color;
      
@@ -25,14 +26,26 @@ typedef struct Particle{
     float gravityScale;    //Maybe have gravity? Might be nice because it makes it curve
 } Particle;
 
-void CreateParticle(float xPos, float yPos, float lifeTime, float size, CP_Color color, CP_Vector force);
-void UpdateParticles(Particle* particlePointer);
+typedef struct Emitter{
+    Particle* particle;
+    float x;
+    float y;
+    int burstCount;
+    float duration; 
+}Emitter;
+
+void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB);
+void UpdateParticle(Particle* particlePointer);
 void DrawParticle(Particle* particlePointer);
 void ResetParticle(Particle* particlePointer);
 void UpdateEffects(void);
+CP_Color LerpedHSLColor(CP_Color color,float timeStep);
 //Temp function for testing
-void RadialParticle(float x, float y);
+void RadialParticle(float x, float y,int particleCount,float force);
+void RadialParticleVaried(float x, float y);
 //Temp function for zombie despawn particle
 void ZombieDeathParticle(float x, float y);
+void NukeParticle(float x, float y);
+
 //Move this to utils!!
 CP_Vector AngleToVector(float degreeAngle);

@@ -12,9 +12,11 @@
   
   Increment Trauma by any value between 0 to 1 to induce screen shaking.
 */
+
+
 float trauma;                       //Value clamped rom 0 to 1, used to control shake
 float traumaMultiplier = 16.f;      //Shake POWERRR. Magic number for now.
-float traumaMagnitude = 7.f;        //Magnitude, the range of movement of the camera translation
+float traumaMagnitude = 12.f;        //Magnitude, the range of movement of the camera translation
 float traumaDecay = 1.3f;           //Speed at which the trauma decays at
 float timeCounter = 0;              //time step for a smooooth transition in noise
 
@@ -39,10 +41,7 @@ void UpdateCameraShaker(void){
         CP_Vector newPosition = CP_Vector_Scale(GetRandomVector(),traumaMagnitude*trauma);
         //Translate the canvas postion by those values.
         CP_Settings_Translate(newPosition.x*traumaMagnitude*trauma,newPosition.y*traumaMagnitude*trauma);
-        //Decrement the trauma values down. technically it's 1.3f^2.
+        //Decrement the trauma values down. Will be tweaking the values
         trauma-=CP_System_GetDt()*traumaDecay*(trauma+0.3f);
-    }
-    else {
-        //By right there should be some resetting of camera position here?
     }
 }

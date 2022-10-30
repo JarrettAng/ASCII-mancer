@@ -53,6 +53,7 @@ void GenerateWave(){
 
 
 //Update function for the wave system
+//Probably do void Subscribe_ZombieTurnUpdate(UpdateWave);
 void UpdateWave(){
 	//For now, the condition for next wave is checking how many are there left on the screen
 	if(CP_Input_KeyTriggered(KEY_K)) //temp to slowly increment the wave 
