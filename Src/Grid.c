@@ -17,8 +17,7 @@ float grid_OffsetValue = 200.f;
 
 void test_init(void) {
 	CP_Settings_StrokeWeight(1);
-	CP_System_SetWindowSize(WINDOWLENGTH, WINDOWHEIGHT);
-	cube_Length = cube_Height = (WINDOWLENGTH% WINDOWHEIGHT)/10;
+	cube_Length = cube_Height = (WINDOWLENGTH % WINDOWHEIGHT) / 10;
 	CreatePlayingSpace();
 }
 void CreatePlayingSpace() {

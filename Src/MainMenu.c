@@ -16,17 +16,37 @@ Button settingBtn;
 Button creditsBtn;
 Button exitBtn;
 
+#pragma region SELECT_POINTER_VARIABLES
+
 // Visual pointer to select menu option.
 CP_Image selectPointer;
+
 // How much to scale up the pointer from a 2x3 pixel.
 int pointerScale = 15;
-// How much pixel to offset from button.
+
+// How much pixel to offset pointer from button.
 int pointerOffset = 40;
 
-// Transition
-_Bool isTrasitioning = FALSE;
-float delay = 3;
-float blinkInterval = 0.3;
+#pragma endregion
+
+#pragma region TRANSITION_VARIABLES
+
+_Bool isTransitioning = FALSE;
+
+// Time it takes till it transition to next scene.
+float transitionTime = 1;
+
+// Interval between blinking.
+float blinkInterval = .1;
+float currentInterval = 0;
+
+// Cache menu button that player clicked on. To know which button to blink.
+Button* buttonClicked = NULL;
+
+// Load next scene after transition.
+Callback transitionCallback = NULL;
+
+#pragma endregion
 
 //___________________________________________________________________
 // TODO: For debugging, remove before release
@@ -37,6 +57,13 @@ void Jarrett(void);
 void InitializeButtons(void);
 void IntializeSelectPointer(void);
 void DrawSelectPointer(void);
+void HandleCarouselButton(void);
+
+void HandleTransition(Button* btn);
+void TransitionToStartGame(void);
+void TransitionToSettings(void);
+void TransitionToCredits(void);
+
 void StartGame(void);
 void Settings(void);
 void Credits(void);
@@ -61,13 +88,16 @@ void MainMenuUpdate(void) {
 	DrawButtons();
 
 	DrawSelectPointer();
+	HandleCarouselButton();
 
-	if (isTrasitioning){
-		HandleTransition();
+	if (isTransitioning){
+		// Blink button that the player clicked on and then go to next scene.
+		HandleTransition(buttonClicked);
 		return;
 	}
 
-	HandleButtonClick();
+	// Cached button clicked and trigger button onClick event.
+	buttonClicked = HandleButtonClick();
 
 	//___________________________________________________________________
 	// TODO: For debugging, remove before release
@@ -122,8 +152,8 @@ void InitializeButtons(void) {
 
 	textData.text = "START";
 	// Intialize button in UI manager.
-	// Onclick: Start game.
-	InitializeButton(&startBtn, startBtnRect, graphicData, textData, StartGame);
+	// OnClick: Start game.
+	InitializeButton(&startBtn, startBtnRect, graphicData, textData, TransitionToStartGame);
 
 	/*========================Settings Button============================*/
 	Rect settingsBtnRect = {
@@ -135,8 +165,8 @@ void InitializeButtons(void) {
 
 	textData.text = "SETTINGS";
 	// Intialize button in UI manager.
-	// Onclick: Settings screen.
-	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, Settings);
+	// OnClick: Settings screen.
+	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, TransitionToSettings);
 
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
@@ -148,8 +178,8 @@ void InitializeButtons(void) {
 
 	textData.text = "CREDITS";
 	// Intialize button in UI manager.
-	// Onclick: Credits screen.
-	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, Credits);
+	// OnClick: Credits screen.
+	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, TransitionToCredits);
 
 	/*=========================Exit Button=============================*/
 	Rect quitBtnRect = {
@@ -161,7 +191,7 @@ void InitializeButtons(void) {
 
 	textData.text = "EXIT";
 	// Intialize button in UI manager.
-	// Onclick: Exit game.
+	// OnClick: Exit game.
 	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData, ExitGame);
 }
 
@@ -177,6 +207,12 @@ void IntializeSelectPointer(){
 
 void DrawSelectPointer(){
 
+	// When player click on a button, pointer will not move from the clicked button.
+	if (isTransitioning){
+		CP_Image_Draw(selectPointer, buttonClicked->transform.cachedPos.x - (pointerOffset * GetWidthScale()), buttonClicked->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
+		return;
+	}
+
 	Button* hoverBtn = NULL;
 
 	hoverBtn = GetButtonHover();
@@ -186,26 +222,83 @@ void DrawSelectPointer(){
 	}
 
 	// Image scale has to be 2:3 for its X and Y because pixel data is 2,3.
-	CP_Image_Draw(selectPointer, hoverBtn->transform.x - (pointerOffset * GetWidthScale()), hoverBtn->transform.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
+	CP_Image_Draw(selectPointer, hoverBtn->transform.cachedPos.x - (pointerOffset * GetWidthScale()), hoverBtn->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
 }
 
-void HandleTransition(){
-	delay -= CP_System_GetDt();
+void HandleCarouselButton(){
+	// Don't move button if transitioning.
+	if (isTransitioning){
+		// Return early to prevent further checks.
+		return;
+	}
 
-	if (delay = 0) return;
+	Button* hoverBtn = NULL;
 
+	hoverBtn = GetButtonHover();
 
+	if (hoverBtn == NULL){
+		return;
+	}
+
+	// When player hover over another button.
+	if (GetPrevBtnHovered() != NULL){
+		// Reset previous button position.
+		GetPrevBtnHovered()->transform.x = GetPrevBtnHovered()->transform.cachedPos.x;
+	}
+	// Offset button that player is hovering to create carousel effect.
+	hoverBtn->transform.x = hoverBtn->transform.cachedPos.x + 20;
 }
 
-void StartGame(void) {
+
+void HandleTransition(Button* btn){
+	// Time to transition to next scene.
+	if (transitionTime > 0){
+		// Count down timers.
+		transitionTime -= CP_System_GetDt();
+		currentInterval -= CP_System_GetDt();
+
+		// Time to blink.
+		if (currentInterval <= 0){
+			// Toggle color of button to make it blink.
+			btn->textData.color = (btn->textData.color.a == 0) ? MENU_WHITE : TRANSPERANT;
+			// Reset.
+			currentInterval = blinkInterval;
+		}
+		return;
+	}
+
+	// Load whichever scene is subscribe to this callback.
+	isTransitioning = FALSE;
+	transitionCallback();
+}
+
+void TransitionToStartGame(void) {
+	isTransitioning = TRUE;
+	// Subscribe to callback to load next scene when transition ends.
+	transitionCallback = StartGame;
+}
+
+void TransitionToSettings(void) {
+	isTransitioning = TRUE;
+	// Subscribe to callback to load next scene when transition ends.
+	transitionCallback = Settings;
+}
+
+void TransitionToCredits(void) {
+	isTransitioning = TRUE;
+	// Subscribe to callback to load next scene when transition ends.
+	transitionCallback = Credits;
+}
+
+void StartGame(void){
 	CP_Engine_SetNextGameState(gameLevelInit, gameLevelUpdate, gameLevelExit);
 }
 
-void Settings(void) {
+void Settings(void){
 	CP_Engine_SetNextGameState(SettingsInit, SettingsUpdate, SettingsExit);
 }
 
-void Credits(void) {
+void Credits(void){
 	CP_Engine_SetNextGameState(CreditsInit, CreditsUpdate, CreditsExit);
 }
 

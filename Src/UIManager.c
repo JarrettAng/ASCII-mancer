@@ -5,6 +5,10 @@
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
 
+Button* prevBtnClicked = NULL;
+Button* prevBtnHovered = NULL;
+Button* btnHovered = NULL;
+
 
 /// <summary>
 /// Intialize button with the given data. Also store btn address in array so it manager can draw them all at once.
@@ -82,10 +86,22 @@ void FreeButton(){
 
 #pragma region UI_INTERACTION
 
-void HandleButtonClick() {
+Button* GetPrevBtnClicked(){
+	return prevBtnClicked;
+}
+
+Button* GetPrevBtnHovered(){
+	return prevBtnHovered;
+}
+
+/// <summary>
+/// Triggers button's callback when player click on it.
+/// Also returns the button player clicked.
+/// </summary>
+Button* HandleButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
-		Callback callBack = NULL;
+		Button* btnClicked = NULL;
 
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
@@ -96,21 +112,24 @@ void HandleButtonClick() {
 			if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				// Cache callback to be triggered after the conditional statement.
 				// Will cause error if callback is triggered here.
-				callBack = btns[i]->callBack;
+				btnClicked = prevBtnClicked = btns[i];
 				// Stop checking for buttons once a button is clicked.
 				// Make sure the button has a onClick event before breaking loop.
 				// In an event where 2 buttons are overlapping, and one button doesnt have a callback, the other button callback will still be triggered.
-				if (callBack != NULL) break;
+				if (btnClicked != NULL) break;
 			}
 		}
-
 		// Trigger onclick event if needed.
-		if (callBack != NULL) {
-			callBack();
+		if (btnClicked != NULL) {
+			btnClicked->callBack();
+			return btnClicked;
 		}
 	}
 }
 
+/// <summary>
+/// Returns the button the player is hovering over.
+/// </summary>
 Button* GetButtonHover(){
 	float xPos = CP_Input_GetMouseX();
 	float yPos = CP_Input_GetMouseY();
@@ -119,6 +138,11 @@ Button* GetButtonHover(){
 	for (int i = 0; i < btnsCount; i++) {
 		// Check if player is hovering a button.
 		if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+			if (btnHovered != btns[i]){
+				// Cached previous button if player is hovering on a new button.
+				prevBtnHovered = btnHovered;
+				btnHovered = btns[i];
+			}
 			// Break loop and return the button the player is hovering.
 			return btns[i];
 		}
@@ -127,6 +151,10 @@ Button* GetButtonHover(){
 	return NULL;
 }
 
+/// <summary>
+/// Check if player's mouse is within a certain boundary area.
+/// Returns true/false.
+/// </summary>
 _Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float mouseX, float mouseY, CP_POSITION_MODE areaMode)
 {
 	// If image is drawn from the corner, click detection will be different from image drawn from center.
@@ -146,5 +174,6 @@ _Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigt
 	}
 	return FALSE;
 }
+
 
 #pragma endregion

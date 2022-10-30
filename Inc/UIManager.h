@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils.h"
+
 #define MAX_UI_BUTTONS 20
 
 typedef struct GraphicData {
@@ -30,8 +32,6 @@ typedef struct Rect {
 /*Button*/
 struct Button;
 
-typedef void(*Callback)();
-
 typedef struct Button {
 	Rect transform;
 	GraphicData graphicData;
@@ -48,7 +48,9 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 void DrawButtons(void);
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
-void HandleButtonClick(void);
+Button* HandleButtonClick(void);
 _Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
 Button* GetButtonHover(void);
+Button* GetPrevBtnClicked(void);
+Button* GetPrevBtnHovered(void);
 void FreeButton(void);

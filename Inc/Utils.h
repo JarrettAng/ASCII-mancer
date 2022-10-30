@@ -13,3 +13,4 @@ float GetWindowHeight();
 float GetWidthScale();
 float GetHeightScale();
 
+typedef void(*Callback)();
