@@ -4,10 +4,8 @@
 
 #define WINDOWHEIGHT CP_System_GetWindowHeight()
 #define WINDOWLENGTH CP_System_GetWindowWidth()
-#define WINDOWHEIGHTCENTER CP_System_GetWindowHeight()/2
-#define WINDOWLENGTHCENTER CP_System_GetWindowWidth()/2
 //GRID VALUE MUST ALWYAS BE ODD
-#define	TOTAL_YGRID 9
+#define	TOTAL_YGRID 11
 #define TOTAL_XGRID 23
 
 typedef struct SpaceInfo
