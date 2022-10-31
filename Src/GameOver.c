@@ -4,6 +4,7 @@
 #include "Grid.h"
 #include "MainMenu.h"
 #include "UIManager.h"
+#include "Hearts.h"
 
 #define ENEMIES_KILLED 12
 #define TURNS_PASSED 7
@@ -98,9 +99,11 @@ void GameOverInit(void) {
 	CP_System_Fullscreen();
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	main_font = CP_Font_Load("Assets/PressStart2P-Regular.ttf");
+	IntializeSelectPointer();
 
 	// Populate buttons with positional, size and text values
 	InitializeButtonsGameOverScreen();
+	// Create the texts
 	Game_Over_Title = CreateText("GAME OVER! :(", HeaderFontSize);
 	Enemies_Killed = CreateText("ZOMBOIYOS KILLED : 10", 50.f);
 	Turns_Made = CreateText("TURNS MADE : 7", 50.f);
@@ -121,7 +124,12 @@ void GameOverUpdate(void) {
 	// Draw buttons
 	DrawButtons();
 	HandleButtonClick();
+	DrawSelectPointer();
 
+	// Update Life
+	//UpdateLife();
+
+	// FOR DEBUGGING PURPOSES DELETE LATER
 	if (CP_Input_KeyTriggered(KEY_Z) == 1) {
 		CP_Engine_Terminate();
 	}

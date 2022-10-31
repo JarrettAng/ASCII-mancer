@@ -18,6 +18,7 @@
     <ClInclude Include="Inc\GameLoop.h" />
     <ClInclude Include="Inc\GameOver.h" />
     <ClInclude Include="Inc\Grid.h" />
+    <ClInclude Include="Inc\Hearts.h" />
     <ClInclude Include="Inc\MainMenu.h" />
     <ClInclude Include="Inc\Particles.h" />
     <ClInclude Include="Inc\Screenshake.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="Src\GameLoop.c" />
     <ClCompile Include="Src\GameOver.c" />
     <ClCompile Include="Src\Grid.c" />
+    <ClCompile Include="Src\Hearts.c" />
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\MainMenu.c" />
     <ClCompile Include="Src\Particles.c" />
