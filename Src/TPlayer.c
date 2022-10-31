@@ -24,6 +24,7 @@ PlayerHandSlot *piece_held; // The pointer to the piece held, if any
 #pragma region
 void RecalculateHandRenderPositions(void);
 void PlayPiece(int played_index);
+void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end);
 #pragma endregion Forward Declarations
 
 //______________________________________________________________
@@ -53,7 +54,7 @@ void TPlayerInit(void) {
     RecalculateHandRenderPositions();
 
     // Subscribe player input to player turn update
-    Subscribe_PlayerTurnUpdate(TPlayerProcessInput, 10);
+    SubscribeEvent(PLAYER_UPDATE, TPlayerProcessInput, 10);
 
     // Reset the piece held to nothing, just in case
     piece_held = NULL;
@@ -217,8 +218,8 @@ void RenderHand(void) {
 void RecalculateHandRenderPositions(void) {
     //______________________________________________________________
     // Initialize player hand factors
-    hand_total_height = (float)CP_System_GetWindowHeight() * .15f; // The hand queue takes up 15% of the height
-    hand_bottom_buffer = hand_total_height * .2f; // The bottom buffer takes up 10% of the hand height
+    hand_total_height = (float)CP_System_GetWindowHeight() * .2f; // The hand queue takes up 20% of the height
+    hand_bottom_buffer = hand_total_height * .2f; // The bottom buffer takes up 20% of the hand height
 
     float total_width = (float)CP_System_GetWindowWidth();
     hand_total_length = total_width * .65f; // The hand queue takes up 65% of the width
@@ -240,7 +241,7 @@ void RecalculateHandRenderPositions(void) {
     peek_total_length = total_width - hand_total_length; // The peek queue takes up the remaining width
     peek_right_buffer = peek_total_length * .25f; // The peek edge buffer takes up 25% of the peek queue
     peek_slot_length = min(hand_total_height * .6f, (peek_total_length - peek_right_buffer) * .9f / PEEK_SIZE); // The length of each slot depends on whether height or 90% of the peek queue width is shorter;
-    peek_slot_spacing = ((peek_total_length - peek_right_buffer) - peek_slot_length * PEEK_SIZE) / (PEEK_SIZE - 1); // The spacing of each slot is the remaining space
+    peek_slot_spacing = (peek_total_length - peek_right_buffer - (peek_slot_length * PEEK_SIZE)) / PEEK_SIZE; // The spacing of each slot is the remaining space
 
     // If the spacing between slots are too wide (more than 33% the length of a slot), reduce the spacing
     if ((peek_slot_spacing - peek_slot_length / 3.0f) > 0) {
@@ -291,18 +292,20 @@ void PlayPiece(int played_index) {
     // JARRETT TODO: Insert the interaction of the piece with the grid here
 
     // Remove the piece from the player's hand, and shift the pieces behind fowards
-    for (int index = played_index; index < HAND_SIZE - 1; ++index) {
-        hand[index] = hand[index + 1];
-    }
+    ArrayShiftFowardFrom(&hand, played_index, HAND_SIZE - 1);
 
     // Move the next piece from the peek queue into the hand
     hand[HAND_SIZE - 1] = peek_hand[0];
 
     // Shift the peek queue piece foward
-    for (int index = 0; index < PEEK_SIZE - 1; ++index) {
-        peek_hand[index] = peek_hand[index + 1];
-    }
+    ArrayShiftFowardFrom(&peek_hand, 0, PEEK_SIZE - 1);
 
     // Draw another piece from the queue
     hand[PEEK_SIZE - 1].piece = DrawFromBag();
+}
+
+void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end) {
+    for (int index = start; index < end; ++index) {
+        array[index] = array[index + 1];
+    }
 }

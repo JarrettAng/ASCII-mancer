@@ -17,6 +17,7 @@ Turn zombie_turn;
 
 #pragma region
 void InsertToArrayAt(TurnEvent* turn_array, void(*function_pointer)(void), int priority);
+void RemoveFromArrayAt(TurnEvent* turn_array, void(*function_pointer)(void));
 #pragma endregion Forward Declarations
 
 //______________________________________________________________
@@ -72,29 +73,41 @@ void GameLoopUpdate(void) {
 }
 
 //______________________________________________________________
-// All subscription functions to all events
-void Subscribe_PlayerTurnStart(void(*function_pointer)(void), int priority) {
-	InsertToArrayAt(&player_turn.start, function_pointer, priority);
+// Subscription/Unsubscription events
+
+/*______________________________________________________________
+@brief 
+*/
+void SubscribeEvent(TurnEventType event_type, void(*function_pointer)(void), int priority) {
+	TurnEvent *chosen_event = NULL;
+	switch (event_type) {
+	case PLAYER_START:  chosen_event = &player_turn.start; break;
+	case PLAYER_UPDATE: chosen_event = &player_turn.update; break;
+	case PLAYER_END:    chosen_event = &player_turn.end; break;
+
+	case ZOMBIE_START:  chosen_event = &zombie_turn.start; break;
+	case ZOMBIE_UPDATE: chosen_event = &zombie_turn.update; break;
+	case ZOMBIE_END:    chosen_event = &zombie_turn.end;  break;
+	}
+
+	if (chosen_event == NULL) return;
+	InsertToArrayAt(chosen_event, function_pointer, priority);
 }
 
-void Subscribe_PlayerTurnUpdate(void(*function_pointer)(void), int priority) {
-	InsertToArrayAt(&player_turn.update, function_pointer, priority);
-}
+void UnsubscribeEvent(TurnEventType event_type, void(*function_pointer)(void)) {
+	TurnEvent *chosen_event = NULL;
+	switch (event_type) {
+	case PLAYER_START:  chosen_event = &player_turn.start; break;
+	case PLAYER_UPDATE: chosen_event = &player_turn.update; break;
+	case PLAYER_END:    chosen_event = &player_turn.end; break;
 
-void Subscribe_PlayerTurnEnd(void(*function_pointer)(void), int priority) {
-	InsertToArrayAt(&player_turn.end, function_pointer, priority);
-}
+	case ZOMBIE_START:  chosen_event = &zombie_turn.start; break;
+	case ZOMBIE_UPDATE: chosen_event = &zombie_turn.update; break;
+	case ZOMBIE_END:    chosen_event = &zombie_turn.end;  break;
+	}
 
-void Subscribe_ZombieTurnStart(void(*function_pointer)(void), int priority) {
-	InsertToArrayAt(&zombie_turn.start, function_pointer, priority);
-}
-
-void Subscribe_ZombieTurnUpdate(void(*function_pointer)(void), int priority) {
-	InsertToArrayAt(&zombie_turn.update, function_pointer, priority);
-}
-
-void Subscribe_ZombieTurnEnd(void(*function_pointer)(void), int priority) {
-	InsertToArrayAt(&zombie_turn.end, function_pointer, priority);
+	if (chosen_event == NULL) return;
+	RemoveFromArrayAt(chosen_event, function_pointer);
 }
 
 /*______________________________________________________________
@@ -158,7 +171,7 @@ void InsertToArrayAt(TurnEvent *turn_array, void(*function_pointer)(void), int p
 	int insert_index = 0, max = turn_array->count;
 
 	for (int index = 0; index < max; ++index) {
-		if (turn_array->events->priority > priority) {
+		if (turn_array->events[index].priority > priority) {
 			insert_index = index;
 			break;
 		}
@@ -174,4 +187,26 @@ void InsertToArrayAt(TurnEvent *turn_array, void(*function_pointer)(void), int p
 
 	// Increase the count to match new size
 	++turn_array->count;
+}
+
+void RemoveFromArrayAt(TurnEvent *turn_array, void(*function_pointer)(void)) {
+	int remove_index = -1, max = turn_array->count;
+
+	for (int index = 0; index < max; ++index) {
+		if (turn_array->events[index].event == function_pointer) {
+			remove_index = index;
+			break;
+		}
+	}
+
+	// If function not found, stop
+	if (remove_index < 0) return;
+
+	// Else, shift all the functions forward
+	for (int index = remove_index; index < max - 1; ++index) {
+		turn_array->events[index] = turn_array->events[index + 1];
+	}
+
+	// Decrease the count to match new size
+	--turn_array->count;
 }
