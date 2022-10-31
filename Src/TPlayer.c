@@ -53,7 +53,7 @@ void TPlayerInit(void) {
     RecalculateHandRenderPositions();
 
     // Subscribe player input to player turn update
-    Subscribe_PlayerTurnUpdate(TPlayerProcessInput);
+    Subscribe_PlayerTurnUpdate(TPlayerProcessInput, 10);
 
     // Reset the piece held to nothing, just in case
     piece_held = NULL;

@@ -14,19 +14,23 @@ ________________________________________________________________________________
  / /___ | |/ /  __/ / / / /_	 (__  ) /_/ / /_/ (__  ) /__/ /  / / /_/ / /_/ / /_/ / / / (__  )
 /_____/ |___/\___/_/ /_/\__/	/____/\__,_/_.___/____/\___/_/  /_/ .___/\__/_/\____/_/ /_/____/
 																 /_/						Read below \/
-
-________________________________________________________________
+*/
+#define DEFAULT_PRIORITY 0 
+/*______________________________________________________________
 @brief PLAYER'S TURN EVENTS, if you need a function called during this turn, pass your function here.
 	   ONLY VOID FUNCTION(VOID) (Functions that return nothing and have no parameters) allowed.
 	   START - Called when first swapping to this turn
 	   UPDATE - Called every update during this turn
 	   END - Called when swapping out to another turn
+	   !! For Priority, higher numbers will be called first, the DEFAULT_PRIORITY int is 0. If your function
+	      needs to be called first, use a higher number (not too high) like 5 or 20, if your function needs to
+		  be called last, use a lower number (negative) like -1 or -20.
 */
-void Subscribe_PlayerTurnStart(void(*function_pointer)(void));
+void Subscribe_PlayerTurnStart(void(*function_pointer)(void), int priority);
 
-void Subscribe_PlayerTurnUpdate(void(*function_pointer)(void));
+void Subscribe_PlayerTurnUpdate(void(*function_pointer)(void), int priority);
 
-void Subscribe_PlayerTurnEnd(void(*function_pointer)(void));
+void Subscribe_PlayerTurnEnd(void(*function_pointer)(void), int priority);
 
 /*______________________________________________________________
 @brief ZOMBIE'S TURN EVENTS, if you need a function called during this turn, pass your function here.
@@ -34,21 +38,29 @@ void Subscribe_PlayerTurnEnd(void(*function_pointer)(void));
 	   START - Called when first swapping to this turn
 	   UPDATE - Called every update during this turn
 	   END - Called when swapping out to another turn
+	   !! For Priority, higher numbers will be called first, the DEFAULT_PRIORITY int is 0. If your function
+		  needs to be called first, use a higher number (not too high) like 5 or 20, if your function needs to
+		  be called last, use a lower number (negative) like -1 or -20.
 */
-void Subscribe_ZombieTurnStart(void(*function_pointer)(void));
+void Subscribe_ZombieTurnStart(void(*function_pointer)(void), int priority);
 
-void Subscribe_ZombieTurnUpdate(void(*function_pointer)(void));
+void Subscribe_ZombieTurnUpdate(void(*function_pointer)(void), int priority);
 
-void Subscribe_ZombieTurnEnd(void(*function_pointer)(void));
+void Subscribe_ZombieTurnEnd(void(*function_pointer)(void), int priority);
 
 /*______________________________________________________________
 @brief It is important this function is called when the game level exits!!
 */
 void UnsubscribeAllEvents(void);
 
+typedef struct {
+	void (*event)(void);
+	int priority;
+} Event;
+
 #define MAX_EVENTS_BUFFER 10
 typedef struct {
-	void (*events[MAX_EVENTS_BUFFER])(void);
+	Event events[MAX_EVENTS_BUFFER];
 	int count;
 } TurnEvent;
 
