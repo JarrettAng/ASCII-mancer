@@ -14,3 +14,9 @@ float GetWidthScale();
 float GetHeightScale();
 
 typedef void(*Callback)();
+
+// Struct to cache variables for a simple timer.
+typedef struct Timer{
+	float time;
+	float elaspedTime;
+}Timer;

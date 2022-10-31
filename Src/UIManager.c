@@ -96,9 +96,8 @@ Button* GetPrevBtnHovered(){
 
 /// <summary>
 /// Triggers button's callback when player click on it.
-/// Also returns the button player clicked.
 /// </summary>
-Button* HandleButtonClick() {
+void HandleButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
 		Button* btnClicked = NULL;
@@ -114,16 +113,36 @@ Button* HandleButtonClick() {
 				// Will cause error if callback is triggered here.
 				btnClicked = prevBtnClicked = btns[i];
 				// Stop checking for buttons once a button is clicked.
-				// Make sure the button has a onClick event before breaking loop.
+				// Make sure the button has a callback event before breaking loop.
 				// In an event where 2 buttons are overlapping, and one button doesnt have a callback, the other button callback will still be triggered.
-				if (btnClicked != NULL) break;
+				if (btnClicked->callBack != NULL) break;
 			}
 		}
 		// Trigger onclick event if needed.
-		if (btnClicked != NULL) {
+		if (btnClicked != NULL && btnClicked->callBack != NULL) {
 			btnClicked->callBack();
-			return btnClicked;
 		}
+	}
+}
+
+/// <summary>
+/// Get the address of the button the player clicked.
+/// </summary>
+Button* GetButtonClick() {
+	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
+	{
+		float xPos = CP_Input_GetMouseX();
+		float yPos = CP_Input_GetMouseY();
+
+		// Loop through all buttons initialized in this scene.
+		for (int i = 0; i < btnsCount; i++) {
+			// Check if player is clicking a button.
+			if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+				prevBtnClicked = btns[i];
+				return btns[i];
+			}
+		}
+		return NULL;
 	}
 }
 
@@ -140,14 +159,17 @@ Button* GetButtonHover(){
 		if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 			if (btnHovered != btns[i]){
 				// Cached previous button if player is hovering on a new button.
-				prevBtnHovered = btnHovered;
+				if (btnHovered != NULL) prevBtnHovered = btnHovered;
 				btnHovered = btns[i];
 			}
 			// Break loop and return the button the player is hovering.
 			return btns[i];
 		}
 	}
-	// Player not hovering on a button.
+	// Cache last hovered button if player stop hovering.
+	if (btnHovered != NULL) prevBtnHovered = btnHovered;
+	// Player is not hovering on a button.
+	btnHovered = NULL;
 	return NULL;
 }
 

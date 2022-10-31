@@ -27,24 +27,32 @@ int pointerScale = 15;
 // How much pixel to offset pointer from button.
 int pointerOffset = 40;
 
+// Timer for blinking pointer.
+Timer pointerBlink = {
+	.time = .2f,
+	.elaspedTime = 0,
+};
+
+int alpha = 255;
+
 #pragma endregion
 
 #pragma region TRANSITION_VARIABLES
 
-_Bool isTransitioning = FALSE;
+// Timer for transition to next scene.
+Timer transitionTimer = {
+	.time = 1.0f,
+	.elaspedTime = 0,
+};
 
-// Time it takes till it transition to next scene.
-float transitionTime = 1;
-
-// Interval between blinking.
-float blinkInterval = .1;
-float currentInterval = 0;
+// Timer for blinking button.
+Timer buttonBlink = {
+	.time = .1f,
+	.elaspedTime = 0,
+};
 
 // Cache menu button that player clicked on. To know which button to blink.
 Button* buttonClicked = NULL;
-
-// Load next scene after transition.
-Callback transitionCallback = NULL;
 
 #pragma endregion
 
@@ -58,11 +66,8 @@ void InitializeButtons(void);
 void IntializeSelectPointer(void);
 void DrawSelectPointer(void);
 void HandleCarouselButton(void);
-
+void HandleMenuButtonClick(void);
 void HandleTransition(Button* btn);
-void TransitionToStartGame(void);
-void TransitionToSettings(void);
-void TransitionToCredits(void);
 
 void StartGame(void);
 void Settings(void);
@@ -86,18 +91,10 @@ void MainMenuUpdate(void) {
 	CP_Image_Draw(title, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
 
 	DrawButtons();
-
 	DrawSelectPointer();
+
 	HandleCarouselButton();
-
-	if (isTransitioning){
-		// Blink button that the player clicked on and then go to next scene.
-		HandleTransition(buttonClicked);
-		return;
-	}
-
-	// Cached button clicked and trigger button onClick event.
-	buttonClicked = HandleButtonClick();
+	HandleMenuButtonClick();
 
 	//___________________________________________________________________
 	// TODO: For debugging, remove before release
@@ -153,7 +150,7 @@ void InitializeButtons(void) {
 	textData.text = "START";
 	// Intialize button in UI manager.
 	// OnClick: Start game.
-	InitializeButton(&startBtn, startBtnRect, graphicData, textData, TransitionToStartGame);
+	InitializeButton(&startBtn, startBtnRect, graphicData, textData, StartGame);
 
 	/*========================Settings Button============================*/
 	Rect settingsBtnRect = {
@@ -166,7 +163,7 @@ void InitializeButtons(void) {
 	textData.text = "SETTINGS";
 	// Intialize button in UI manager.
 	// OnClick: Settings screen.
-	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, TransitionToSettings);
+	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, Settings);
 
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
@@ -179,7 +176,7 @@ void InitializeButtons(void) {
 	textData.text = "CREDITS";
 	// Intialize button in UI manager.
 	// OnClick: Credits screen.
-	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, TransitionToCredits);
+	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, Credits);
 
 	/*=========================Exit Button=============================*/
 	Rect quitBtnRect = {
@@ -208,86 +205,88 @@ void IntializeSelectPointer(){
 void DrawSelectPointer(){
 
 	// When player click on a button, pointer will not move from the clicked button.
-	if (isTransitioning){
+	if (buttonClicked){
 		CP_Image_Draw(selectPointer, buttonClicked->transform.cachedPos.x - (pointerOffset * GetWidthScale()), buttonClicked->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
 		return;
 	}
 
-	Button* hoverBtn = NULL;
+	Button* hoverBtn = GetButtonHover();
 
-	hoverBtn = GetButtonHover();
-
+	// Stop if no button hovered.
 	if (hoverBtn == NULL){
 		return;
 	}
 
+	if (pointerBlink.elaspedTime < pointerBlink.time){
+		// Tick timer.
+		pointerBlink.elaspedTime += CP_System_GetDt();
+	}
+	else {
+		// Toggle visibility of pointer.
+		alpha = (alpha == 0) ? 255 : 0;
+		// Reset timer.
+		pointerBlink.elaspedTime = 0;
+	}
+
 	// Image scale has to be 2:3 for its X and Y because pixel data is 2,3.
-	CP_Image_Draw(selectPointer, hoverBtn->transform.cachedPos.x - (pointerOffset * GetWidthScale()), hoverBtn->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
+	CP_Image_Draw(selectPointer, hoverBtn->transform.cachedPos.x - (pointerOffset * GetWidthScale()), hoverBtn->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), alpha);
 }
 
 void HandleCarouselButton(){
 	// Don't move button if transitioning.
-	if (isTransitioning){
+	if (buttonClicked){
 		// Return early to prevent further checks.
 		return;
 	}
 
-	Button* hoverBtn = NULL;
+	Button* hoverBtn = GetButtonHover();
 
-	hoverBtn = GetButtonHover();
-
-	if (hoverBtn == NULL){
-		return;
-	}
-
-	// When player hover over another button.
+	// If player is not hovering on any button, reset last hovered button position.
 	if (GetPrevBtnHovered() != NULL){
-		// Reset previous button position.
 		GetPrevBtnHovered()->transform.x = GetPrevBtnHovered()->transform.cachedPos.x;
 	}
-	// Offset button that player is hovering to create carousel effect.
-	hoverBtn->transform.x = hoverBtn->transform.cachedPos.x + 20;
+
+	// If hovering over a button.
+	if (hoverBtn != NULL){
+		// Offset button that player is hovering to create carousel effect.
+		hoverBtn->transform.x = hoverBtn->transform.cachedPos.x + 35;
+	}
+}
+
+void HandleMenuButtonClick(){
+	if (buttonClicked != NULL){
+		// Blink button that the player clicked on and then go to next scene.
+		HandleTransition(buttonClicked);
+	}
+	else {
+		// Check if player clicked any button.
+		buttonClicked = GetButtonClick();
+	}
 }
 
 
 void HandleTransition(Button* btn){
-	// Time to transition to next scene.
-	if (transitionTime > 0){
-		// Count down timers.
-		transitionTime -= CP_System_GetDt();
-		currentInterval -= CP_System_GetDt();
+	// No blink when exiting game.
+	if (btn == &exitBtn){
+		transitionTimer.elaspedTime = transitionTimer.time;
+	}
+
+	if (transitionTimer.elaspedTime < transitionTimer.time){
+		// Tick timers.
+		transitionTimer.elaspedTime += CP_System_GetDt();
+		buttonBlink.elaspedTime += CP_System_GetDt();
 
 		// Time to blink.
-		if (currentInterval <= 0){
+		if (buttonBlink.elaspedTime >= buttonBlink.time){
 			// Toggle color of button to make it blink.
 			btn->textData.color = (btn->textData.color.a == 0) ? MENU_WHITE : TRANSPERANT;
 			// Reset.
-			currentInterval = blinkInterval;
+			buttonBlink.elaspedTime = 0;
 		}
 		return;
 	}
 
-	// Load whichever scene is subscribe to this callback.
-	isTransitioning = FALSE;
-	transitionCallback();
-}
-
-void TransitionToStartGame(void) {
-	isTransitioning = TRUE;
-	// Subscribe to callback to load next scene when transition ends.
-	transitionCallback = StartGame;
-}
-
-void TransitionToSettings(void) {
-	isTransitioning = TRUE;
-	// Subscribe to callback to load next scene when transition ends.
-	transitionCallback = Settings;
-}
-
-void TransitionToCredits(void) {
-	isTransitioning = TRUE;
-	// Subscribe to callback to load next scene when transition ends.
-	transitionCallback = Credits;
+	btn->callBack();
 }
 
 void StartGame(void){

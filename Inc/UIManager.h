@@ -48,7 +48,8 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 void DrawButtons(void);
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
-Button* HandleButtonClick(void);
+void HandleButtonClick(void);
+Button* GetButtonClick();
 _Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
 Button* GetButtonHover(void);
 Button* GetPrevBtnClicked(void);
