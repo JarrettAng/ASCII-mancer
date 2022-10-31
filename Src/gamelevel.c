@@ -3,9 +3,11 @@
 #include "Particles.h"
 #include "WaveSystem.h"
 #include "Screenshake.h"
+#include "Hearts.h"
 void gameLevelInit(void){
     test_init();
     InitWaveSystem();
+    InitializeLife();
 }
 void gameLevelUpdate(void){
     UpdateCameraShaker();
@@ -18,7 +20,8 @@ void gameLevelUpdate(void){
     //DRAWING AND UPDATING OF GRID
     test_update();
 
-
+    //UPDATE HEARTS
+    UpdateLife();
 
     //UPDATE VFX
     UpdateEffects();
@@ -27,5 +30,5 @@ void gameLevelUpdate(void){
     CP_Graphics_ClearBackground(BLACK);
 }
 void gameLevelExit(void){
-
+    ClearHearts();
 }
