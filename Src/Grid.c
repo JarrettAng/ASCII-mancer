@@ -3,9 +3,9 @@
 #include "ColorTable.h"
 
 
-int cube_Length;
+float cube_Length;
 
-float grid_OffsetValue = 200.f;
+float grid_OffsetValue = 150.f;
 
 ///Screen split to 3 segment
 /// TOP - HEALTH AND WAVE AREA(UI)
@@ -19,6 +19,8 @@ float grid_Top = 0;
 float grid_Bottom = 0;
 float grid_PlayArea = 0;
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
+int xpos = TOTAL_XGRID - 1;
+int ypos = TOTAL_YGRID - 1;
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
 
 
@@ -37,9 +39,7 @@ void CreatePlayingSpace() {
 		for (int x = 1; x< TOTAL_XGRID; x++)
 		{
 			space[x][y].x_pos = (float)(grid_Top + (x* cube_Length));
-			space[x][y].y_pos = (float)(grid_Top + (y* cube_Length));
-			CP_Settings_TextSize(50.f);
-			CP_Font_DrawText("Z", space[x][y].x_pos, space[x][y].y_pos);
+			space[x][y].y_pos = (float)(grid_Top + (y* cube_Length+(cube_Length/2.f));
 		}
 	}
 }
@@ -48,16 +48,10 @@ void DrawLineGrid()
 	CP_Graphics_ClearBackground(BLACK);
 	CP_Settings_Stroke(GREEN);
 	float grid_CurrentIndex = 1;
-	///Starting at the center of the screen, half of the grid will be drawn above while the other drawn below
-	// --------- TopHalf
-	// --------- 
-	// --------- CenterLine
-	// ---------
-	// --------- BottomHalf
-	///	
-	//Control YGrid
+
 	CP_Graphics_DrawLine(0.f, grid_Top, (float)WINDOWLENGTH, grid_Top);
 	CP_Graphics_DrawLine(0.f, grid_Bottom, (float)WINDOWLENGTH, grid_Bottom);
+	//Control Y grid
 	while (grid_CurrentIndex < TOTAL_YGRID)
 	{
 		CP_Graphics_DrawLine(grid_OffsetValue, grid_Top + (grid_CurrentIndex * (float)cube_Length), (float)WINDOWLENGTH, grid_Top + (grid_CurrentIndex * (float)cube_Length));
@@ -73,7 +67,6 @@ void DrawLineGrid()
 void test_update(void)
 {
 	DrawLineGrid();
-	CreatePlayingSpace();
 }
 void test_exit(void)
 {

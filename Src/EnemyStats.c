@@ -7,24 +7,30 @@
 #include "Grid.h"
 #include "ColorTable.h"
 
+
+#define ENEMY1 1,1,1,"1"
+#define ENEMY2 2,2,2,"2"
+#define ENEMY3 3,3,3,"3"
 //Not gonna use externs for this case because it gets messy
 EnemyInfo Enemy[ENEMYPOOL];
 int enemyPoolIndex = 0;
-
+///TEST
+///TEST
 //Initialises the enemy pool. Edit this to add more enemy types
 void InitEnemyPool(){
 	//Manual way of adding enemies
-	CreateEnemy(1,1,1,"1");
-	CreateEnemy(2,2,1,"2");
-	CreateEnemy(3,3,1,"3");
+	CreateEnemy(ENEMY1);
+	CreateEnemy(ENEMY2);
+	CreateEnemy(ENEMY3);
 }
 
 //Function that creates enemies and adds them to the enemy pool
-void CreateEnemy(int cost, int speed, int health,const char* sprite){
+void CreateEnemy(int cost, int speed, int health, const char* sprite){
 	EnemyInfo newEnemy;
 	newEnemy.Cost = cost;
 	newEnemy.Health = health;
 	newEnemy.CharSprite = sprite;
+	newEnemy.MovementSpeed = speed;
 	Enemy[enemyPoolIndex] = newEnemy;
 	enemyPoolIndex++;
 }
@@ -47,34 +53,23 @@ void SpawnEnemy(EnemyInfo* enemy, int x, int y){
 	enemy->x = x;
 	enemy->y = y;
 	
-	// srand(time(0));
-	// int enemy_Type = (rand() % enemy_TotalType);
-	// //Set Check current credit here to dictate what enemy to spawn
-	// for (int i = 0; i < ENEMYPOOL; i++)
-	// {
-	// 	//Check pool to see which enemy element is free
-	// 	if (Enemy[enemyPoolIndex].is_Alive == FALSE)
-	// 	{
-	// 		SetEnemy(&Enemy[enemyPoolIndex], enemy_Type);//Spawn random type of enemy
-	// 		break;
-	// 	}
-	// }
 
 }
 
 void MoveEnemy(EnemyInfo* enemy){
-	// if(enemy->x <=0){
-	// 	//If the enemy has hit the far left of the screen, do something!
-	// 	enemy->is_Alive = FALSE;
-	// }
-	//Moving the enemies by their movespeed * arbritrary cellsize for now.
-	//NOTE!! REMEMBER TO MULTIPLY BY ACTUAL CELL SIZE!
-	enemy->x+=(enemy->MovementSpeed*150);
+	//If the enemy has reach last x element, it'll die and damage player
+	enemy->x -= enemy->MovementSpeed;
+	if (enemy->x < 0)
+	{
+		enemy->is_Alive = FALSE;//Should put this in OnDeath()
+	}
 }
 void DrawEnemy(EnemyInfo* enemy){
+	
 	CP_Settings_Fill(MENU_RED);
-	CP_Settings_TextSize(55.f);
-	CP_Font_DrawText(enemy->CharSprite,enemy->x,enemy->y);
+	CP_Settings_TextSize(25.f);
+	CP_Font_DrawText(enemy->CharSprite, space[enemy->x][enemy->y].x_pos, space[enemy->x][enemy->y].y_pos);
+
 }
 void OnDeath()
 {

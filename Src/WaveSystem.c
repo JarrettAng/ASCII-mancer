@@ -1,6 +1,6 @@
 #include "WaveSystem.h"
 #include "EnemyStats.h"
-
+#include "Grid.h"
 int currentWave=1;			
 int enemyThreshold;			//Set to a ratio of the current wave credits (used later)
 
@@ -44,9 +44,6 @@ void GenerateWave(){
 			waveCredits-=GetEnemy(randomEnemyIndex)->Cost;
 			enemyCount++;
 		}
-		/*
-		else if(waveCredits <= 0) break;		//I think not needed
-		*/
 	}
 
 }
@@ -66,13 +63,12 @@ void UpdateWave(){
 		//Iterates through the wave array and starts spawning the enemies
 		if(waveIndex < enemyCount){
 			//Can probably be wrapped to a spawn enemy function
-			WaveObjects[waveIndex].x = (float)CP_System_GetWindowWidth()-10.f;
-			float tempCellYSize = (float)(CP_System_GetWindowHeight()/9);
-			float randomYOffset = (float)(CP_Random_RangeInt(0,9)*tempCellYSize);
-			WaveObjects[waveIndex].y = randomYOffset;
+			WaveObjects[waveIndex].x = TOTAL_XGRID;//Start at far right
+			unsigned int enemy_StatingPosY = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));//Spawn at random y pos
+			WaveObjects[waveIndex].y = enemy_StatingPosY;
 			WaveObjects[waveIndex].is_Alive = TRUE;
 			waveIndex++;
-			spawnTimer = spawnInterval;		//Makes it such that enemies turn by turn
+			spawnTimer = spawnInterval;	//Makes it such that enemies turn by turn
 		}
 		else{
 			NextWave();
@@ -85,12 +81,7 @@ void UpdateWave(){
 			if(WaveObjects[i].is_Alive)
 			{
 				MoveEnemy(&WaveObjects[i]);
-				// liveEnemyCount++;
 			}
-			// if(i == waveIndex-1 && liveEnemyCount ==0)
-			// {
-
-			// }
 		}
 	}
 	//DISPLAY ENEMIES
@@ -113,5 +104,5 @@ void NextWave()
 }
 
 void ClearWaveArray(){
-	memset(WaveObjects,0,sizeof(EnemyInfo)*(9*23));
+	memset(WaveObjects,0,sizeof(EnemyInfo)*(TOTAL_XGRID*TOTAL_YGRID));
 }
