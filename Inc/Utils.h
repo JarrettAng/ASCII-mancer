@@ -10,6 +10,9 @@ void UpdateUIScale(void);
 float GetWindowWidth(void);
 float GetWindowHeight(void);
 
+float GetDisplayWidth(void);
+float GetDisplayHeight(void);
+
 float GetWidthScale(void);
 float GetHeightScale(void);
 
