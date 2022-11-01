@@ -39,7 +39,7 @@ void CreatePlayingSpace() {
 		for (int x = 1; x< TOTAL_XGRID; x++)
 		{
 			space[x][y].x_pos = (float)(grid_Top + (x* cube_Length));
-			space[x][y].y_pos = (float)(grid_Top + (y* cube_Length+(cube_Length/2.f));
+			space[x][y].y_pos = (float)(grid_Top + (y* cube_Length+(cube_Length/2.f)));//Get center pos of cell
 		}
 	}
 }

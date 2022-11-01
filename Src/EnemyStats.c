@@ -59,7 +59,7 @@ void SpawnEnemy(EnemyInfo* enemy, int x, int y){
 void MoveEnemy(EnemyInfo* enemy){
 	//If the enemy has reach last x element, it'll die and damage player
 	enemy->x -= enemy->MovementSpeed;
-	if (enemy->x < 0)
+	if (enemy->x <= 0)
 	{
 		enemy->is_Alive = FALSE;//Should put this in OnDeath()
 	}
