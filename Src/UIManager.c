@@ -144,6 +144,7 @@ Button* GetButtonClick() {
 		}
 		return NULL;
 	}
+	return NULL;
 }
 
 /// <summary>
