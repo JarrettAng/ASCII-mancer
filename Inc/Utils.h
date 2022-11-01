@@ -5,15 +5,15 @@
 #define BASE_WINDOW_WIDTH 1920
 #define BASE_WINDOW_HEIGHT 1080
 
-void UpdateUIScale();
+void UpdateUIScale(void);
 
-float GetWindowWidth();
-float GetWindowHeight();
+float GetWindowWidth(void);
+float GetWindowHeight(void);
 
-float GetWidthScale();
-float GetHeightScale();
+float GetWidthScale(void);
+float GetHeightScale(void);
 
-typedef void(*Callback)();
+typedef void(*Callback)(void);
 
 // Struct to cache variables for a simple timer.
 typedef struct Timer{

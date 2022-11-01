@@ -113,10 +113,10 @@ void InitializeButtons(void) {
 	// Starting position to draw the menu buttons.
 	// Drawn 11% from left.
 	// Drawn 50% from top.
-	float xPos = GetWindowWidth() / 9;
-	float yPos = GetWindowHeight() / 2;
+	float xPos = (float)BASE_WINDOW_WIDTH / 9 * GetWidthScale();
+	float yPos = (float)BASE_WINDOW_HEIGHT / 2 * GetHeightScale();
 	// Buttons have an offset of 11% of window height.
-	float offSet = GetWindowHeight() / 9;
+	float offSet = (float)BASE_WINDOW_HEIGHT / 9 * GetHeightScale();
 
 	/*==============Button Graphics & Text Settings===================*/
 	// Currently all buttons in menu are using this graphic & text setting
@@ -143,7 +143,7 @@ void InitializeButtons(void) {
 	Rect startBtnRect = {
 	.x = xPos,
 	.y = yPos,
-	.heigth = textData.textSize * GetHeightScale(),
+	.heigth = textData.textSize,
 	.width = 400 * GetWidthScale(),
 	};
 
@@ -155,8 +155,8 @@ void InitializeButtons(void) {
 	/*========================Settings Button============================*/
 	Rect settingsBtnRect = {
 	.x = xPos,
-	.y = yPos + (offSet * GetHeightScale()),
-	.heigth = textData.textSize * GetHeightScale(),
+	.y = yPos + offSet,
+	.heigth = textData.textSize,
 	.width = 700 * GetWidthScale(),
 	};
 
@@ -168,8 +168,8 @@ void InitializeButtons(void) {
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
 	.x = xPos,
-	.y = yPos + (offSet * 2 * GetHeightScale()),
-	.heigth = textData.textSize * GetHeightScale(),
+	.y = yPos + offSet * 2,
+	.heigth = textData.textSize,
 	.width = 600 * GetWidthScale(),
 	};
 
@@ -181,8 +181,8 @@ void InitializeButtons(void) {
 	/*=========================Exit Button=============================*/
 	Rect quitBtnRect = {
 	.x = xPos,
-	.y = yPos + (offSet * 3 * GetHeightScale()),
-	.heigth = textData.textSize * GetHeightScale(),
+	.y = yPos + offSet * 3,
+	.heigth = textData.textSize,
 	.width = 300 * GetWidthScale(),
 	};
 

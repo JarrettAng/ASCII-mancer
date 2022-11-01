@@ -13,8 +13,8 @@ float heightScale = BASE_WINDOW_HEIGHT;
 void UpdateUIScale(){
 	widthScale = (float)CP_System_GetDisplayWidth() / BASE_WINDOW_WIDTH;
 	heightScale = (float)CP_System_GetDisplayHeight() / BASE_WINDOW_HEIGHT;
-	//widthScale = (float)2560 / BASE_WINDOW_WIDTH;
-	//heightScale = (float)1440 / BASE_WINDOW_HEIGHT;
+	//widthScale = GetWindowWidth() / BASE_WINDOW_WIDTH;
+	//heightScale = GetWindowHeight() / BASE_WINDOW_HEIGHT;
 }
 
 float GetWindowWidth()
