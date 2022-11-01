@@ -41,7 +41,7 @@ int alpha = 255;
 
 // Timer for transition to next scene.
 Timer transitionTimer = {
-	.time = 1.0f,
+	.time = .5,
 	.elaspedTime = 0,
 };
 
@@ -285,7 +285,6 @@ void HandleTransition(Button* btn){
 		}
 		return;
 	}
-
 	btn->callBack();
 }
 
