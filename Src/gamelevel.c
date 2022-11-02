@@ -5,7 +5,7 @@
 #include "Screenshake.h"
 #include "Hearts.h"
 void gameLevelInit(void){
-    test_init();
+    grid_init();
     InitWaveSystem();
     InitializeLife();
 }
@@ -18,7 +18,7 @@ void gameLevelUpdate(void){
 
 
     //DRAWING AND UPDATING OF GRID
-    test_update();
+    grid_update();
 
     //UPDATE HEARTS
     UpdateLife();

@@ -6,7 +6,7 @@
 #define WINDOWLENGTH CP_System_GetWindowWidth()
 //GRID VALUE MUST ALWYAS BE ODD
 #define	TOTAL_YGRID 11
-#define TOTAL_XGRID 26
+#define TOTAL_XGRID 22
 
 typedef struct SpaceInfo
 {
@@ -14,11 +14,15 @@ typedef struct SpaceInfo
 	float y_pos;
 }SpaceInfo;
 
-struct SpaceInfo space[TOTAL_XGRID][TOTAL_YGRID];
+float GridYToPosY(int index);
+float GridXToPosX(int index);
 
-void test_init(void);
-void test_update(void);
-void test_exit(void);
+int PosXToGridX(float pos);
+int PosYToGridY(float pos);
+
+void grid_init(void);
+void grid_update(void);
+void grid_exit(void);
 //For drawing the grid
 void DrawLineGrid();
 //Create the space for players to place their blocks and enemy to move in
