@@ -1,6 +1,8 @@
 #include <cprocessing.h>
 #include "Grid.h"
 #include "ColorTable.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 float cube_Length;
@@ -43,9 +45,6 @@ void CreatePlayingSpace() {
 		}
 	}
 }
-CP_Vector GetPosFromGrid(int x, int y){
-	return CP_Vector_Set(space[x][y].x_pos,space[x][y].y_pos);
-}
 
 //Formula to get position to index (without offset)
 //int x = (int)((GridPos/CP_System_GetWindowWidth())*width);
@@ -57,16 +56,15 @@ float GridXToPosX(int index){
 	float PositionWithoutOffset = (float)(index*((CP_System_GetWindowWidth()-gridXOffset)/TOTAL_XGRID));
 	return PositionWithoutOffset+gridXOffset+(cube_Length/2);
 }
+
 int PosXToGridX(float pos){
-	int x = (pos-gridXOffset-(cube_Length/2)/(WINDOWLENGTH-gridXOffset))*TOTAL_XGRID;
+	int x = (pos-gridXOffset)/(WINDOWLENGTH-gridXOffset)*TOTAL_XGRID;
 	return x;
 }
 int PosYToGridY(float pos){
-	int y = (pos-grid_Top-(cube_Length/2)/grid_PlayArea)*TOTAL_YGRID;
+	int y = (pos/(grid_PlayArea))*TOTAL_YGRID;
 	return y;
 }
-
-
 void DrawLineGrid()
 {
 	CP_Graphics_ClearBackground(BLACK);
@@ -91,6 +89,12 @@ void DrawLineGrid()
 void grid_update(void)
 {
 	DrawLineGrid();
+	CP_Settings_Fill(MENU_RED);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
+	CP_Settings_TextSize(25.f);
+	char buffer[25] = {0};
+	sprintf_s(buffer,25,"%i, %i",PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()));
+	CP_Font_DrawText(buffer,CP_Input_GetMouseX(),CP_Input_GetMouseY());
 }
 void grid_exit(void)
 {
