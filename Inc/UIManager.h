@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils.h"
+#include "Utils.h"	// For callback function
 
 #define MAX_UI_BUTTONS 20
 
@@ -49,8 +49,7 @@ void DrawButtons(void);
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
 void HandleButtonClick(void);
-Button* GetButtonClick();
-_Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float clickX, float clickY, CP_POSITION_MODE mode);
+Button* GetButtonClick(void);
 Button* GetButtonHover(void);
 Button* GetPrevBtnClicked(void);
 Button* GetPrevBtnHovered(void);

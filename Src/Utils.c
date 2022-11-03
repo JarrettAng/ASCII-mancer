@@ -46,3 +46,27 @@ float GetWidthScale()
 
 #pragma endregion
 
+/// <summary>
+/// Check if given position is within a certain boundary area.
+/// Returns true/false.
+/// </summary>
+_Bool pointWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float xPos, float yPos, CP_POSITION_MODE areaMode)
+{
+	// If image is drawn from the corner, click detection will be different from image drawn from center.
+	if (areaMode == CP_POSITION_CORNER) {
+		if ((xPos < areaX + areaWidth) && (xPos > areaX) && (yPos < areaY + areaHeigth) && (yPos > areaY)) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	float halfWidth = areaWidth / 2;
+	float halfHeigth = areaHeigth / 2;
+
+	// Image drawn from center.
+	if (xPos > areaX - halfWidth && xPos < areaX + halfWidth && yPos < areaY + halfHeigth && yPos > areaY - halfHeigth) {
+		return TRUE;
+	}
+	return FALSE;
+}
+

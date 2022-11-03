@@ -1,5 +1,6 @@
 #include <cprocessing.h>
 #include "UIManager.h"
+#include "Utils.h"
 #include "ColorTable.h"
 
 Button* btns[MAX_UI_BUTTONS];
@@ -108,7 +109,7 @@ void HandleButtonClick() {
 		// Loop through all buttons initialized in this scene.
 		for (int i = 0; i < btnsCount; i++) {
 			// Check if player is clicking a button.
-			if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				// Cache callback to be triggered after the conditional statement.
 				// Will cause error if callback is triggered here.
 				btnClicked = prevBtnClicked = btns[i];
@@ -137,7 +138,7 @@ Button* GetButtonClick() {
 		// Loop through all buttons initialized in this scene.
 		for (int i = 0; i < btnsCount; i++) {
 			// Check if player is clicking a button.
-			if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				prevBtnClicked = btns[i];
 				return btns[i];
 			}
@@ -157,7 +158,7 @@ Button* GetButtonHover(){
 	// Loop through all buttons initialized in this scene.
 	for (int i = 0; i < btnsCount; i++) {
 		// Check if player is hovering a button.
-		if (MouseWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+		if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 			if (btnHovered != btns[i]){
 				// Cached previous button if player is hovering on a new button.
 				if (btnHovered != NULL) prevBtnHovered = btnHovered;
@@ -173,30 +174,5 @@ Button* GetButtonHover(){
 	btnHovered = NULL;
 	return NULL;
 }
-
-/// <summary>
-/// Check if player's mouse is within a certain boundary area.
-/// Returns true/false.
-/// </summary>
-_Bool MouseWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float mouseX, float mouseY, CP_POSITION_MODE areaMode)
-{
-	// If image is drawn from the corner, click detection will be different from image drawn from center.
-	if (areaMode == CP_POSITION_CORNER) {
-		if ((mouseX < areaX + areaWidth) && (mouseX > areaX) && (mouseY < areaY + areaHeigth) && (mouseY > areaY)) {
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	float halfWidth = areaWidth / 2;
-	float halfHeigth = areaHeigth / 2;
-
-	// Image drawn from center.
-	if (mouseX > areaX - halfWidth && mouseX < areaX + halfWidth && mouseY < areaY + halfHeigth && mouseY > areaY - halfHeigth) {
-		return TRUE;
-	}
-	return FALSE;
-}
-
 
 #pragma endregion

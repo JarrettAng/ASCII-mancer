@@ -23,3 +23,5 @@ typedef struct Timer{
 	float time;
 	float elaspedTime;
 }Timer;
+
+_Bool pointWithinArea(float areaX, float areaY, float areaWidth, float areaHeigth, float xPos, float yPos, CP_POSITION_MODE areaMode);
