@@ -2,6 +2,7 @@
 #include "UIManager.h"
 #include "Utils.h"
 #include "ColorTable.h"
+#include "SoundManager.h"
 
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
@@ -138,6 +139,7 @@ Button* GetButtonClick() {
 		for (int i = 0; i < btnsCount; i++) {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+				PlaySound(MOUSECLICK,CP_SOUND_GROUP_SFX);
 				return btns[i];
 			}
 		}

@@ -1,6 +1,7 @@
 #include "Particles.h"
 #include "testfile.h"
 #include "Screenshake.h"
+#include "SoundManager.h"
 //Particle Array. Will use some form of Object Pooling.
 //ParticleCount defined in particles.h, 1000. 
 Particle particleArray[PARTICLECOUNT];
@@ -154,6 +155,7 @@ void UpdateEffects(void){
     if(CP_Input_MouseClicked()){
         // ZombieDeathParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
         NukeParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+        PlaySoundEx(TETROMINOEXPLODE,CP_SOUND_GROUP_SFX);
     }
     if(CP_Input_MouseClicked())
     {
@@ -178,7 +180,6 @@ CP_Color LerpedHSLColor(CP_Color color,float timeStep){
 
 //RANDOM MATH UTILS FUNCTION!! WILL PROBABLY MOVE IT TO A UTILS.C!!
 CP_Vector AngleToVector(float degreeAngle){
-    CP_Vector startVector = VECTOR_UP;
     float angleRadians = CP_Math_Radians(degreeAngle);
     //Note, if the starting vector points up, the calculations will be different.
     float x = (VECTOR_UP.x*cosf(angleRadians)-VECTOR_UP.y*sinf(angleRadians));

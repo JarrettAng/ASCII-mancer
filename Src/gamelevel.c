@@ -4,10 +4,12 @@
 #include "WaveSystem.h"
 #include "Screenshake.h"
 #include "Hearts.h"
+#include "SoundManager.h"
 void gameLevelInit(void){
     grid_init();
     InitWaveSystem();
     InitializeLife();
+    InitSoundManager(GAMEBGM);
 }
 void gameLevelUpdate(void){
     UpdateCameraShaker();
@@ -25,10 +27,10 @@ void gameLevelUpdate(void){
 
     //UPDATE VFX
     UpdateEffects();
-
     //CLEAR SCREEN
     CP_Graphics_ClearBackground(BLACK);
 }
 void gameLevelExit(void){
     ClearHearts();
+    KillSoundManager();
 }

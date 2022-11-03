@@ -23,6 +23,7 @@
     <ClInclude Include="Inc\Particles.h" />
     <ClInclude Include="Inc\Screenshake.h" />
     <ClInclude Include="Inc\Settings.h" />
+    <ClInclude Include="Inc\SoundManager.h" />
     <ClInclude Include="Inc\Splashscreen.h" />
     <ClInclude Include="Inc\testfile.h" />
     <ClInclude Include="Inc\TManager.h" />
@@ -45,6 +46,7 @@
     <ClCompile Include="Src\Particles.c" />
     <ClCompile Include="Src\Screenshake.c" />
     <ClCompile Include="Src\Settings.c" />
+    <ClCompile Include="Src\SoundManager.c" />
     <ClCompile Include="Src\Splashscreen.c" />
     <ClCompile Include="Src\testfile.c" />
     <ClCompile Include="Src\TManager.c" />

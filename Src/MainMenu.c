@@ -8,6 +8,7 @@
 #include "gamelevel.h"
 #include "testfile.h"
 #include "Utils.h"
+#include "SoundManager.h"
 
 CP_Image title;
 
@@ -81,7 +82,7 @@ void MainMenuInit(void) {
 
 	// Populate buttons with positional, size and text values.
 	InitializeButtons();
-
+	InitSoundManager(MAINMENU);
 	IntializeSelectPointer();
 }
 
@@ -106,6 +107,7 @@ void MainMenuUpdate(void) {
 void MainMenuExit(void) {
 	CP_Image_Free(&title);
 	CP_Image_Free(&selectPointer);
+	KillSoundManager();
 	FreeButton();
 }
 

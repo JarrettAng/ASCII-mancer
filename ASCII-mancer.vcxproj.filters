@@ -81,6 +81,9 @@
     <ClInclude Include="Inc\Hearts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\SoundManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -138,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Hearts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SoundManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
