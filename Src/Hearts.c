@@ -32,11 +32,13 @@ void GainLife(int gain_life) {
 			break;
 		}
 	}
+	if (heart_stats[MAX_HEART_COUNT - 1].heartAlive != 1) PlaySound(GAINHEART, CP_SOUND_GROUP_SFX);
 	// TO DO : Add Gain Life Animation
 }
 
 void LoseLife(int lose_life) {
 	int i = 0;
+	float total_flicker_time = 5.f;
 	if (i < MAX_HEART_COUNT && heart_stats[0].heartAlive != 0) {
 		while (heart_stats[i].heartAlive == 1) {
 			++i;
@@ -44,6 +46,7 @@ void LoseLife(int lose_life) {
 		heart_stats[i - 1].heartAlive = 0;
 		heart_stats[i - 1].alpha = 0;
 	}
+	PlaySound(LOSE, CP_SOUND_GROUP_SFX);
 	// TO DO : Add Lose Life Animation
 }
 
@@ -79,7 +82,6 @@ float BezierCurve(float t) {
 	return t * t * (3.0f - 2.0f * t);
 }
 
-
 // AnimationLife variables
 float time_elapsed = 0;
 int up_tick_marker = 1;
@@ -94,7 +96,7 @@ void AnimationLife() {
 
 	// Animate each heart
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
-		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetDisplayWidth() / 16.f - 50.f, (CP_System_GetDisplayWidth() / 16.f - 50.f) - 20.f, BezierCurve(tick));
+		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetDisplayWidth() / 16.f - 60.f, (CP_System_GetDisplayWidth() / 16.f - 60.f) - 12.f, BezierCurve(tick));
 	}
 	// Check if it should be down ticking or up ticking
 	if (time_elapsed >= duration) {

@@ -17,6 +17,7 @@ typedef enum Clip{
     LOSE,
     MOUSECLICK,
     GAMEOVER,
+    GAINHEART,
     NONE
 } Clip;
 

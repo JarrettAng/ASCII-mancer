@@ -23,6 +23,7 @@ void InitSoundManager(Clip BGMName){
     AddSoundToArray(CP_Sound_Load("Assets/WinSound.wav"),WIN);
     AddSoundToArray(CP_Sound_Load("Assets/MouseClick.wav"),MOUSECLICK);
     AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER);
+    AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART);
 
     if (BGMName == NONE) return;
     CP_Sound_PlayMusic(GetSound(BGMName));
