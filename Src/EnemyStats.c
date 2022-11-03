@@ -68,7 +68,7 @@ void DrawEnemy(EnemyInfo* enemy){
 	
 	CP_Settings_Fill(MENU_RED);
 	CP_Settings_TextSize(25.f);
-	CP_Font_DrawText(enemy->CharSprite, space[enemy->x][enemy->y].x_pos, space[enemy->x][enemy->y].y_pos);
+	CP_Font_DrawText(enemy->CharSprite, GridXToPosX(enemy->x),GridYToPosY(enemy->y));
 
 }
 void OnDeath()
