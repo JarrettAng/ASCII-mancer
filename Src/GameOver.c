@@ -99,7 +99,6 @@ void GameOverInit(void) {
 	CP_System_Fullscreen();
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	main_font = CP_Font_Load("Assets/PressStart2P-Regular.ttf");
-	IntializeSelectPointer();
 
 	// Populate buttons with positional, size and text values
 	InitializeButtonsGameOverScreen();
@@ -124,10 +123,6 @@ void GameOverUpdate(void) {
 	// Draw buttons
 	DrawButtons();
 	HandleButtonClick();
-	DrawSelectPointer();
-
-	// Update Life
-	//UpdateLife();
 
 	// FOR DEBUGGING PURPOSES DELETE LATER
 	if (CP_Input_KeyTriggered(KEY_Z) == 1) {

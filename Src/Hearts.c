@@ -1,6 +1,8 @@
 #include "cprocessing.h"
 #include "GameOver.h"
 #include "Hearts.h"
+#include "SoundManager.h"
+#include "UIManager.h"
 
 HeartContainer heart_stats[MAX_HEART_COUNT];
 CP_Image heart_image;
@@ -19,6 +21,9 @@ void InitializeLife(void) {
 	}
 }
 
+//-----------------------
+//  INPUTS
+//-----------------------
 void GainLife(int gain_life) {
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		if (heart_stats[i].heartAlive == 0) {
@@ -35,7 +40,6 @@ void LoseLife(int lose_life) {
 	if (i < MAX_HEART_COUNT && heart_stats[0].heartAlive != 0) {
 		while (heart_stats[i].heartAlive == 1) {
 			++i;
-			continue;
 		}
 		heart_stats[i - 1].heartAlive = 0;
 		heart_stats[i - 1].alpha = 0;
@@ -43,13 +47,9 @@ void LoseLife(int lose_life) {
 	// TO DO : Add Lose Life Animation
 }
 
-void DrawLife(void) {
-	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
-		if (heart_stats[i].heartAlive == 1) {
-			CP_Image_DrawAdvanced(heart_image, heart_stats[i].xpos, heart_stats[i].ypos, (float)IMAGE_HEART_LENGTH * heart_stats[i].size, (float)IMAGE_HEART_LENGTH * heart_stats[i].size, heart_stats[i].alpha, heart_stats[i].rotation);
-		}
-	}
-}
+//-----------------------
+// CHECKS
+//-----------------------
 
 // Check if total life = 0, if 0 bring to Game Over Screen
 void CheckLoseCondition(void) {
@@ -58,7 +58,54 @@ void CheckLoseCondition(void) {
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		total_life += heart_stats[i].heartAlive;
 	}
-	if (total_life == 0) CP_Engine_SetNextGameState(GameOverInit, GameOverUpdate, GameOverExit);
+	if (total_life == 0) {
+		PlaySound(GAMEOVER, CP_SOUND_GROUP_SFX);
+		//CP_Engine_SetNextGameState(GameOverInit, GameOverUpdate, GameOverExit);
+	}
+}
+
+//-----------------------
+// RENDERS
+//-----------------------
+void DrawLife(void) {
+	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
+		if (heart_stats[i].heartAlive == 1) {
+			CP_Image_DrawAdvanced(heart_image, heart_stats[i].xpos, heart_stats[i].ypos, (float)IMAGE_HEART_LENGTH * heart_stats[i].size, (float)IMAGE_HEART_LENGTH * heart_stats[i].size, heart_stats[i].alpha, heart_stats[i].rotation);
+		}
+	}
+}
+
+float BezierCurve(float t) {
+	return t * t * (3.0f - 2.0f * t);
+}
+
+
+// AnimationLife variables
+float time_elapsed = 0;
+int up_tick_marker = 1;
+int down_tick_marker = 0;
+float duration = 0.75f; // 0.75 Seconds to loop
+
+void AnimationLife() {
+	float tick = time_elapsed / duration;
+	// To check whether the heart needs to go down or up
+	if (up_tick_marker == 1) time_elapsed += CP_System_GetDt();
+	else if (down_tick_marker == 1) time_elapsed -= CP_System_GetDt();
+
+	// Animate each heart
+	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
+		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetDisplayWidth() / 16.f - 50.f, (CP_System_GetDisplayWidth() / 16.f - 50.f) - 20.f, BezierCurve(tick));
+	}
+	// Check if it should be down ticking or up ticking
+	if (time_elapsed >= duration) {
+		down_tick_marker = 1;
+		up_tick_marker = 0;
+	}
+	else if (time_elapsed <= 0) {
+		up_tick_marker = 1;
+		down_tick_marker = 0;
+	}
+	
 }
 
 void UpdateLife(void) {
@@ -69,6 +116,7 @@ void UpdateLife(void) {
 	CheckLoseCondition();
 	//Renders
 	DrawLife();
+	AnimationLife();
 }
 
 void ClearHearts() {

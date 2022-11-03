@@ -10,7 +10,7 @@ typedef struct HeartContainer {
 	float xpos;
 	float ypos;
 	float size;
-	float alpha;
+	int alpha;
 	float rotation;
 }HeartContainer;
 
@@ -18,6 +18,8 @@ void InitializeLife(void);
 void GainLife(int gain_life);
 void LoseLife(int lose_life);
 void DrawLife(void);
-void UpdateLife(void);
 void CheckLoseCondition(void);
+float BezierCurve(float);
+void AnimationLife(void);
+void UpdateLife(void);
 void ClearHearts(void);
