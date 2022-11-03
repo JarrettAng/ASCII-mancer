@@ -60,7 +60,7 @@ Button* buttonClicked = NULL;
 // TODO: For debugging, remove before release
 void Jarrett(void);
 
-#pragma region Forward Declarations
+#pragma region FORWARD_DECLARATIONS
 
 void InitializeButtons(void);
 void IntializeSelectPointer(void);
@@ -69,9 +69,9 @@ void HandleCarouselButton(void);
 void HandleMenuButtonClick(void);
 void HandleTransition(Button* btn);
 
-void StartGame(void);
-void Settings(void);
-void Credits(void);
+void LoadGameScene(void);
+void LoadSettingsScene(void);
+void LoadCreditsScene(void);
 void ExitGame(void);
 
 #pragma endregion
@@ -150,7 +150,7 @@ void InitializeButtons(void) {
 	textData.text = "START";
 	// Intialize button in UI manager.
 	// OnClick: Start game.
-	InitializeButton(&startBtn, startBtnRect, graphicData, textData, StartGame);
+	InitializeButton(&startBtn, startBtnRect, graphicData, textData, LoadGameScene);
 
 	/*========================Settings Button============================*/
 	Rect settingsBtnRect = {
@@ -163,7 +163,7 @@ void InitializeButtons(void) {
 	textData.text = "SETTINGS";
 	// Intialize button in UI manager.
 	// OnClick: Settings screen.
-	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, Settings);
+	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, LoadSettingsScene);
 
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
@@ -176,7 +176,7 @@ void InitializeButtons(void) {
 	textData.text = "CREDITS";
 	// Intialize button in UI manager.
 	// OnClick: Credits screen.
-	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, Credits);
+	InitializeButton(&creditsBtn, creditsBtnRect, graphicData, textData, LoadCreditsScene);
 
 	/*=========================Exit Button=============================*/
 	Rect quitBtnRect = {
@@ -288,15 +288,15 @@ void HandleTransition(Button* btn){
 	btn->callBack();
 }
 
-void StartGame(void){
+void LoadGameScene(void){
 	CP_Engine_SetNextGameState(gameLevelInit, gameLevelUpdate, gameLevelExit);
 }
 
-void Settings(void){
+void LoadSettingsScene(void){
 	CP_Engine_SetNextGameState(SettingsInit, SettingsUpdate, SettingsExit);
 }
 
-void Credits(void){
+void LoadCreditsScene(void){
 	CP_Engine_SetNextGameState(CreditsInit, CreditsUpdate, CreditsExit);
 }
 

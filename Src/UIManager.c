@@ -6,9 +6,11 @@
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
 
-Button* prevBtnClicked = NULL;
-Button* prevBtnHovered = NULL;
 Button* btnHovered = NULL;
+Button* prevBtnHovered = NULL;
+
+SliderKnob* knobs[MAX_UI_KNOBS];
+int knobsCount = 0;
 
 
 /// <summary>
@@ -24,6 +26,7 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 
 	btns[btnsCount++] = btn;
 }
+
 
 /// <summary>
 /// Require button to be intialized before drawing.
@@ -87,10 +90,6 @@ void FreeButton(){
 
 #pragma region UI_INTERACTION
 
-Button* GetPrevBtnClicked(){
-	return prevBtnClicked;
-}
-
 Button* GetPrevBtnHovered(){
 	return prevBtnHovered;
 }
@@ -112,7 +111,7 @@ void HandleButtonClick() {
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				// Cache callback to be triggered after the conditional statement.
 				// Will cause error if callback is triggered here.
-				btnClicked = prevBtnClicked = btns[i];
+				btnClicked = btns[i];
 				// Stop checking for buttons once a button is clicked.
 				// Make sure the button has a callback event before breaking loop.
 				// In an event where 2 buttons are overlapping, and one button doesnt have a callback, the other button callback will still be triggered.
@@ -139,7 +138,6 @@ Button* GetButtonClick() {
 		for (int i = 0; i < btnsCount; i++) {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
-				prevBtnClicked = btns[i];
 				return btns[i];
 			}
 		}
@@ -173,6 +171,14 @@ Button* GetButtonHover(){
 	// Player is not hovering on a button.
 	btnHovered = NULL;
 	return NULL;
+}
+
+SliderKnob* GetSliderKnobHeld(){
+	if (CP_Input_MouseDown(MOUSE_BUTTON_LEFT)){
+		float xPos = CP_Input_GetMouseX();
+		float yPos = CP_Input_GetMouseY();
+		//if (pointWithinCircle())
+	}
 }
 
 #pragma endregion

@@ -70,3 +70,10 @@ _Bool pointWithinArea(float areaX, float areaY, float areaWidth, float areaHeigt
 	return FALSE;
 }
 
+_Bool pointWithinCircle(float xPos, float yPos, float circleX, float circleY, float radius){
+	if ((xPos < circleX + radius) && (xPos > circleX - radius) && (yPos < circleY + radius) && (yPos > circleY - radius)){
+		return TRUE;
+	}
+	return FALSE;
+}
+

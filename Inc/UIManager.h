@@ -3,6 +3,7 @@
 #include "Utils.h"	// For callback function
 
 #define MAX_UI_BUTTONS 20
+#define MAX_UI_KNOBS 5
 
 typedef struct GraphicData {
 	CP_POSITION_MODE imagePosMode;
@@ -44,6 +45,26 @@ typedef struct Text {
 	TextData textData;
 }Text;
 
+typedef struct SliderKnob{
+	float x;
+	float y;
+	float bobRadius;
+
+	CP_Color colour;
+	CP_Color stroke;
+	float strokeWeight;
+
+}SliderKnob;
+
+typedef struct Slider{
+	CP_Vector start;
+	CP_Vector end;
+
+	CP_Color stroke;
+	float strokeWeight;
+
+}Slider;
+
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack);
 void DrawButtons(void);
 void SetGraphicSetting(GraphicData data);
@@ -51,6 +72,6 @@ void SetTextSetting(TextData data);
 void HandleButtonClick(void);
 Button* GetButtonClick(void);
 Button* GetButtonHover(void);
-Button* GetPrevBtnClicked(void);
 Button* GetPrevBtnHovered(void);
+SliderKnob* GetSliderKnobHeld(void);
 void FreeButton(void);
