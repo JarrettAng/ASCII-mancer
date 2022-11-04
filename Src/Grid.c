@@ -62,7 +62,7 @@ int PosXToGridX(float pos){
 	return x;
 }
 int PosYToGridY(float pos){
-	int y = (pos/(grid_PlayArea))*TOTAL_YGRID;
+	int y = ((pos-grid_Top)/grid_PlayArea)*TOTAL_YGRID;
 	return y;
 }
 void DrawLineGrid()
