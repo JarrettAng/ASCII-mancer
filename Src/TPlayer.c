@@ -12,15 +12,13 @@ ________________________________________________________________________________
 
 #include "TManager.h" 
 #include "TPlayer.h" 
+#include "TPlayerHeld.h" // For handling the piece held
 #include "GameLoop.h"
 
 PlayerHandSlot hand[HAND_SIZE];
 PlayerHandSlot peek_hand[PEEK_SIZE];
 
 CP_Vector text_peek_pos;
-
-_Bool is_piece_held; // Flag for when the player clicks and holds on a Tetris Piece
-PlayerPieceHeld piece_held; // The pointer to the piece held, if any
 
 #pragma region
 void RecalculateHandRenderPositions(void);
@@ -57,15 +55,8 @@ void TPlayerInit(void) {
 	// Subscribe player input to player turn update
 	SubscribeEvent(PLAYER_UPDATE, TPlayerProcessInput, 10);
 
-	// Initialize the held piece
-	is_piece_held = FALSE;
-	piece_held.piece = NULL;
-	// TODO: LINK WITH ACTUAL GRID SETTINGS
-	// Change the render color & size to match the grid
-	piece_held.color = MENU_RED;
-	piece_held.color_stroke = TRANSPERANT;
-	piece_held.x_screen_length = 75.0f;
-	piece_held.y_screen_length = 75.0f;
+	// Initialize the settings for piece held
+	TPlayerHeldInit();
 }
 
 void TPlayerProcessInput(void) {
@@ -77,42 +68,21 @@ void TPlayerProcessInput(void) {
 		// Check which slot the player which on, if any
 		for (int index = 0; index < HAND_SIZE; ++index) {
 			current = &hand[index];
+			// If we found the slot clicked on,
 			if (pointWithinArea(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length, mouse_pos.x, mouse_pos.y, CP_POSITION_CORNER)) {
-				// We found the slot clicked! Set the flags to true
-				is_piece_held = TRUE;
-				piece_held.piece = &current->piece;
-
-				// Update the render offset
-				piece_held.center_offset.x = (piece_held.piece->x_length / 2 + 0.5f) * piece_held.x_screen_length;
-				piece_held.center_offset.y = (piece_held.piece->y_length / 2 + 0.5f) * piece_held.y_screen_length;
+				// Update the piece held render settings
+				NewPieceHeld(&current->piece);
 
 				// Play "piece selected" sound
 				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
-
 				break;
 			}
 		}
 	}
 
-	// While the player is holding a piece
-	if (is_piece_held) {
-		CP_Vector mouse_pos = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
-
-		// The player should hold the center of the piece, if the piece has an even length (e.g. 2x2) bias towards the end
-		piece_held.draw_pos.x = mouse_pos.x - piece_held.center_offset.x;
-		piece_held.draw_pos.y = mouse_pos.y - piece_held.center_offset.y;
-	}
-
-	// When the player lets go of a piece
-	if (CP_Input_MouseReleased(MOUSE_BUTTON_1) && is_piece_held) {
-		if (0) {
-			// JARRETT TODO: If piece is dropped onto the grid, get the corresponding pos and do something
-			// PlayPiece();
-		}
-
-		// Remove the flags for piece_held
-		is_piece_held = FALSE;
-		piece_held.piece = NULL;
+	// When the player lets go of a click
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
+		PieceHeldReleased(); // Let piece held know and handle if a piece was released
 	}
 }
 
@@ -135,7 +105,7 @@ void RenderHand(void) {
 		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
-		if (&current->piece == piece_held.piece) continue; // Don't render the piece if it's held
+		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
 
 		// Settings for tile rendering
 		CP_Settings_Fill(current->piece.color);
@@ -183,20 +153,8 @@ void RenderHand(void) {
 		}
 	}
 
-	// Render the carried piece last so that it is on top of everything
-	if (is_piece_held) {
-		// Settings for tile rendering
-		CP_Settings_Fill(piece_held.color);
-		CP_Settings_Stroke(piece_held.color_stroke);
-		// Render each tile in the Tetris Piece
-		for (int index_x = 0; index_x < SHAPE_BOUNDS; ++index_x) {
-			for (int index_y = 0; index_y < SHAPE_BOUNDS; ++index_y) {
-				if (piece_held.piece->shape[index_x][index_y]) {
-					CP_Graphics_DrawRect(piece_held.draw_pos.x + index_x * piece_held.x_screen_length, piece_held.draw_pos.y + index_y * piece_held.y_screen_length, piece_held.x_screen_length, piece_held.y_screen_length);
-				}
-			}
-		}
-	}
+	// JARRETT TODO: CHANGE RENDER CALL TO SOMEWHERE ELSE
+	RenderPieceHeld();
 }
 
 //______________________________________________________________

@@ -7,23 +7,12 @@ ________________________________________________________________________________
 
 #pragma once // Only include this header file once
 
-#include "cprocessing.h"
+#include "TPiece.h"
 
 typedef struct {
     CP_Vector pos;
     TetrisPiece piece;
 } PlayerHandSlot;
-
-typedef struct {
-    TetrisPiece const *piece;
-
-    CP_Vector draw_pos;
-    float x_screen_length, y_screen_length;
-    CP_Vector center_offset;
-
-    CP_Color color;
-    CP_Color color_stroke;
-} PlayerPieceHeld;
 
 //______________________________________________________________
 // Tetris Rendering settings
