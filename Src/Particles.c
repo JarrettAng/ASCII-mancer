@@ -7,10 +7,16 @@
 Particle particleArray[PARTICLECOUNT];
 int particleIndex =0;
 
+Emitter emitterArray[20];
+int emitterIndex =0;
 //This is where I'll declare "anim strings for animation"
 char* SparkleAnimString = "x+*\".\0";
 char* ZombieDeathAnimString = "ZZZZ    ZZZZ    ZZZZ    ZZZNNzznncu*\'`\0";
 char* NukeAnimString = "@Oo*\'\0";
+
+//TODO: Create particle prefabs, emitters will control burst, duration and if radial and all the other fancy stuff. Particle will just remain as particle and emitter will handle all the emissions.
+//!in other words, its an overhaul woops
+
 
 //Function that handles creating of particle.
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB){
@@ -38,6 +44,21 @@ void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gra
 
 }
 
+void CreateEmitter(Particle* particle, float x, float y, int burstCount, float duration, _Bool isRandomPos){
+    Emitter newEmitter = {
+        .particle = particle,
+        .x = x,
+        .y = y,
+        .burstCount = burstCount,
+        .duration =duration,
+        .isRandomPos = isRandomPos
+    };
+    emitterArray[emitterIndex%(20)] = newEmitter;
+    emitterIndex++;
+}
+void UpdateEmitter(Emitter* emitterPointer){
+
+}
 //Function that updates a given particle. Used in Update effects forloop. Handles particle movement and lifetime.
 void UpdateParticle(Particle* particlePointer){
 
@@ -155,7 +176,7 @@ void UpdateEffects(void){
     if(CP_Input_MouseClicked()){
         // ZombieDeathParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
         NukeParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
-        PlaySoundEx(TETROMINOEXPLODE,CP_SOUND_GROUP_SFX);
+        PlaySoundEx(NUKE,CP_SOUND_GROUP_SFX);
     }
     if(CP_Input_MouseClicked())
     {

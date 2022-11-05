@@ -32,9 +32,11 @@ typedef struct Emitter{
     float y;
     int burstCount;
     float duration; 
+    _Bool isRandomPos;
 }Emitter;
 
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB);
+void CreateEmitter(Particle* particle, float x, float y, int burstCount, float duration, _Bool isRandomPos);
 void UpdateParticle(Particle* particlePointer);
 void DrawParticle(Particle* particlePointer);
 void ResetParticle(Particle* particlePointer);
