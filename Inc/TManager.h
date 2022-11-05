@@ -20,7 +20,7 @@ ________________________________________________________________________________
 //______________________________________________________________
 // Player hand settings
 #define HAND_SIZE 4
-#define PEEK_SIZE 1
+#define PEEK_SIZE 2
 
 /*______________________________________________________________
 @brief TManager needs to be initialized at the start of the game level so that 

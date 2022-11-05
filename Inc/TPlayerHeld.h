@@ -20,6 +20,11 @@ typedef struct {
     CP_Color color_stroke;
 } PlayerPieceHeld;
 
+typedef struct {
+    int grid_x, grid_y;
+    int cell;
+} PieceHeldCell;
+
 /*______________________________________________________________
 @brief Called by TPlayer during its initialization, this function will load
        the values needed for rendering and such.

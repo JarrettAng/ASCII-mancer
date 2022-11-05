@@ -225,7 +225,7 @@ void RecalculateHandRenderPositions(void) {
 // Player interaction functions
 
 /*______________________________________________________________
-@brief When a Tetris Piece is dropped onto the grid, update the player's hand
+@brief When a Tetris Piece is dropped onto the grid, remove the piece and update the player's hand
 */
 void RemovePieceHeldFromHand() {
 	PlayerHandSlot *current;

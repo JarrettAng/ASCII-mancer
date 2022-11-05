@@ -6,15 +6,31 @@
 ________________________________________________________________________________________________________*/
 
 #include "ColorTable.h"
+#include "grid.h" // For grid information
 
 #include "TPlayer.h" 
 #include "TPlayerHeld.h"
+
+// Rotation information
+PieceHeldCell piece_held_shapeA[SHAPE_BOUNDS + 1][SHAPE_BOUNDS + 1]; // The + 1 is a buffer for rotating non-symmetrical pieces
+PieceHeldCell piece_held_shapeB[SHAPE_BOUNDS + 1][SHAPE_BOUNDS + 1];
+PieceHeldCell(*piece_held_shape_current)[SHAPE_BOUNDS + 1][SHAPE_BOUNDS + 1];
+
+// Transformation matrices
+int left_rotation[2][2] = { 0, -1, 1, 0 };
+int right_rotation[2][2] = { 0, 1, -1, 0 };
 
 PlayerPieceHeld piece_held;
 
 #pragma region
 void PieceHeldPlayed(void);
 #pragma endregion Forward Declarations
+
+// Piece on grid rendering information
+CP_Vector grid_bounds;
+CP_Vector grid_size;
+float cell_size;
+_Bool in_playing_area;
 
 //______________________________________________________________
 // All "public" functions (Basically those in the TPlayer.h)
@@ -26,11 +42,17 @@ void PieceHeldPlayed(void);
 void TPlayerHeldInit(void) {
 	piece_held.piece = NULL;
 	// TODO: LINK WITH ACTUAL GRID SETTINGS
+	// Initialize Piece on grid rendering information
+	
+
 	// Change the render color & size to match the grid
 	piece_held.color = MENU_RED;
-	piece_held.color_stroke = TRANSPERANT;
+	piece_held.color_stroke = MENU_RED;
 	piece_held.x_screen_length = 75.0f;
 	piece_held.y_screen_length = 75.0f;
+
+	// Initialize shape rotation matrices
+
 }
 
 /*______________________________________________________________
@@ -66,9 +88,32 @@ void NewPieceHeld(TetrisPiece const *new_piece) {
 	   handle all input related to the piece held
 */
 void TPlayerHeldProcessInput(void) {
+	if (!IsPieceHeld()) return;
+
+	// Update piece position based on where it current is.
+	CP_Vector mouse_pos = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
+
+	// If the piece is within the grid, snap the piece to the grid
+	if (in_playing_area = InPlayingArea()) {
+		mouse_pos.x = GridXToPosX(PosXToGridX(mouse_pos.x));
+		mouse_pos.y = GridYToPosY(PosYToGridY(mouse_pos.y));
+	}
+
+	// The player should hold the center of the piece, if the piece has an even length (e.g. 2x2) bias towards the end
+	piece_held.draw_pos.x = mouse_pos.x - piece_held.center_offset.x;
+	piece_held.draw_pos.y = mouse_pos.y - piece_held.center_offset.y;
+
+	// When the player rotates/ right clicks
+	if (CP_Input_MouseTriggered(MOUSE_BUTTON_2)) {
+
+	}
+
 	// When the player lets go of a click
-	if (CP_Input_MouseReleased(MOUSE_BUTTON_1) && IsPieceHeld()) {
-		PieceHeldPlayed();
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
+		// If the piece is in the playing area, play it, otherwise it will just return to hand
+		if (in_playing_area) {
+			PieceHeldPlayed();
+		}
 
 		piece_held.piece = NULL; // Removes information on piece held once the player has released.
 	}
@@ -79,12 +124,6 @@ void TPlayerHeldProcessInput(void) {
 */
 void RenderPieceHeld(void) {
 	if (!IsPieceHeld()) return;
-
-	CP_Vector mouse_pos = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
-
-	// The player should hold the center of the piece, if the piece has an even length (e.g. 2x2) bias towards the end
-	piece_held.draw_pos.x = mouse_pos.x - piece_held.center_offset.x;
-	piece_held.draw_pos.y = mouse_pos.y - piece_held.center_offset.y;
 
 	// Settings for tile rendering
 	CP_Settings_Fill(piece_held.color);
@@ -104,8 +143,6 @@ void RenderPieceHeld(void) {
 
 /*______________________________________________________________
 @brief When a Tetris Piece is dropped onto the grid, it has been played.
-
-@param int - Which piece was played
 */
 void PieceHeldPlayed(void) {
 	RemovePieceHeldFromHand();

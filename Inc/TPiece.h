@@ -30,7 +30,6 @@ typedef struct {
 	PieceType type;
 
 	int shape[SHAPE_BOUNDS][SHAPE_BOUNDS];
-	int rotation;
 
 	int x_length, y_length;
 	float x_screen_length, y_screen_length;
