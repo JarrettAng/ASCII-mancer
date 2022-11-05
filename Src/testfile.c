@@ -2,6 +2,7 @@
 
 #include "gamelevel.h"
 #include "ColorTable.h"
+#include "SoundManager.h"
 
 #include "GameLoop.h"
 #include "TManager.h"
@@ -14,6 +15,7 @@ void TTestInit(void) {
 	   hands CProcessing, I hope you are proud of yourself. */
 	CP_System_SetWindowSize(1920, 1080); 
 
+	InitSoundManager(GAMEBGM);
 	TManagerInit(DEFAULT_SPAWN_SEED);
 	TPlayerInit();
 

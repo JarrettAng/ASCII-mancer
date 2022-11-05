@@ -8,6 +8,7 @@ ________________________________________________________________________________
 #include "ColorTable.h"
 
 #include "Utils.h"	// For click detection
+#include "SoundManager.h"
 
 #include "TManager.h" 
 #include "TPlayer.h" 
@@ -80,6 +81,10 @@ void TPlayerProcessInput(void) {
 				piece_held->piece.color_stroke = TRANSPERANT;
 				piece_held->piece.x_screen_length = 75.0f;
 				piece_held->piece.y_screen_length = 75.0f;
+
+				// Play "piece selected" sound
+				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
+
 				break;
 			}
 		}
@@ -135,6 +140,8 @@ void RenderHand(void) {
 		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
+		if (current == piece_held) continue; // Don't render the piece if it's held
+
 		// Settings for tile rendering
 		CP_Settings_Fill(current->piece.color);
 		CP_Settings_Stroke(current->piece.color_stroke);
@@ -158,8 +165,6 @@ void RenderHand(void) {
 
 	for (int index = 0; index < PEEK_SIZE; ++index) {
 		current = &peek_hand[index];
-
-		if (current == piece_held) continue;
 
 		CP_Settings_StrokeWeight(peek_tile_stroke);
 
@@ -186,12 +191,6 @@ void RenderHand(void) {
 	// Render the carried piece last so that it is on top of everything
 	if (is_piece_held) {
 		current = piece_held;
-		CP_Settings_StrokeWeight(hand_tile_stroke);
-
-		// Render the background square surrounding each piece
-		CP_Settings_Fill(MENU_BLACK);
-		CP_Settings_Stroke(current->piece.color);
-		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
 		// Settings for tile rendering
 		CP_Settings_Fill(current->piece.color);
