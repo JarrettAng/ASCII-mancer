@@ -14,6 +14,17 @@ typedef struct {
     TetrisPiece piece;
 } PlayerHandSlot;
 
+typedef struct {
+    TetrisPiece const *piece;
+
+    CP_Vector draw_pos;
+    float x_screen_length, y_screen_length;
+    CP_Vector center_offset;
+
+    CP_Color color;
+    CP_Color color_stroke;
+} PlayerPieceHeld;
+
 //______________________________________________________________
 // Tetris Rendering settings
 float hand_total_height;

@@ -29,6 +29,7 @@
     <ClInclude Include="Inc\TManager.h" />
     <ClInclude Include="Inc\TPiece.h" />
     <ClInclude Include="Inc\TPlayer.h" />
+    <ClInclude Include="Inc\TPlayerHeld.h" />
     <ClInclude Include="Inc\UIManager.h" />
     <ClInclude Include="Inc\Utils.h" />
     <ClInclude Include="Inc\WaveSystem.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Src\testfile.c" />
     <ClCompile Include="Src\TManager.c" />
     <ClCompile Include="Src\TPlayer.c" />
+    <ClCompile Include="Src\TPlayerHeld.c" />
     <ClCompile Include="Src\UIManager.c" />
     <ClCompile Include="Src\Utils.c" />
     <ClCompile Include="Src\WaveSystem.c" />

@@ -20,7 +20,7 @@ PlayerHandSlot peek_hand[PEEK_SIZE];
 CP_Vector text_peek_pos;
 
 _Bool is_piece_held; // Flag for when the player clicks and holds on a Tetris Piece
-PlayerHandSlot* piece_held; // The pointer to the piece held, if any
+PlayerPieceHeld piece_held; // The pointer to the piece held, if any
 
 #pragma region
 void RecalculateHandRenderPositions(void);
@@ -57,8 +57,15 @@ void TPlayerInit(void) {
 	// Subscribe player input to player turn update
 	SubscribeEvent(PLAYER_UPDATE, TPlayerProcessInput, 10);
 
-	// Reset the piece held to nothing, just in case
-	piece_held = NULL;
+	// Initialize the held piece
+	is_piece_held = FALSE;
+	piece_held.piece = NULL;
+	// TODO: LINK WITH ACTUAL GRID SETTINGS
+	// Change the render color & size to match the grid
+	piece_held.color = MENU_RED;
+	piece_held.color_stroke = TRANSPERANT;
+	piece_held.x_screen_length = 75.0f;
+	piece_held.y_screen_length = 75.0f;
 }
 
 void TPlayerProcessInput(void) {
@@ -73,14 +80,11 @@ void TPlayerProcessInput(void) {
 			if (pointWithinArea(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length, mouse_pos.x, mouse_pos.y, CP_POSITION_CORNER)) {
 				// We found the slot clicked! Set the flags to true
 				is_piece_held = TRUE;
-				piece_held = current;
+				piece_held.piece = &current->piece;
 
-				// TODO: LINK WITH ACTUAL GRID SETTINGS
-				// Change the render color & size to match the grid
-				piece_held->piece.color = MENU_RED;
-				piece_held->piece.color_stroke = TRANSPERANT;
-				piece_held->piece.x_screen_length = 75.0f;
-				piece_held->piece.y_screen_length = 75.0f;
+				// Update the render offset
+				piece_held.center_offset.x = (piece_held.piece->x_length / 2 + 0.5f) * piece_held.x_screen_length;
+				piece_held.center_offset.y = (piece_held.piece->y_length / 2 + 0.5f) * piece_held.y_screen_length;
 
 				// Play "piece selected" sound
 				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
@@ -93,8 +97,10 @@ void TPlayerProcessInput(void) {
 	// While the player is holding a piece
 	if (is_piece_held) {
 		CP_Vector mouse_pos = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
-		piece_held->piece.draw_pos.x = mouse_pos.x;
-		piece_held->piece.draw_pos.y = mouse_pos.y;
+
+		// The player should hold the center of the piece, if the piece has an even length (e.g. 2x2) bias towards the end
+		piece_held.draw_pos.x = mouse_pos.x - piece_held.center_offset.x;
+		piece_held.draw_pos.y = mouse_pos.y - piece_held.center_offset.y;
 	}
 
 	// When the player lets go of a piece
@@ -103,21 +109,10 @@ void TPlayerProcessInput(void) {
 			// JARRETT TODO: If piece is dropped onto the grid, get the corresponding pos and do something
 			// PlayPiece();
 		}
-		else {
-			// If piece is dropped outside the grid, return it and carry on
-			piece_held->piece.draw_pos.x = piece_held->pos.x + (SHAPE_BOUNDS - piece_held->piece.x_length) / 2.0f * hand_tile_length;
-			piece_held->piece.draw_pos.y = piece_held->pos.y + (SHAPE_BOUNDS - piece_held->piece.y_length) / 2.0f * hand_tile_length;
-		}
-
-		// Reset the render color & size to match the grid
-		piece_held->piece.color = WHITE;
-		piece_held->piece.color_stroke = BLACK;
-		piece_held->piece.x_screen_length = hand_tile_length;
-		piece_held->piece.y_screen_length = hand_tile_length;
 
 		// Remove the flags for piece_held
 		is_piece_held = FALSE;
-		piece_held = NULL;
+		piece_held.piece = NULL;
 	}
 }
 
@@ -140,7 +135,7 @@ void RenderHand(void) {
 		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
-		if (current == piece_held) continue; // Don't render the piece if it's held
+		if (&current->piece == piece_held.piece) continue; // Don't render the piece if it's held
 
 		// Settings for tile rendering
 		CP_Settings_Fill(current->piece.color);
@@ -190,18 +185,14 @@ void RenderHand(void) {
 
 	// Render the carried piece last so that it is on top of everything
 	if (is_piece_held) {
-		current = piece_held;
-
 		// Settings for tile rendering
-		CP_Settings_Fill(current->piece.color);
-		CP_Settings_Stroke(current->piece.color_stroke);
+		CP_Settings_Fill(piece_held.color);
+		CP_Settings_Stroke(piece_held.color_stroke);
 		// Render each tile in the Tetris Piece
-		float* x_screen_length = &current->piece.x_screen_length;
-		float* y_screen_length = &current->piece.y_screen_length;
 		for (int index_x = 0; index_x < SHAPE_BOUNDS; ++index_x) {
 			for (int index_y = 0; index_y < SHAPE_BOUNDS; ++index_y) {
-				if (current->piece.shape[index_x][index_y]) {
-					CP_Graphics_DrawRect(current->piece.draw_pos.x + index_x * *x_screen_length, current->piece.draw_pos.y + index_y * *y_screen_length, *x_screen_length, *y_screen_length);
+				if (piece_held.piece->shape[index_x][index_y]) {
+					CP_Graphics_DrawRect(piece_held.draw_pos.x + index_x * piece_held.x_screen_length, piece_held.draw_pos.y + index_y * piece_held.y_screen_length, piece_held.x_screen_length, piece_held.y_screen_length);
 				}
 			}
 		}
