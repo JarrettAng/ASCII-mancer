@@ -7,9 +7,14 @@ ________________________________________________________________________________
 
 #include "ColorTable.h"
 
+#include "TPlayer.h" 
 #include "TPlayerHeld.h"
 
 PlayerPieceHeld piece_held;
+
+#pragma region
+void PieceHeldPlayed(void);
+#pragma endregion Forward Declarations
 
 //______________________________________________________________
 // All "public" functions (Basically those in the TPlayer.h)
@@ -28,14 +33,25 @@ void TPlayerHeldInit(void) {
 	piece_held.y_screen_length = 75.0f;
 }
 
+/*______________________________________________________________
+@brief Returns true if a piece is currently held by the player.
+*/
 _Bool IsPieceHeld(void) {
 	return piece_held.piece != NULL;
 }
 
+/*______________________________________________________________
+@brief Called by TPlayer when rendering, returns true if the piece to compare is the piece held,
+	   if no piece is held it will return false.
+*/
 _Bool IsThisPieceHeld(TetrisPiece const *piece_to_compare) {
-	return &piece_held.piece == &piece_to_compare;
+	return piece_held.piece == piece_to_compare;
 }
 
+/*______________________________________________________________
+@brief Called by TPlayer when a click has been detected on one of the slots
+	   The information of the piece clicked will be passed through here.
+*/
 void NewPieceHeld(TetrisPiece const *new_piece) {
 	// We found the slot clicked! Set the flags to true
 	piece_held.piece = new_piece;
@@ -45,6 +61,22 @@ void NewPieceHeld(TetrisPiece const *new_piece) {
 	piece_held.center_offset.y = (piece_held.piece->y_length / 2 + 0.5f) * piece_held.y_screen_length;
 }
 
+/*______________________________________________________________
+@brief Called by TPlayer during its process input, this function will
+	   handle all input related to the piece held
+*/
+void TPlayerHeldProcessInput(void) {
+	// When the player lets go of a click
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_1) && IsPieceHeld()) {
+		PieceHeldPlayed();
+
+		piece_held.piece = NULL; // Removes information on piece held once the player has released.
+	}
+}
+
+/*______________________________________________________________
+@brief Render the piece held by the player, if any.
+*/
 void RenderPieceHeld(void) {
 	if (!IsPieceHeld()) return;
 
@@ -67,6 +99,14 @@ void RenderPieceHeld(void) {
 	}
 }
 
-void PieceHeldReleased(void) {
-	piece_held.piece = NULL;
+//______________________________________________________________
+// Player interaction functions
+
+/*______________________________________________________________
+@brief When a Tetris Piece is dropped onto the grid, it has been played.
+
+@param int - Which piece was played
+*/
+void PieceHeldPlayed(void) {
+	RemovePieceHeldFromHand();
 }

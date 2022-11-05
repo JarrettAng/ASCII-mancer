@@ -21,7 +21,7 @@ typedef struct {
 } PlayerPieceHeld;
 
 /*______________________________________________________________
-@brief Called by TPlayer during it's initialization, this function will load
+@brief Called by TPlayer during its initialization, this function will load
        the values needed for rendering and such.
 */
 void TPlayerHeldInit(void);
@@ -44,11 +44,12 @@ _Bool IsThisPieceHeld(TetrisPiece const* piece_to_compare);
 void NewPieceHeld(TetrisPiece const *new_piece);
 
 /*______________________________________________________________
+@brief Called by TPlayer during its process input, this function will 
+       handle all input related to the piece held
+*/
+void TPlayerHeldProcessInput(void);
+
+/*______________________________________________________________
 @brief Render the piece held by the player, if any.
 */
 void RenderPieceHeld(void);
-
-/*______________________________________________________________
-@brief Removes information on piece held once the player has released.
-*/
-void PieceHeldReleased(void);

@@ -22,7 +22,6 @@ CP_Vector text_peek_pos;
 
 #pragma region
 void RecalculateHandRenderPositions(void);
-void PlayPiece(int played_index);
 void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end);
 #pragma endregion Forward Declarations
 
@@ -80,10 +79,7 @@ void TPlayerProcessInput(void) {
 		}
 	}
 
-	// When the player lets go of a click
-	if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
-		PieceHeldReleased(); // Let piece held know and handle if a piece was released
-	}
+	TPlayerHeldProcessInput();
 }
 
 /*______________________________________________________________
@@ -92,7 +88,6 @@ void TPlayerProcessInput(void) {
 */
 void RenderHand(void) {
 	PlayerHandSlot* current;
-
 	//______________________________________________________________
 	// Render each piece in the player's hand
 	for (int index = 0; index < HAND_SIZE; ++index) {
@@ -230,30 +225,51 @@ void RecalculateHandRenderPositions(void) {
 // Player interaction functions
 
 /*______________________________________________________________
-@brief When a Tetris Piece is dropped onto the grid, it has been played.
-
-@param int - Which piece was played
+@brief When a Tetris Piece is dropped onto the grid, update the player's hand
 */
-void PlayPiece(int played_index) {
-	if (played_index == -1) return;
-
-	// JARRETT TODO: Insert the interaction of the piece with the grid here
+void RemovePieceHeldFromHand() {
+	PlayerHandSlot *current;
+	int played_index = 0;
+	for (; played_index < HAND_SIZE; ++played_index) {
+		current = &hand[played_index];
+		if (IsThisPieceHeld(&current->piece)) {
+			break;
+		}
+	}
 
 	// Remove the piece from the player's hand, and shift the pieces behind fowards
 	ArrayShiftFowardFrom(&hand, played_index, HAND_SIZE - 1);
 
 	// Move the next piece from the peek queue into the hand
-	hand[HAND_SIZE - 1] = peek_hand[0];
+	hand[HAND_SIZE - 1].piece = peek_hand[0].piece;
 
 	// Shift the peek queue piece foward
 	ArrayShiftFowardFrom(&peek_hand, 0, PEEK_SIZE - 1);
 
 	// Draw another piece from the queue
-	hand[PEEK_SIZE - 1].piece = DrawFromBag();
+	peek_hand[PEEK_SIZE - 1].piece = DrawFromBag();
+
+	//______________________________________________________________
+	// Update the positions
+	for (int index = 0; index < HAND_SIZE; ++index) {
+		current = &hand[index];
+		current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * hand_tile_length;
+		current->piece.draw_pos.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * hand_tile_length;
+		current->piece.x_screen_length = hand_tile_length;
+		current->piece.y_screen_length = hand_tile_length;
+	}
+
+	for (int index = 0; index < PEEK_SIZE; ++index) {
+		current = &peek_hand[index];
+		current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * peek_tile_length;
+		current->piece.draw_pos.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * peek_tile_length;
+		current->piece.x_screen_length = peek_tile_length;
+		current->piece.y_screen_length = peek_tile_length;
+	}
 }
 
 void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end) {
 	for (int index = start; index < end; ++index) {
-		array[index] = array[index + 1];
+		array[index].piece = array[index + 1].piece;
 	}
 }
