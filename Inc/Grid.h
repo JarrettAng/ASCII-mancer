@@ -13,6 +13,13 @@ typedef struct SpaceInfo
 	float x_pos;
 	float y_pos;
 }SpaceInfo;
+typedef struct CurrentGridPos
+{
+	int x_Index;
+	int y_Index;
+	float x_CenterPos;
+	float y_CenterPos;
+}CurrentGridPos;
 
 float GridYToPosY(int index);
 float GridXToPosX(int index);
