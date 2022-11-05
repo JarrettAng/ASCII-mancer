@@ -23,6 +23,14 @@ float grid_PlayArea = 0;
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
 int xpos = TOTAL_XGRID - 1;
 int ypos = TOTAL_YGRID - 1;
+int x_Index = 0;
+int y_Index = 0;
+
+struct CurrentXYIndex
+{
+	int x;
+	int y;
+};
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
 SpaceInfo space[TOTAL_XGRID][TOTAL_YGRID];
 
@@ -65,6 +73,19 @@ int PosYToGridY(float pos){
 	int y = ((pos-grid_Top)/grid_PlayArea)*TOTAL_YGRID;
 	return y;
 }
+//Check if mouse is in playing area
+_Bool InPlayingArea()
+{
+	if (CP_Input_GetMouseY() > grid_Top && CP_Input_GetMouseY() < grid_Bottom && CP_Input_GetMouseX() > gridXOffset)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 void DrawLineGrid()
 {
 	CP_Graphics_ClearBackground(BLACK);
@@ -93,7 +114,13 @@ void grid_update(void)
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_TextSize(25.f);
 	char buffer[25] = {0};
-	sprintf_s(buffer,25,"%i, %i",PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()));
+	x_Index = PosXToGridX(CP_Input_GetMouseX());
+	y_Index = PosYToGridY(CP_Input_GetMouseY());
+	if (InPlayingArea() == TRUE)
+	{
+
+		sprintf_s(buffer,25,"%d, %d", x_Index, y_Index);
+	}
 	CP_Font_DrawText(buffer,CP_Input_GetMouseX(),CP_Input_GetMouseY());
 }
 void grid_exit(void)
