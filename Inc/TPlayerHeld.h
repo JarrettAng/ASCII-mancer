@@ -29,6 +29,14 @@ typedef struct {
     PieceHeldCell grid[SHAPE_BOUNDS * SHAPE_BOUNDS];
 } PieceHeldShape;
 
+typedef enum {
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT,
+    ROTATION_TYPE_LENGTH
+} PieceOrientation;
+
 /*______________________________________________________________
 @brief Called by TPlayer during its initialization, this function will load
        the values needed for rendering and such.

@@ -22,6 +22,7 @@ int piece_held_shape_centre;
 // Transformation matrices
 int left_rotation[2][2] = { 0, -1, 1, 0 };
 int right_rotation[2][2] = { 0, 1, -1, 0 };
+PieceOrientation current_rotation;
 
 // Piece on grid rendering information
 CP_Vector grid_bounds;
@@ -31,7 +32,9 @@ _Bool in_playing_area;
 
 #pragma region
 void PieceHeldPlayed(void);
+void PieceHeldRotateRight(void);
 int ShapeToIndex(int shape_x, int shape_y);
+int GridToIndex(int grid_x, int grid_y);
 int IndexToShapeX(int index);
 int IndexToShapeY(int index);
 #pragma endregion Forward Declarations
@@ -111,11 +114,10 @@ void NewPieceHeld(TetrisPiece const *new_piece) {
 		}
 	}
 
-	piece_held_shapeCurrent->grid[0].cell = piece_held_shapeCurrent->grid[0].cell;
-
 	// Update the render offset
 	piece_held.center_offset.x = (piece_held_shape_centre + 0.5f) * piece_held.x_screen_length;
 	piece_held.center_offset.y = (piece_held_shape_centre + 0.5f) * piece_held.y_screen_length;
+	current_rotation = UP;
 }
 
 /*______________________________________________________________
@@ -141,7 +143,7 @@ void TPlayerHeldProcessInput(void) {
 
 	// When the player rotates/ right clicks
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_2)) {
-
+		PieceHeldRotateRight();
 	}
 
 	// When the player lets go of a click
@@ -173,16 +175,6 @@ void RenderPieceHeld(void) {
 			CP_Graphics_DrawRect(piece_held.draw_pos.x + current->grid_x * piece_held.x_screen_length, piece_held.draw_pos.y + current->grid_y * piece_held.y_screen_length, piece_held.x_screen_length, piece_held.y_screen_length);
 		}
 	}
-
-	/*
-	// Render each tile in the Tetris Piece
-	for (int index_x = 0; index_x < SHAPE_BOUNDS; ++index_x) {
-		for (int index_y = 0; index_y < SHAPE_BOUNDS; ++index_y) {
-			if (piece_held.piece->shape[index_x][index_y]) {
-				CP_Graphics_DrawRect(piece_held.draw_pos.x + index_x * piece_held.x_screen_length, piece_held.draw_pos.y + index_y * piece_held.y_screen_length, piece_held.x_screen_length, piece_held.y_screen_length);
-			}
-		}
-	} */
 }
 
 //______________________________________________________________
@@ -195,11 +187,61 @@ void PieceHeldPlayed(void) {
 	RemovePieceHeldFromHand();
 }
 
+void PieceHeldRotateRight(void) {
+	PieceHeldShape* previous = piece_held_shapeCurrent;
+	piece_held_shapeCurrent = (piece_held_shapeCurrent == &piece_held_shapeA) ? &piece_held_shapeB : &piece_held_shapeA;
+
+	int new_x, new_y, old_x, old_y;
+	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
+		// The shape index goes from 0 to 5 (Assuming length of 6) but we need it to go from -2 to 3, so we convert it.
+		old_x = previous->grid[index].grid_x - piece_held_shape_centre;
+		old_y = previous->grid[index].grid_y + piece_held_shape_centre - previous->grid[index].grid_y * 2;
+		new_x = left_rotation[0][0] * old_x + left_rotation[1][0] * old_y;
+		new_y = left_rotation[0][1] * old_x + left_rotation[1][1] * old_y;
+
+		// In order to store it back into the array, we need to convert the -2 to 3 and to 0 to 5.
+		piece_held_shapeCurrent->grid[GridToIndex(new_x, new_y)].cell = previous->grid[index].cell;
+	}
+
+	current_rotation = (current_rotation + 1) % ROTATION_TYPE_LENGTH;
+	// Update the draw_pos to be centred on the new piece
+	switch (current_rotation) {
+	case UP:
+		piece_held.center_offset.x = (piece_held_shape_centre + 0.5f) * piece_held.x_screen_length;
+		piece_held.center_offset.y = (piece_held_shape_centre + 0.5f) * piece_held.y_screen_length;
+		break;
+	case RIGHT:
+		piece_held.center_offset.x = (piece_held_shape_centre - 0.5f) * piece_held.x_screen_length;
+		piece_held.center_offset.y = (piece_held_shape_centre + 0.5f) * piece_held.y_screen_length;
+		break;
+	case DOWN:
+		piece_held.center_offset.x = (piece_held_shape_centre - 0.5f) * piece_held.x_screen_length;
+		piece_held.center_offset.y = (piece_held_shape_centre - 0.5f) * piece_held.y_screen_length;
+		break;
+	case LEFT:
+		piece_held.center_offset.x = (piece_held_shape_centre + 0.5f) * piece_held.x_screen_length;
+		piece_held.center_offset.y = (piece_held_shape_centre - 0.5f) * piece_held.y_screen_length;
+		break;
+	}
+}
+
 //______________________________________________________________
 // Piece rotating functions
 
+/*______________________________________________________________
+@brief Using a system where 0 is the start (e.g. 0 to 5) covert it to index in shape array
+*/
 int ShapeToIndex(int shape_x, int shape_y) {
 	return shape_x + shape_y * SHAPE_BOUNDS;
+}
+
+/*______________________________________________________________
+@brief Using a system where 0 is the origin (e.g. -3 to 3) covert it to index in shape array
+*/
+int GridToIndex(int grid_x, int grid_y) {
+	int shape_x = grid_x + piece_held_shape_centre - 1;
+	int shape_y = piece_held_shape_centre - (piece_held_shape_centre - (piece_held_shape_centre - grid_y));
+	return ShapeToIndex(shape_x, shape_y);
 }
 
 int IndexToShapeX(int index) {
