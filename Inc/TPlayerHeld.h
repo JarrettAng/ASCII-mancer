@@ -62,7 +62,3 @@ void TPlayerHeldProcessInput(void);
 @brief Render the piece held by the player, if any.
 */
 void RenderPieceHeld(void);
-
-int RotationToIndex(int rotation_x, int rotation_y);
-int IndexToRotationX(int index);
-int IndexToRotationY(int index);

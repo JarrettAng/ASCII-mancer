@@ -121,6 +121,7 @@ void RenderHand(void) {
 	// Render each piece in the peek queue & the "NEXT" text
 	CP_Settings_Fill(WHITE);
 	CP_Settings_TextSize(text_peek_size);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP);
 	CP_Font_DrawText("NEXT", text_peek_pos.x, text_peek_pos.y);
 
 	for (int index = 0; index < PEEK_SIZE; ++index) {
