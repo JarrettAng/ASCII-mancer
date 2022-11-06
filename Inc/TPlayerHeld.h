@@ -25,6 +25,10 @@ typedef struct {
     int cell;
 } PieceHeldCell;
 
+typedef struct {
+    PieceHeldCell grid[SHAPE_BOUNDS * SHAPE_BOUNDS];
+} PieceHeldShape;
+
 /*______________________________________________________________
 @brief Called by TPlayer during its initialization, this function will load
        the values needed for rendering and such.
@@ -58,3 +62,7 @@ void TPlayerHeldProcessInput(void);
 @brief Render the piece held by the player, if any.
 */
 void RenderPieceHeld(void);
+
+int RotationToIndex(int rotation_x, int rotation_y);
+int IndexToRotationX(int index);
+int IndexToRotationY(int index);

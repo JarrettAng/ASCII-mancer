@@ -11,26 +11,26 @@ ________________________________________________________________________________
 #include "TPlayer.h" 
 #include "TPlayerHeld.h"
 
+PlayerPieceHeld piece_held; // Information on the piece held
+
 // Rotation information
-PieceHeldCell piece_held_shapeA[SHAPE_BOUNDS + 1][SHAPE_BOUNDS + 1]; // The + 1 is a buffer for rotating non-symmetrical pieces
-PieceHeldCell piece_held_shapeB[SHAPE_BOUNDS + 1][SHAPE_BOUNDS + 1];
-PieceHeldCell(*piece_held_shape_current)[SHAPE_BOUNDS + 1][SHAPE_BOUNDS + 1];
+PieceHeldShape piece_held_shapeA; // The + 1 is a buffer for rotating non-symmetrical pieces
+PieceHeldShape piece_held_shapeB;
+PieceHeldShape *piece_held_shapeCurrent;
 
 // Transformation matrices
 int left_rotation[2][2] = { 0, -1, 1, 0 };
 int right_rotation[2][2] = { 0, 1, -1, 0 };
-
-PlayerPieceHeld piece_held;
-
-#pragma region
-void PieceHeldPlayed(void);
-#pragma endregion Forward Declarations
 
 // Piece on grid rendering information
 CP_Vector grid_bounds;
 CP_Vector grid_size;
 float cell_size;
 _Bool in_playing_area;
+
+#pragma region
+void PieceHeldPlayed(void);
+#pragma endregion Forward Declarations
 
 //______________________________________________________________
 // All "public" functions (Basically those in the TPlayer.h)
@@ -41,7 +41,7 @@ _Bool in_playing_area;
 */
 void TPlayerHeldInit(void) {
 	piece_held.piece = NULL;
-	// TODO: LINK WITH ACTUAL GRID SETTINGS
+	// JARRETT TODO: LINK WITH ACTUAL GRID SETTINGS
 	// Initialize Piece on grid rendering information
 	
 
@@ -52,7 +52,18 @@ void TPlayerHeldInit(void) {
 	piece_held.y_screen_length = 75.0f;
 
 	// Initialize shape rotation matrices
-
+	piece_held_shapeCurrent = &piece_held_shapeA;
+	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
+		piece_held_shapeCurrent->grid[index].grid_x = IndexToRotationX(index);
+		piece_held_shapeCurrent->grid[index].grid_y = IndexToRotationY(index);
+		piece_held_shapeCurrent->grid[index].cell = 0;
+	}
+	piece_held_shapeCurrent = &piece_held_shapeB;
+	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
+		piece_held_shapeCurrent->grid[index].grid_x = IndexToRotationX(index);
+		piece_held_shapeCurrent->grid[index].grid_y = IndexToRotationY(index);
+		piece_held_shapeCurrent->grid[index].cell = 0;
+	}
 }
 
 /*______________________________________________________________
@@ -146,4 +157,19 @@ void RenderPieceHeld(void) {
 */
 void PieceHeldPlayed(void) {
 	RemovePieceHeldFromHand();
+}
+
+//______________________________________________________________
+// Piece rotating functions
+
+int RotationToIndex(int rotation_x, int rotation_y) {
+	return rotation_x + rotation_y * SHAPE_BOUNDS;
+}
+
+int IndexToRotationX(int index) {
+	return index % SHAPE_BOUNDS;
+}
+
+int IndexToRotationY(int index) {
+	return index / SHAPE_BOUNDS;
 }
