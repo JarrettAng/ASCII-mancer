@@ -41,7 +41,7 @@ int GetEnemyCount(){
 }
 
 //Returns the the EnemyInfo in the stored index
-EnemyInfo* GetEnemy(int index){
+EnemyInfo* GetEnemyPrefab(int index){
 	return &Enemy[index];
 }
 
@@ -58,11 +58,21 @@ void SpawnEnemy(EnemyInfo* enemy, int x, int y){
 
 void MoveEnemy(EnemyInfo* enemy){
 	//If the enemy has reach last x element, it'll die and damage player
-	enemy->x -= enemy->MovementSpeed;
 	if (enemy->x <= 0)
 	{
 		enemy->is_Alive = FALSE;//Should put this in OnDeath()
 	}
+	for(short i =0; i< enemy->MovementSpeed; ++i){
+		if(GetEnemyFromGrid(enemy->x-i,enemy->y)==NULL) continue;
+		if(GetEnemyFromGrid(enemy->x-i,enemy->y)->y == enemy->y){
+
+			if(GetEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){
+				enemy->x = GetEnemyFromGrid(enemy->x-i,enemy->y)->x+1;
+				return;
+			}
+		}
+	}
+	enemy->x -= enemy->MovementSpeed;
 }
 void DrawEnemy(EnemyInfo* enemy){
 	

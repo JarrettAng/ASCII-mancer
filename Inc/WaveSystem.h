@@ -1,5 +1,7 @@
 #pragma once
 #include <cprocessing.h>
+#include "EnemyStats.h"
+#include "Grid.h"
 
 //Initialises the wave system. MUST BE CALLED AT LEAST ONCE.
 void InitWaveSystem(void);
@@ -10,5 +12,7 @@ void UpdateWave(void);
 //Function that increments wave and generates the next one
 void NextWave(void);
 
+
+EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now
 void ClearWaveArray(void);
