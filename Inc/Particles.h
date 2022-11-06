@@ -6,7 +6,7 @@
 
 #define VECTOR_UP CP_Vector_Set(0,-1)
 #define VECTOR_DOWN CP_Vector_Set(0,1)
-#define PARTICLECOUNT 1000
+#define PARTICLECOUNT 1001
 
 typedef struct Particle{
     float x;
@@ -14,34 +14,20 @@ typedef struct Particle{
     float xVelocity;
     float yVelocity;        
     float lifeTime;         //Current lifetime remaining for particle. Disappears when <0
+    float timeBeforeActive;
     float cachedLifeTime;   //Used for calculating time particle has been alive for.
     float size;             //NOTE!! FONT SIZE GOTTA BE BIG! OR CAN'T SEE SHITTT!! At least like, Min 15.f
     BOOL isRGB;
     CP_Vector force;        //force that is acting on particle. Cummulative and will be calculated in UpdateParticle.
     char* animString;
     CP_Color color;
-     
     //BOOL isActive;        //Returns false if the lifeTime is zero. If that's the case then just check against lifeTime?
     float gravityScale;    //Maybe have gravity? Might be nice because it makes it curve
 } Particle;
 
-typedef struct EmissionData{
-    int burstCount;
-    float duration; 
-    _Bool isRandomPos;
-}EmissionData;
 
-typedef enum EmissionType{
-    RADIAL,
-    RADIALEX,
-    CONE,
-    CONEEX,
-    SCREEN,
-    SCREENEX
-}EmissionType;
+void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB,float timeBeforeActive);
 
-void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB);
-void CreateEmitter(Particle* particle, float x, float y, int burstCount, float duration, _Bool isRandomPos);
 void UpdateParticle(Particle* particlePointer);
 void DrawParticle(Particle* particlePointer);
 void ResetParticle(Particle* particlePointer);

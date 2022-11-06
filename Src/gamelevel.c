@@ -15,7 +15,6 @@ void gameLevelInit(void){
     InitWaveSystem();
     InitializeLife();
     InitSoundManager(GAMEBGM);
-
 	TManagerInit(DEFAULT_SPAWN_SEED);
 	TPlayerInit();
 
