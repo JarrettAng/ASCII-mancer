@@ -14,6 +14,7 @@ typedef struct EnemyInfo
 	int MovementSpeed;
 	//Health
 	int Health;
+	int MaxHealth;
 	//For the time being, it's the "sprite"
 	char* CharSprite;
 	//in the future, width height for size
@@ -37,3 +38,5 @@ void DrawEnemy(EnemyInfo* enemy);
 //Helper functions
 int GetEnemyCount();
 EnemyInfo* GetEnemyPrefab(int index);
+
+void SendDamage(int x, int y,int damage);

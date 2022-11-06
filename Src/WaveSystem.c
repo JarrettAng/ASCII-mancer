@@ -1,4 +1,5 @@
 #include "WaveSystem.h"
+#include "Particles.h"
 
 int currentWave=1;			
 int enemyThreshold;			//Set to a ratio of the current wave credits (used later)
@@ -62,8 +63,8 @@ void UpdateWave(){
 		//Iterates through the wave array and starts spawning the enemies
 		if(waveIndex < enemyCount){
 			//Can probably be wrapped to a spawn enemy function
-			WaveObjects[waveIndex].x = TOTAL_XGRID;//Start at far right
-			unsigned int enemy_StatingPosY = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));//Spawn at random y pos
+			WaveObjects[waveIndex].x = TOTAL_XGRID-1;//Start at far right
+			unsigned int enemy_StatingPosY = (CP_Random_RangeInt(0, TOTAL_YGRID-1));//Spawn at random y pos
 			WaveObjects[waveIndex].y = enemy_StatingPosY;
 			WaveObjects[waveIndex].is_Alive = TRUE;
 			waveIndex++;
@@ -94,13 +95,31 @@ void UpdateWave(){
 	
 }
 
-EnemyInfo* GetEnemyFromGrid(int x, int y){
+// EnemyInfo* GetEnemyFromGrid(int x, int y){
+// 	for(short i=0; i< waveIndex;++i){
+// 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
+// 			return &WaveObjects[i];
+// 		}
+// 	}
+// 	return NULL;
+// }
+EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	for(short i=0; i< waveIndex;++i){
-		if(WaveObjects[waveIndex].x == x && WaveObjects[waveIndex].y ==y){
-			return &WaveObjects[waveIndex];
+		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
+			if(WaveObjects[i].is_Alive) return &WaveObjects[i];
 		}
 	}
 	return NULL;
+}
+void SendDamage(int x, int y,int damage){
+	if (GetAliveEnemyFromGrid(x, y) == NULL) return;
+	EnemyInfo* enemy = GetAliveEnemyFromGrid(x,y);
+	enemy->Health-=damage;
+	if(enemy->Health <=0){
+
+		enemy->is_Alive = FALSE;
+		ZombieDeathParticle(GridXToPosX(x),GridYToPosY(y));
+	}
 }
 
 void NextWave()
@@ -112,5 +131,5 @@ void NextWave()
 }
 
 void ClearWaveArray(){
-	memset(WaveObjects,0,sizeof(EnemyInfo)*(TOTAL_XGRID*TOTAL_YGRID));
+	memset(WaveObjects,0,sizeof(EnemyInfo)*(200));
 }

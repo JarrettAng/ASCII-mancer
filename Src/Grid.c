@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 
-float cube_Length;
+float cube_Length = 0;
 
 float gridXOffset = 0;
 
@@ -36,7 +36,7 @@ void grid_init(void) {
 
 	//Calculations for adjusting buffers according to cell size
 	float x = (WINDOWLENGTH*.9f)/TOTAL_XGRID;	//Width of playing space is 90% of screen width
-	float y = (WINDOWHEIGHT*.6f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
+	float y = (WINDOWHEIGHT*.65f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
 	float size = min(x,y);						//Get whichever is smaller
 	if(WINDOWLENGTH-(size*TOTAL_XGRID)>gridXOffset){	//We prioritise adjusting by length
 	gridXOffset = WINDOWLENGTH-(size*TOTAL_XGRID);		//Set the X Buffer first
@@ -65,6 +65,12 @@ void CreatePlayingSpace() {
 //Returns the size of the grid cell
 float GetCellSize(){
 	return cube_Length;
+}
+float GetGridTopBuffer(){
+	return grid_Top;
+}
+float GetGridPlayingArea(){
+	return grid_PlayArea;
 }
 //Formula to get position to index (without offset)
 //int x = (int)((GridPos/CP_System_GetWindowWidth())*width);
@@ -140,9 +146,6 @@ void DrawLineGrid()
 void grid_update(void)
 {
 	DrawLineGrid();
-	CP_Settings_Fill(MENU_RED);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_TextSize(25.f);
 	char buffer[25] = {0};
 
 	x_Index = PosXToGridX(CP_Input_GetMouseX());//Get x index of grid
@@ -150,14 +153,17 @@ void grid_update(void)
 	grid_Info = CurrentPos(x_Index, y_Index);//A struct that contains the x,y index and the grid centerpoint
 	//FOR DEBUGGING
 	//Remove if no longer need to use
-	if (IsInPlayingArea(CP_Input_GetMouseX(),CP_Input_GetMouseY()))
-	{
-		sprintf_s(buffer,25,"%d, %d,%.0f,%.0f", grid_Info.x_Index, grid_Info.y_Index, grid_Info.x_CenterPos, grid_Info.y_CenterPos);
-		// CP_Font_DrawText("Z", grid_Info.x_CenterPos, grid_Info.y_CenterPos);
-		 CP_Font_DrawText("Z", GetGridCenterX(CP_Input_GetMouseX()),GetGridCenterY(CP_Input_GetMouseY()));
+	// if (IsInPlayingArea(CP_Input_GetMouseX(),CP_Input_GetMouseY()))
+	// {
+	// 	sprintf_s(buffer,25,"%d, %d,%.0f,%.0f", grid_Info.x_Index, grid_Info.y_Index, grid_Info.x_CenterPos, grid_Info.y_CenterPos);
+	// 	// CP_Font_DrawText("Z", grid_Info.x_CenterPos, grid_Info.y_CenterPos);
+	// 	CP_Settings_Fill(MENU_RED);
+	// 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
+	// 	CP_Settings_TextSize(25.f);
+	// 	CP_Font_DrawText("Z", GetGridCenterX(CP_Input_GetMouseX()),GetGridCenterY(CP_Input_GetMouseY()));
 
-	}
-	CP_Font_DrawText(buffer,CP_Input_GetMouseX(),CP_Input_GetMouseY());
+	// }
+	// CP_Font_DrawText(buffer,CP_Input_GetMouseX(),CP_Input_GetMouseY());
 }
 void grid_exit(void)
 {

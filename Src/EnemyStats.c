@@ -6,6 +6,7 @@
 #include "WaveSystem.h"
 #include "Grid.h"
 #include "ColorTable.h"
+#include "Particles.h"
 
 
 #define ENEMY1 1,1,1,"1"
@@ -29,6 +30,7 @@ void CreateEnemy(int cost, int speed, int health, const char* sprite){
 	EnemyInfo newEnemy;
 	newEnemy.Cost = cost;
 	newEnemy.Health = health;
+	newEnemy.MaxHealth = 3;
 	newEnemy.CharSprite = sprite;
 	newEnemy.MovementSpeed = speed;
 	Enemy[enemyPoolIndex] = newEnemy;
@@ -58,27 +60,41 @@ void SpawnEnemy(EnemyInfo* enemy, int x, int y){
 
 void MoveEnemy(EnemyInfo* enemy){
 	//If the enemy has reach last x element, it'll die and damage player
-	if (enemy->x <= 0)
-	{
-		enemy->is_Alive = FALSE;//Should put this in OnDeath()
-	}
-	for(short i =0; i< enemy->MovementSpeed; ++i){
-		if(GetEnemyFromGrid(enemy->x-i,enemy->y)==NULL) continue;
-		if(GetEnemyFromGrid(enemy->x-i,enemy->y)->y == enemy->y){
-
-			if(GetEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){
-				enemy->x = GetEnemyFromGrid(enemy->x-i,enemy->y)->x+1;
-				return;
-			}
+	for(short i =1; i<= enemy->MovementSpeed; ++i){
+		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)==NULL){
+			continue;
 		}
+		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->is_Alive){
+
+			if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->y == enemy->y){
+
+				if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){
+					enemy->x = GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x+1;
+					return;
+				}
+			}
+		} 
 	}
 	enemy->x -= enemy->MovementSpeed;
+	if (enemy->x < 0)
+	{
+		//Special despawn animation over here
+		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y),enemy->Health);
+		enemy->is_Alive = FALSE;//Should put this in OnDeath()
+	}
+	// if((enemy->x-enemy->MovementSpeed)<0) enemy->x = 0;
+	// else enemy->x-= enemy->MovementSpeed;
 }
 void DrawEnemy(EnemyInfo* enemy){
 	
 	CP_Settings_Fill(MENU_RED);
-	CP_Settings_TextSize(25.f);
-	CP_Font_DrawText(enemy->CharSprite, GridXToPosX(enemy->x),GridYToPosY(enemy->y));
+	CP_Settings_TextSize(GetCellSize()*((float)enemy->Health/(float)enemy->MaxHealth));
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
+
+    char buffer[25] = {0};
+	sprintf_s(buffer,25,"%d",enemy->Health);
+
+	CP_Font_DrawText("Z", GridXToPosX(enemy->x),GridYToPosY(enemy->y));
 
 }
 void OnDeath()

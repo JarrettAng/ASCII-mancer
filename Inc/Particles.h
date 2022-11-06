@@ -9,7 +9,6 @@
 #define PARTICLECOUNT 1000
 
 typedef struct Particle{
-    int UID;                //Particle's uniqueIdentifier to search out the specific particle
     float x;
     float y;
     float xVelocity;
@@ -26,14 +25,20 @@ typedef struct Particle{
     float gravityScale;    //Maybe have gravity? Might be nice because it makes it curve
 } Particle;
 
-typedef struct Emitter{
-    Particle* particle;
-    float x;
-    float y;
+typedef struct EmissionData{
     int burstCount;
     float duration; 
     _Bool isRandomPos;
-}Emitter;
+}EmissionData;
+
+typedef enum EmissionType{
+    RADIAL,
+    RADIALEX,
+    CONE,
+    CONEEX,
+    SCREEN,
+    SCREENEX
+}EmissionType;
 
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB);
 void CreateEmitter(Particle* particle, float x, float y, int burstCount, float duration, _Bool isRandomPos);
@@ -48,6 +53,7 @@ void RadialParticleVaried(float x, float y);
 //Temp function for zombie despawn particle
 void ZombieDeathParticle(float x, float y);
 void NukeParticle(float x, float y);
+void ZombieToPlayerParticle(float x,float y);
 
 //Move this to utils!!
 CP_Vector AngleToVector(float degreeAngle);

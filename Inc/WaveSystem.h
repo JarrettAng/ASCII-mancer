@@ -13,6 +13,7 @@ void UpdateWave(void);
 void NextWave(void);
 
 
-EnemyInfo* GetEnemyFromGrid(int x, int y);
+// EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now
 void ClearWaveArray(void);
+EnemyInfo* GetAliveEnemyFromGrid(int x, int y);

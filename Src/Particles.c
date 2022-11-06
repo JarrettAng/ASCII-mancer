@@ -2,16 +2,19 @@
 #include "testfile.h"
 #include "Screenshake.h"
 #include "SoundManager.h"
+#include "WaveSystem.h"
+#include "Grid.h"
 //Particle Array. Will use some form of Object Pooling.
 //ParticleCount defined in particles.h, 1000. 
 Particle particleArray[PARTICLECOUNT];
 int particleIndex =0;
 
-Emitter emitterArray[20];
+EmissionData emitterArray[20];
 int emitterIndex =0;
 //This is where I'll declare "anim strings for animation"
 char* SparkleAnimString = "x+*\".\0";
 char* ZombieDeathAnimString = "ZZZZ    ZZZZ    ZZZZ    ZZZNNzznncu*\'`\0";
+char* ZombieAnim = "ZzZzZzZzZzZzZzZz";
 char* NukeAnimString = "@Oo*\'\0";
 
 //TODO: Create particle prefabs, emitters will control burst, duration and if radial and all the other fancy stuff. Particle will just remain as particle and emitter will handle all the emissions.
@@ -45,10 +48,7 @@ void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gra
 }
 
 void CreateEmitter(Particle* particle, float x, float y, int burstCount, float duration, _Bool isRandomPos){
-    Emitter newEmitter = {
-        .particle = particle,
-        .x = x,
-        .y = y,
+    EmissionData newEmitter = {
         .burstCount = burstCount,
         .duration =duration,
         .isRandomPos = isRandomPos
@@ -56,7 +56,7 @@ void CreateEmitter(Particle* particle, float x, float y, int burstCount, float d
     emitterArray[emitterIndex%(20)] = newEmitter;
     emitterIndex++;
 }
-void UpdateEmitter(Emitter* emitterPointer){
+void UpdateEmitter(EmissionData* emitterPointer){
 
 }
 //Function that updates a given particle. Used in Update effects forloop. Handles particle movement and lifetime.
@@ -128,7 +128,7 @@ void RadialParticle(float x, float y,int particleCount,float force){
 }
 
 void ZombieDeathParticle(float x, float y){
-    CreateParticle(x,y,1.8f,50.f,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString,FALSE);
+    CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString,FALSE);
     trauma+=0.5f;
 }
 
@@ -136,7 +136,12 @@ void NukeParticle(float x, float y){
     CreateParticle(x,y,0.5f,120.f,0.1f,MENU_RED,CP_Vector_Zero(),NukeAnimString,TRUE);
     trauma+=1.f;
 }
-
+void ZombieToPlayerParticle(float x,float y,int health){
+    CP_Vector dirToPlayer = CP_Vector_Set((CP_System_GetWindowWidth()*0.05f)-x,(GetGridPlayingArea()/2)+GetGridTopBuffer() - y);
+    dirToPlayer = CP_Vector_Normalize(dirToPlayer);
+    CreateParticle(x,y,2.f,GetCellSize()*((float)health/(float)3),0,MENU_RED,dirToPlayer,ZombieAnim,TRUE);
+    trauma+=0.5f;
+}
 
 //Function that handles the animation and drawing of the particle to screen. Sets the color but not the alignment.
 void DrawParticle(Particle* particlePointer){
@@ -175,8 +180,9 @@ void UpdateEffects(void){
     //Testing radial particle. Not sure if input should be checked here. Maybe it should be.
     if(CP_Input_MouseClicked()){
         // ZombieDeathParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
-        NukeParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
-        PlaySoundEx(NUKE,CP_SOUND_GROUP_SFX);
+        // NukeParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+        PlaySoundEx(TETROMINOEXPLODE,CP_SOUND_GROUP_SFX);
+        SendDamage(PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()),1);
     }
     if(CP_Input_MouseClicked())
     {
