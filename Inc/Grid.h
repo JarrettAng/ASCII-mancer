@@ -6,7 +6,7 @@
 #define WINDOWLENGTH CP_System_GetWindowWidth()
 //GRID VALUE MUST ALWYAS BE EVEN
 #define	TOTAL_YGRID 11
-#define TOTAL_XGRID 22
+#define TOTAL_XGRID 27
 
 typedef struct SpaceInfo
 {
@@ -21,6 +21,7 @@ typedef struct CurrentGridPos
 	float y_CenterPos;
 }CurrentGridPos;
 
+float GetCellSize();
 float GridYToPosY(int index);
 float GridXToPosX(int index);
 
@@ -31,8 +32,8 @@ void grid_init(void);
 void grid_update(void);
 void grid_exit(void);
 
-//Check if mouse is in playing area
-_Bool InPlayingArea();
+//Check if given point is in playing area
+_Bool IsInPlayingArea(float x,float y);
 
 //For drawing the grid
 void DrawLineGrid();

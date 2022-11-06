@@ -1,6 +1,5 @@
 #include "WaveSystem.h"
-#include "EnemyStats.h"
-#include "Grid.h"
+
 int currentWave=1;			
 int enemyThreshold;			//Set to a ratio of the current wave credits (used later)
 
@@ -38,10 +37,10 @@ void GenerateWave(){
 		int randomEnemyIndex = CP_Random_RangeInt(0,GetEnemyCount()-1);
 		//Check if Credits-Enemy cost is valid. (it loops and tries again if it isn't)
 		//NOTE: Because there's no break, there MUST be an enemy with at least 1 for it's cost.
-		if((waveCredits-GetEnemy(randomEnemyIndex)->Cost)>=0)		
+		if((waveCredits-GetEnemyPrefab(randomEnemyIndex)->Cost)>=0)		
 		{
-			WaveObjects[enemyCount] = *GetEnemy(randomEnemyIndex);
-			waveCredits-=GetEnemy(randomEnemyIndex)->Cost;
+			WaveObjects[enemyCount] = *GetEnemyPrefab(randomEnemyIndex);
+			waveCredits-=GetEnemyPrefab(randomEnemyIndex)->Cost;
 			enemyCount++;
 		}
 	}
@@ -93,6 +92,15 @@ void UpdateWave(){
 			}
 	}
 	
+}
+
+EnemyInfo* GetEnemyFromGrid(int x, int y){
+	for(short i=0; i< waveIndex;++i){
+		if(WaveObjects[waveIndex].x == x && WaveObjects[waveIndex].y ==y){
+			return &WaveObjects[waveIndex];
+		}
+	}
+	return NULL;
 }
 
 void NextWave()

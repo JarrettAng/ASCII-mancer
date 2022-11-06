@@ -32,10 +32,23 @@ CurrentGridPos grid_Info;
 
 void grid_init(void) {
 	gridXOffset = WINDOWLENGTH*0.1f; 	//10% of screen on left side reserved for player
-	grid_Top = WINDOWHEIGHT * area_Top / 100.f;
-	grid_Bottom = WINDOWHEIGHT * area_Bottom / 100.f;
+	grid_Top = WINDOWHEIGHT*0.1f;
+
+	//Calculations for adjusting buffers according to cell size
+	float x = (WINDOWLENGTH*.9f)/TOTAL_XGRID;	//Width of playing space is 90% of screen width
+	float y = (WINDOWHEIGHT*.6f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
+	float size = min(x,y);						//Get whichever is smaller
+	if(WINDOWLENGTH-(size*TOTAL_XGRID)>gridXOffset){	//We prioritise adjusting by length
+	gridXOffset = WINDOWLENGTH-(size*TOTAL_XGRID);		//Set the X Buffer first
+	grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/4;		//have to adjust top accordingly (10% to top, 30% to bottom)
+	}
+	//Regardless of anything adjustments, bottom is always playarea+grid_top
+	grid_Bottom = ((size*TOTAL_YGRID)+grid_Top);
+
 	grid_PlayArea = grid_Bottom - grid_Top;
-	cube_Length = grid_PlayArea / TOTAL_YGRID;
+	cube_Length = size;
+
+
 	CP_Settings_StrokeWeight(1);
 	CreatePlayingSpace();
 }
@@ -49,7 +62,10 @@ void CreatePlayingSpace() {
 		}
 	}
 }
-
+//Returns the size of the grid cell
+float GetCellSize(){
+	return cube_Length;
+}
 //Formula to get position to index (without offset)
 //int x = (int)((GridPos/CP_System_GetWindowWidth())*width);
 float GridYToPosY(int index){
@@ -69,18 +85,26 @@ int PosYToGridY(float pos){
 	int y = ((pos-grid_Top)/grid_PlayArea)*TOTAL_YGRID;
 	return y;
 }
-//Check if mouse is in playing area
-_Bool InPlayingArea()
+
+int GetGridCenterX(float pos){
+	return GridXToPosX(PosXToGridX(pos));
+}
+int GetGridCenterY(float pos){
+	return GridYToPosY(PosYToGridY(pos));
+}
+//Check if poiont is in playing area
+_Bool IsInPlayingArea(float x,float y)
 {
+	return ((x > gridXOffset && x < WINDOWLENGTH)&&(y > grid_Top && y < grid_Bottom)) ? TRUE : FALSE;
 	//Return value if inside playing area
-	if (CP_Input_GetMouseY() > grid_Top && CP_Input_GetMouseY() < grid_Bottom && CP_Input_GetMouseX() > gridXOffset)
-	{
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
+	// if (CP_Input_GetMouseY() > grid_Top && CP_Input_GetMouseY() < grid_Bottom && CP_Input_GetMouseX() > gridXOffset)
+	// {
+	// 	return TRUE;
+	// }
+	// else
+	// {
+	// 	return FALSE;
+	// }
 }
 struct CurrentGridPos CurrentPos(int x,int y)
 {
@@ -126,10 +150,12 @@ void grid_update(void)
 	grid_Info = CurrentPos(x_Index, y_Index);//A struct that contains the x,y index and the grid centerpoint
 	//FOR DEBUGGING
 	//Remove if no longer need to use
-	if (InPlayingArea() == TRUE)
+	if (IsInPlayingArea(CP_Input_GetMouseX(),CP_Input_GetMouseY()))
 	{
 		sprintf_s(buffer,25,"%d, %d,%.0f,%.0f", grid_Info.x_Index, grid_Info.y_Index, grid_Info.x_CenterPos, grid_Info.y_CenterPos);
-		CP_Font_DrawText("Z", grid_Info.x_CenterPos, grid_Info.y_CenterPos);
+		// CP_Font_DrawText("Z", grid_Info.x_CenterPos, grid_Info.y_CenterPos);
+		 CP_Font_DrawText("Z", GetGridCenterX(CP_Input_GetMouseX()),GetGridCenterY(CP_Input_GetMouseY()));
+
 	}
 	CP_Font_DrawText(buffer,CP_Input_GetMouseX(),CP_Input_GetMouseY());
 }

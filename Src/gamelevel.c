@@ -5,14 +5,28 @@
 #include "Screenshake.h"
 #include "Hearts.h"
 #include "SoundManager.h"
+
+#include "GameLoop.h"
+#include "TManager.h"
+#include "TPlayer.h"
+
 void gameLevelInit(void){
     grid_init();
     InitWaveSystem();
     InitializeLife();
     InitSoundManager(GAMEBGM);
+
+	TManagerInit(DEFAULT_SPAWN_SEED);
+	TPlayerInit();
+
+	// Initialize game loop last, after all the events have been subscribed
+	GameLoopInit();
 }
 void gameLevelUpdate(void){
     UpdateCameraShaker();
+
+    GameLoopUpdate();
+	Render();
     //MAIN GAME LOOP GOES HERE
     UpdateWave();
 
@@ -31,6 +45,7 @@ void gameLevelUpdate(void){
     CP_Graphics_ClearBackground(BLACK);
 }
 void gameLevelExit(void){
+    UnsubscribeAllEvents();
     ClearHearts();
     KillSoundManager();
 }

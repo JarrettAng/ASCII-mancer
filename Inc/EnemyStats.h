@@ -36,4 +36,4 @@ void DrawEnemy(EnemyInfo* enemy);
 
 //Helper functions
 int GetEnemyCount();
-EnemyInfo* GetEnemy(int index);
+EnemyInfo* GetEnemyPrefab(int index);
