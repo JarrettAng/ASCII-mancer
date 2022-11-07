@@ -22,3 +22,11 @@
 /*======================*/
 #define GAMEOVER_RED CP_Color_Create(175, 100, 100, 255)
 #define GAMEOVER_DARKGRAY CP_Color_Create(25, 25 ,25 ,255)
+
+/*====================*/
+/*	GAME LEVEL PICES  */
+/*====================*/
+#define GRID_COLOR CP_Color_Create(92, 92, 92, 255)
+#define TETRIS_COLOR CP_Color_Create(197, 197, 197, 255)
+#define TETRIS_SLOT_COLOR CP_Color_Create(66, 66, 66, 255)
+#define TETRIS_HOVER_COLOR CP_Color_Create(197, 197, 197, 130)

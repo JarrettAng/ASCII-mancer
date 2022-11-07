@@ -119,7 +119,7 @@ void RenderHand(void) {
 
 	//______________________________________________________________
 	// Render each piece in the peek queue & the "NEXT" text
-	CP_Settings_Fill(WHITE);
+	CP_Settings_Fill(TETRIS_COLOR);
 	CP_Settings_TextSize(text_peek_size);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP);
 	CP_Font_DrawText("NEXT", text_peek_pos.x, text_peek_pos.y);
@@ -130,7 +130,7 @@ void RenderHand(void) {
 		CP_Settings_StrokeWeight(peek_tile_stroke);
 
 		// Render the background square surrounding each piece
-		CP_Settings_Fill(MENU_BLACK);
+		CP_Settings_Fill(TETRIS_SLOT_COLOR);
 		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, peek_slot_length, peek_slot_length);
 

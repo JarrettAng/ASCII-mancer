@@ -7,6 +7,7 @@ ________________________________________________________________________________
 
 #include "ColorTable.h"
 #include "Grid.h" // For grid information
+#include "WaveSystem.h" // For enemy damaging on grid
 
 #include "TPlayer.h" 
 #include "TPlayerHeld.h"
@@ -53,8 +54,8 @@ void TPlayerHeldInit(void) {
 	
 
 	// Change the render color & size to match the grid
-	piece_held.color = MENU_RED;
-	piece_held.color_stroke = MENU_RED;
+	piece_held.color = TETRIS_HOVER_COLOR;
+	piece_held.color_stroke = TETRIS_COLOR;
 	piece_held.x_screen_length = GetCellSize();
 	piece_held.y_screen_length = GetCellSize();
 

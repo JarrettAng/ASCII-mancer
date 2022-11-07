@@ -107,7 +107,7 @@ int RandInt(int min, int max) {
 @return TetrisPiece - The new tetris piece, warranty not included.
 */
 TetrisPiece CreatePiece(PieceType type) {
-    TetrisPiece new_piece = { .color = WHITE, .color_stroke = BLACK, .type = type, .x_length = 0, .y_length = 0, 
+    TetrisPiece new_piece = { .color = TETRIS_COLOR, .color_stroke = BLACK, .type = type, .x_length = 0, .y_length = 0, 
                               .x_screen_length = 0, .y_screen_length = 0, .shape = { 0 } , .draw_pos = { 0 } };
     
     // Set shape data for the new piece
