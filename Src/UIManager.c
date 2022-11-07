@@ -4,15 +4,25 @@
 #include "ColorTable.h"
 #include "SoundManager.h"
 
+#pragma region UI_CACHE
+
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
 
-Button* btnHovered = NULL;
-Button* prevBtnHovered = NULL;
+Text* texts[MAX_UI_TEXT];
+int textsCount = 0;
 
 SliderKnob* knobs[MAX_UI_KNOBS];
 int knobsCount = 0;
 
+#pragma endregion
+
+#pragma region UI_INTERACT_CACHE
+
+Button* btnHovered = NULL;
+Button* prevBtnHovered = NULL;
+
+#pragma endregion
 
 /// <summary>
 /// Intialize button with the given data. Also store btn address in array so it manager can draw them all at once.
@@ -28,6 +38,16 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 	btns[btnsCount++] = btn;
 }
 
+/// <summary>
+/// Intialize text with the given data.Also store text address in array so it manager can draw them all at once.
+/// </summary>
+void IntializeText(Text* txt, Rect transform, TextData data){
+	txt->transform = transform;
+	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
+	txt->textData = data;
+
+	texts[textsCount++] = txt;
+}
 
 /// <summary>
 /// Require button to be intialized before drawing.
@@ -46,7 +66,7 @@ void DrawButton(Button* btn){
 /// Draw all buttons cached in btns array.
 /// </summary>
 void DrawButtons() {
-	for (int i = 0; i < btnsCount; i++) {
+	for (int i = 0; i < btnsCount; ++i) {
 		// Draw rect
 		SetGraphicSetting(btns[i]->graphicData);
 		CP_Graphics_DrawRect(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth);
@@ -54,6 +74,26 @@ void DrawButtons() {
 		// Draw text
 		SetTextSetting(btns[i]->textData);
 		CP_Font_DrawText(btns[i]->textData.text, btns[i]->transform.x, btns[i]->transform.y);
+	}
+}
+
+/// <summary>
+/// Require text to be intialized before drawing.
+/// </summary>
+//void RenderText(Text* txt){
+//	// Draw text
+//	SetTextSetting(txt->textData);
+//	CP_Font_DrawText(txt->textData.text, txt->transform.x, txt->transform.y);
+//}
+
+/// <summary>
+/// Draw all buttons cached in texts array.
+/// </summary>
+void RenderTexts(){
+	for (int i = 0; i < textsCount; ++i) {
+		// Draw text
+		SetTextSetting(texts[i]->textData);
+		CP_Font_DrawText(texts[i]->textData.text, texts[i]->transform.x, texts[i]->transform.y);
 	}
 }
 
@@ -80,12 +120,29 @@ void SetTextSetting(TextData data) {
 }
 
 /// <summary>
+/// Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
+/// </summary>
+void FreeUI(){
+	FreeButton();
+	FreeText();
+}
+
+/// <summary>
 /// Empty button array when exiting a scene, so that next scene can reuse the array.
 /// </summary>
 void FreeButton(){
 	// Empty array so next scene can use.
 	memset(btns, 0, sizeof(btns));
 	btnsCount = 0;
+}
+
+/// <summary>
+/// Empty text array when exiting a scene, so that next scene can reuse the array.
+/// </summary>
+void FreeText(){
+	// Empty array so next scene can use.
+	memset(texts, 0, sizeof(texts));
+	textsCount = 0;
 }
 
 
@@ -139,7 +196,7 @@ Button* GetButtonClick() {
 		for (int i = 0; i < btnsCount; i++) {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
-				PlaySound(MOUSECLICK,CP_SOUND_GROUP_SFX);
+				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
 				return btns[i];
 			}
 		}

@@ -4,6 +4,7 @@
 
 #define MAX_UI_BUTTONS 20
 #define MAX_UI_KNOBS 5
+#define MAX_UI_TEXT 20
 
 typedef struct GraphicData {
 	CP_POSITION_MODE imagePosMode;
@@ -29,9 +30,6 @@ typedef struct Rect {
 	float width;
 	float heigth;
 }Rect;
-
-/*Button*/
-struct Button;
 
 typedef struct Button {
 	Rect transform;
@@ -66,12 +64,27 @@ typedef struct Slider{
 }Slider;
 
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack);
+void IntializeText(Text* txt, Rect transform, TextData data);
+
+//TODO: Change this to render button/s
+void DrawButton(Button* btn);
 void DrawButtons(void);
+
+// TODO: Change gameover renderText function
+//void RenderText(Text* txt);
+void RenderTexts(void);
+
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
+
 void HandleButtonClick(void);
 Button* GetButtonClick(void);
+
 Button* GetButtonHover(void);
 Button* GetPrevBtnHovered(void);
+
 SliderKnob* GetSliderKnobHeld(void);
+
+void FreeUI();
+void FreeText(void);
 void FreeButton(void);

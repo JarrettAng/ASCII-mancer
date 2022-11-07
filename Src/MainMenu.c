@@ -105,10 +105,11 @@ void MainMenuUpdate(void) {
 }
 
 void MainMenuExit(void) {
+	buttonClicked = NULL;
 	CP_Image_Free(&title);
 	CP_Image_Free(&selectPointer);
 	KillSoundManager();
-	FreeButton();
+	FreeUI();
 }
 
 void InitializeButtons(void) {
@@ -287,6 +288,8 @@ void HandleTransition(Button* btn){
 		}
 		return;
 	}
+	// Reset.
+	transitionTimer.elaspedTime = 0;
 	btn->callBack();
 }
 
