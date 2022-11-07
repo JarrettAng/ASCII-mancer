@@ -32,7 +32,7 @@ float cell_size;
 _Bool in_playing_area;
 
 #pragma region
-void PieceHeldPlayed(void);
+void PieceHeldPlayed(int grid_x, int grid_y);
 void PieceHeldRotateRight(void);
 int ShapeToIndex(int shape_x, int shape_y);
 int GridToIndex(int grid_x, int grid_y);
@@ -49,11 +49,8 @@ int IndexToShapeY(int index);
 */
 void TPlayerHeldInit(void) {
 	piece_held.piece = NULL;
-	// JARRETT TODO: LINK WITH ACTUAL GRID SETTINGS
-	// Initialize Piece on grid rendering information
-	
 
-	// Change the render color & size to match the grid
+	// Initialize Piece on grid rendering information & the render color & size to match the grid
 	piece_held.color = TETRIS_HOVER_COLOR;
 	piece_held.color_stroke = TETRIS_COLOR;
 	piece_held.x_screen_length = GetCellSize();
@@ -133,7 +130,7 @@ void TPlayerHeldProcessInput(void) {
 
 	// If the piece is within the grid, snap the piece to the grid
 	// JARRETT TODO: Add the checks for all the sides of the piece
-	if (in_playing_area = IsInPlayingArea(CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (in_playing_area = IsInPlayingArea( mouse_pos.x, mouse_pos.y)) {
 		mouse_pos.x = GridXToPosX(PosXToGridX(mouse_pos.x));
 		mouse_pos.y = GridYToPosY(PosYToGridY(mouse_pos.y));
 	}
@@ -151,7 +148,7 @@ void TPlayerHeldProcessInput(void) {
 	if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
 		// If the piece is in the playing area, play it, otherwise it will just return to hand
 		if (in_playing_area) {
-			PieceHeldPlayed();
+			PieceHeldPlayed(PosXToGridX(mouse_pos.x), PosYToGridY(mouse_pos.y)); // Do damage and remove from hand
 		}
 
 		piece_held.piece = NULL; // Removes information on piece held once the player has released.
@@ -184,7 +181,25 @@ void RenderPieceHeld(void) {
 /*______________________________________________________________
 @brief When a Tetris Piece is dropped onto the grid, it has been played.
 */
-void PieceHeldPlayed(void) {
+void PieceHeldPlayed(int mouse_x, int mouse_y) {
+	// Do damage to zombies covered by the piece
+	PieceHeldCell* current = &piece_held_shapeCurrent->grid;
+	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
+		if (current[index].cell) {
+			int grid_x = mouse_x + IndexToShapeX(index) - piece_held_shape_centre;
+			int grid_y = mouse_y + IndexToShapeY(index) - piece_held_shape_centre;
+
+			// Adjust grid positions for rotations (because pieces aren't symmetrical, they rotate unbalanced)
+			switch (current_rotation) {
+			case RIGHT: ++grid_x; break;
+			case DOWN: ++grid_x; ++grid_y; break;
+			case LEFT: ++grid_y; break;
+			}
+
+			SendDamage(grid_x, grid_y, 1);
+		}
+	}
+
 	RemovePieceHeldFromHand();
 }
 

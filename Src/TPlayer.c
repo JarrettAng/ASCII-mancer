@@ -130,7 +130,7 @@ void RenderHand(void) {
 		CP_Settings_StrokeWeight(peek_tile_stroke);
 
 		// Render the background square surrounding each piece
-		CP_Settings_Fill(TETRIS_SLOT_COLOR);
+		CP_Settings_Fill(MENU_BLACK);
 		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, peek_slot_length, peek_slot_length);
 
@@ -149,7 +149,6 @@ void RenderHand(void) {
 		}
 	}
 
-	// JARRETT TODO: CHANGE RENDER CALL TO SOMEWHERE ELSE
 	RenderPieceHeld();
 }
 
