@@ -126,7 +126,7 @@ void DrawLineGrid()
 {
 	//Line =/ Grid position
 	CP_Graphics_ClearBackground(BLACK);
-	CP_Settings_Stroke(GRID_COLOR);
+	CP_Settings_Stroke(BLACK);
 	float grid_CurrentIndex = 0;
 
 	CP_Graphics_DrawLine(0.f, grid_Top, (float)WINDOWLENGTH, grid_Top);
@@ -144,9 +144,24 @@ void DrawLineGrid()
 	}
 
 }
+
+void RenderGridCells(void){
+	for(short x =0; x< TOTAL_XGRID-1; ++x){
+		for(short y = 0; y< TOTAL_YGRID; ++y){
+			CP_Settings_Stroke(BLACK);
+			CP_Settings_StrokeWeight(cube_Length * 0.1f);
+			CP_Settings_Fill(GRID_COLOR);
+			CP_Settings_RectMode(CP_POSITION_CENTER);
+			CP_Graphics_DrawRect(GridXToPosX(x),GridYToPosY(y),cube_Length,cube_Length);
+			CP_Settings_RectMode(CP_POSITION_CORNER);
+		}
+	}
+}
+
 void grid_update(void)
 {
 	DrawLineGrid();
+	RenderGridCells();
 	char buffer[25] = {0};
 
 	x_Index = PosXToGridX(CP_Input_GetMouseX());//Get x index of grid

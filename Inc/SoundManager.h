@@ -24,6 +24,7 @@ typedef enum Clip{
 //Sound clips are just sounds with clipnames tagged to them
 typedef struct SoundClip{
     CP_Sound sound;
+    float volumeModifier;
     Clip clipName;
 }SoundClip;
 
@@ -39,6 +40,7 @@ void KillSoundManager(void);
 void AddSoundToArray(CP_Sound sound,Clip clipName);
 //Returns a sound that matches the clip name. NULL if clipname doesn't exist.
 CP_Sound GetSound(Clip clipName);
+float GetVolume(Clip clipName);
 //Plays Sound with varied pitch and sets the sound group. Use only GROUP_SFX or GROUP_MUSIC accordingly!
 void PlaySoundEx(Clip clipName,CP_SOUND_GROUP group);
 void PlaySound(Clip clipName,CP_SOUND_GROUP group);

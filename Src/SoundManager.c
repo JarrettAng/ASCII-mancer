@@ -14,25 +14,26 @@ _Bool toggleMuteBGM = FALSE;
 
 //Inits sounds to soundclip array and PLAYS BGM. 
 void InitSoundManager(Clip BGMName){
-    AddSoundToArray(CP_Sound_Load("Assets/GameBGM.wav"),GAMEBGM);
-    AddSoundToArray(CP_Sound_Load("Assets/MainMenu.wav"),MAINMENU);
-    AddSoundToArray(CP_Sound_Load("Assets/EnemyDeathSound.wav"),ENEMYDEATH);
-    AddSoundToArray(CP_Sound_Load("Assets/TetrominoExplode.wav"),TETROMINOEXPLODE);
-    AddSoundToArray(CP_Sound_Load("Assets/Nuke.wav"),NUKE);
-    AddSoundToArray(CP_Sound_Load("Assets/LoseHealth.wav"),LOSE);
-    AddSoundToArray(CP_Sound_Load("Assets/WinSound.wav"),WIN);
-    AddSoundToArray(CP_Sound_Load("Assets/MouseClick.wav"),MOUSECLICK);
-    AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER);
-    AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART);
+    AddSoundToArray(CP_Sound_Load("Assets/GameBGM.wav"),GAMEBGM,1);
+    AddSoundToArray(CP_Sound_Load("Assets/MainMenu.wav"),MAINMENU,.6f);
+    AddSoundToArray(CP_Sound_Load("Assets/EnemyDeathSound.wav"),ENEMYDEATH,1);
+    AddSoundToArray(CP_Sound_Load("Assets/TetrominoExplode.wav"),TETROMINOEXPLODE,1);
+    AddSoundToArray(CP_Sound_Load("Assets/Nuke.wav"),NUKE,1.2f);
+    AddSoundToArray(CP_Sound_Load("Assets/LoseHealth.wav"),LOSE,1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/WinSound.wav"),WIN,1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/MouseClick.wav"),MOUSECLICK,1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER,.6f);
+    AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART,1.f);
 
     if (BGMName == NONE) return;
     CP_Sound_PlayMusic(GetSound(BGMName));
 }
 
 //Adds sound to array of soundclips
-void AddSoundToArray(CP_Sound sound,Clip clipName){
+void AddSoundToArray(CP_Sound sound,Clip clipName,float volumeModifier){
     SoundClip newSoundClip = {
         .sound = sound,
+        .volumeModifier = volumeModifier,
         .clipName = clipName
     };
     SoundArray[SoundIndex] = newSoundClip;
@@ -49,13 +50,21 @@ CP_Sound GetSound(Clip clipName){
     return NULL;
 }
 
+float GetVolume(Clip clipName){
+    for(short i=0; i<SoundIndex; ++i){
+        if (SoundArray[i].clipName == clipName){
+            return SoundArray[i].volumeModifier;
+        }
+    }
+    return 0;
+}
 //Plays sound set in the enum. Only use either group_SFX or group_MUSIC (Includes pitch variance)
 void PlaySoundEx(Clip clipName,CP_SOUND_GROUP group){
-    CP_Sound_PlayAdvanced(GetSound(clipName),volume,pitch+(CP_Random_Gaussian()/4.f),FALSE,group);
+    CP_Sound_PlayAdvanced(GetSound(clipName),GetVolume(clipName),pitch+(CP_Random_Gaussian()/4.f),FALSE,group);
 }
 //Plays sound set in the enum. Only use either group_SFX or group_MUSIC
-void PlaySound(Clip clipName,CP_SOUND_GROUP group){
-    CP_Sound_PlayAdvanced(GetSound(clipName),volume,pitch,FALSE,group);
+void PlaySound(Clip clipName,float volumeModifier,CP_SOUND_GROUP group){
+    CP_Sound_PlayAdvanced(GetSound(clipName),GetVolume(clipName),pitch,FALSE,group);
 }
 //Function that sets sfx volume. 1.0f default, 0.f is silence.
 void SetSFXVolume(float volume){

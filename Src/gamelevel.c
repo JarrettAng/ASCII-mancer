@@ -26,13 +26,13 @@ void gameLevelUpdate(void){
 
     GameLoopUpdate();
     //MAIN GAME LOOP GOES HERE
+    grid_update();
     UpdateWave();
 
 
 
 
     //DRAWING AND UPDATING OF GRID
-    grid_update();
 
     //UPDATE HEARTS
     UpdateLife();

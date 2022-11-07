@@ -4,10 +4,10 @@
 int currentWave=1;			
 int enemyThreshold;			//Set to a ratio of the current wave credits (used later)
 
-EnemyInfo WaveObjects[200];	//Max size of the array probably = gridsize. I don't think we'll have more enemies than that
+EnemyInfo WaveObjects[WAVEOBJECTCOUNT];	//Max size of the array probably = gridsize. I don't think we'll have more enemies than that
 int enemyCount =0; 			//Keeps track of how many enemies are generated
 int waveCredits = 0; 		//Arbritarily set to currentWave * 10
-int spawnInterval = 1;		//How much time in between spawns. (Time referring to turns.)
+int spawnInterval = 0;		//How much time in between spawns. (Time referring to turns.)
 int waveIndex = 0;			//Used to keep track of which enemy to spawn in the wavearray
 
 int spawnTimer = 0;			//Turns left before it will spawn. Checks against spawn interval
@@ -28,8 +28,6 @@ void InitWaveSystem(){
 	InitEnemyPool();
 	GenerateWave();
 }
-
-
 //Generates the wave by deducting credits and adding enemies to the wave
 void GenerateWave(){
 	waveCredits = currentWave *5;					//magic number
@@ -59,32 +57,50 @@ void UpdateWave(){
 		if(spawnTimer > 0){			//Should be replaced with some variation of turn counter.
 			spawnTimer--;
 			return;
+		}
+		else{
+
+		//MOVE ENEMIES
+			for(short i =0; i<WAVEOBJECTCOUNT;++i)		//will probably refactor this
+			{
+				if(WaveObjects[i].is_Alive)
+				{
+					MoveEnemy(&WaveObjects[i]);
+				}
+			}
 		} 
 		//Iterates through the wave array and starts spawning the enemies
 		if(waveIndex < enemyCount){
 			//Can probably be wrapped to a spawn enemy function
-			WaveObjects[waveIndex].x = TOTAL_XGRID;//Start at far right
-			unsigned int enemy_StatingPosY = (CP_Random_RangeInt(0, TOTAL_YGRID-1));//Spawn at random y pos
-			WaveObjects[waveIndex].y = enemy_StatingPosY;
-			WaveObjects[waveIndex].is_Alive = TRUE;
-			waveIndex++;
+			// WaveObjects[waveIndex].x = TOTAL_XGRID-1;//Start at far right
+			// unsigned int enemy_StatingPosY = (CP_Random_RangeInt(0, TOTAL_YGRID-1));//Spawn at random y pos
+			// WaveObjects[waveIndex].y = enemy_StatingPosY;
+			// WaveObjects[waveIndex].is_Alive = TRUE;
+			// NukeParticle(GridXToPosX(WaveObjects[waveIndex].x),GridYToPosY(WaveObjects[waveIndex].y));
+			// waveIndex++;
+			for(short y = 0; y<TOTAL_YGRID-1;++y){
+				if(waveIndex >= enemyCount) break;
+				int randNum = CP_Random_RangeInt(0,4);
+				if(!randNum){
+					WaveObjects[waveIndex].x = TOTAL_XGRID-1;//Start at far right
+					int enemyStartY = (CP_Random_RangeInt(0, TOTAL_YGRID-1));//Spawn at random y pos
+					if(!HasLiveEnemyInCell(WaveObjects[waveIndex].x,enemyStartY)){
+						WaveObjects[waveIndex].y = enemyStartY;
+						WaveObjects[waveIndex].is_Alive = TRUE;
+						NukeParticle(GridXToPosX(WaveObjects[waveIndex].x),GridYToPosY(WaveObjects[waveIndex].y));
+						waveIndex++;
+						// continue;
+					}
+				}
+			}
 			spawnTimer = spawnInterval;	//Makes it such that enemies turn by turn
 		}
 		else{
 			NextWave();
 		}
-
-		//MOVE ENEMIES
-		for(short i =0; i<waveIndex;++i)		//will probably refactor this
-		{
-			if(WaveObjects[i].is_Alive)
-			{
-				MoveEnemy(&WaveObjects[i]);
-			}
-		}
 	}
 	//DISPLAY ENEMIES
-	for(short i =0; i<waveIndex; ++i)		//will probably refactor this
+	for(short i =0; i<WAVEOBJECTCOUNT; ++i)		//will probably refactor this
 	{
 		if(WaveObjects[i].is_Alive)
 			{
@@ -95,12 +111,22 @@ void UpdateWave(){
 }
 
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
-	for(short i=0; i< waveIndex;++i){
+	for(short i=0; i< WAVEOBJECTCOUNT;++i){
 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
 			if(WaveObjects[i].is_Alive) return &WaveObjects[i];
 		}
 	}
 	return NULL;
+}
+BOOL HasLiveEnemyInCell(int x, int y){
+	// if(!GetAliveEnemyFromGrid) return FALSE;
+	// return GetAliveEnemyFromGrid(x,y)->is_Alive;
+	for(short i=0; i< WAVEOBJECTCOUNT;++i){
+		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
+			if(WaveObjects[i].is_Alive) return TRUE;
+		}
+	}
+	return FALSE;
 }
 void SendDamage(int x, int y,int damage){
 	if(!IsInPlayingArea(GridXToPosX(x),GridYToPosY(y)))return;
@@ -117,11 +143,11 @@ void SendDamage(int x, int y,int damage){
 void NextWave()
 {
 	//Once the wave is done spawning, it waits for more turns
-	spawnTimer = spawnInterval*2; //arbritrary number, just makes it so it takes longer between each wave
+	spawnTimer = spawnInterval*3; //arbritrary number, just makes it so it takes longer between each wave
 	currentWave++;
 	GenerateWave();				//generates the next wave
 }
 
 void ClearWaveArray(){
-	memset(WaveObjects,0,sizeof(EnemyInfo)*(200));
+	memset(WaveObjects,0,sizeof(EnemyInfo)*(WAVEOBJECTCOUNT));
 }
