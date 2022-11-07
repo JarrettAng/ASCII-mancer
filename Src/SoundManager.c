@@ -14,19 +14,21 @@ _Bool toggleMuteBGM = FALSE;
 
 //Inits sounds to soundclip array and PLAYS BGM. 
 void InitSoundManager(Clip BGMName){
-    AddSoundToArray(CP_Sound_Load("Assets/GameBGM.wav"),GAMEBGM,1);
-    AddSoundToArray(CP_Sound_Load("Assets/MainMenu.wav"),MAINMENU,.6f);
+    AddSoundToArray(CP_Sound_Load("Assets/GameBGM.wav"),GAMEBGM,.8f);
+    AddSoundToArray(CP_Sound_Load("Assets/MainMenu.wav"),MAINMENU,.1f);
     AddSoundToArray(CP_Sound_Load("Assets/EnemyDeathSound.wav"),ENEMYDEATH,1);
     AddSoundToArray(CP_Sound_Load("Assets/TetrominoExplode.wav"),TETROMINOEXPLODE,1);
     AddSoundToArray(CP_Sound_Load("Assets/Nuke.wav"),NUKE,1.2f);
     AddSoundToArray(CP_Sound_Load("Assets/LoseHealth.wav"),LOSE,1.f);
     AddSoundToArray(CP_Sound_Load("Assets/WinSound.wav"),WIN,1.f);
     AddSoundToArray(CP_Sound_Load("Assets/MouseClick.wav"),MOUSECLICK,1.f);
-    AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER,.6f);
+    AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER,.1f);
     AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART,1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/ZombieSpawn.wav"), ZOMBIESPAWN,.5f);
 
     if (BGMName == NONE) return;
-    CP_Sound_PlayMusic(GetSound(BGMName));
+    //CP_Sound_PlayMusic(GetSound(BGMName));
+    CP_Sound_PlayAdvanced(GetSound(BGMName), GetVolume(BGMName), 1, TRUE, CP_SOUND_GROUP_MUSIC);
 }
 
 //Adds sound to array of soundclips
@@ -63,7 +65,7 @@ void PlaySoundEx(Clip clipName,CP_SOUND_GROUP group){
     CP_Sound_PlayAdvanced(GetSound(clipName),GetVolume(clipName),pitch+(CP_Random_Gaussian()/4.f),FALSE,group);
 }
 //Plays sound set in the enum. Only use either group_SFX or group_MUSIC
-void PlaySound(Clip clipName,float volumeModifier,CP_SOUND_GROUP group){
+void PlaySound(Clip clipName,CP_SOUND_GROUP group){
     CP_Sound_PlayAdvanced(GetSound(clipName),GetVolume(clipName),pitch,FALSE,group);
 }
 //Function that sets sfx volume. 1.0f default, 0.f is silence.
@@ -97,7 +99,7 @@ void ToggleMuteBGM(void){
 void KillSoundManager(){
     CP_Sound_StopAll();
     for(short i=0; i< SoundIndex; ++i){
-        CP_Sound_Free(SoundArray[i].sound);
+        CP_Sound_Free(&SoundArray[i].sound);
     }
     SoundIndex = 0;
     memset(SoundArray, 0, sizeof(SoundClip) * SOUNDCOUNT);

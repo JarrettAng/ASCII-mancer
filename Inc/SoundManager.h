@@ -18,6 +18,7 @@ typedef enum Clip{
     MOUSECLICK,
     GAMEOVER,
     GAINHEART,
+    ZOMBIESPAWN,
     NONE
 } Clip;
 
@@ -37,7 +38,7 @@ void InitSoundManager(Clip clipName);
 void KillSoundManager(void);
 
 //Used in Init to add sounds to the array
-void AddSoundToArray(CP_Sound sound,Clip clipName);
+void AddSoundToArray(CP_Sound sound,Clip clipName,float volumeModifier);
 //Returns a sound that matches the clip name. NULL if clipname doesn't exist.
 CP_Sound GetSound(Clip clipName);
 float GetVolume(Clip clipName);

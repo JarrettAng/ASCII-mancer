@@ -38,8 +38,8 @@ void RadialParticle(float x, float y,int particleCount,float force);
 void RadialParticleVaried(float x, float y);
 //Temp function for zombie despawn particle
 void ZombieDeathParticle(float x, float y);
-void NukeParticle(float x, float y);
-void ZombieToPlayerParticle(float x,float y);
+void ZombieSpawnParticle(float x, float y);
+void ZombieToPlayerParticle(float x,float y,int health);
 
 //Move this to utils!!
 CP_Vector AngleToVector(float degreeAngle);

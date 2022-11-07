@@ -27,12 +27,13 @@ void InitEnemyPool(){
 
 //Function that creates enemies and adds them to the enemy pool
 void CreateEnemy(int cost, int speed, int health, const char* sprite){
-	EnemyInfo newEnemy;
-	newEnemy.Cost = cost;
-	newEnemy.Health = health;
-	newEnemy.MaxHealth = 3;
-	newEnemy.CharSprite = sprite;
-	newEnemy.MovementSpeed = speed;
+	EnemyInfo newEnemy = {
+		.Cost = cost,
+		.Health = health,
+		.MaxHealth = 3,
+		.CharSprite = sprite,
+		.MovementSpeed = speed
+	};
 	Enemy[enemyPoolIndex] = newEnemy;
 	enemyPoolIndex++;
 }
@@ -76,7 +77,7 @@ void MoveEnemy(EnemyInfo* enemy){
 		} 
 	}
 	enemy->x -= enemy->MovementSpeed;
-	if (enemy->x < 0)
+	if (enemy->x < 0 && enemy->is_Alive)
 	{
 		//Special despawn animation over here
 		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y),enemy->Health);

@@ -13,7 +13,7 @@ particleIndex =0;
 char* SparkleAnimString = "x+*\".";
 char* ZombieDeathAnimString = "ZZZZ    ZZZZ    ZZZZ    ZZZNNzznncu*\'`";
 char* ZombieAnim = "ZzZzZzZzZzZzZzZz";
-char* NukeAnimString = "@Oo*\'";
+char* ZombieSpawnAnimString = "@Oo*\'";
 
 
 //Function that handles creating of particle.
@@ -114,9 +114,8 @@ void ZombieDeathParticle(float x, float y){
     trauma+=0.5f;
 }
 
-void NukeParticle(float x, float y){
-    CreateParticle(x,y,0.5f,120.f,0.1f,MENU_RED,CP_Vector_Zero(),NukeAnimString,TRUE,0);
-    trauma+=1.f;
+void ZombieSpawnParticle(float x, float y){
+    CreateParticle(x,y,0.5f,120.f,0.1f,MENU_RED,CP_Vector_Zero(),ZombieSpawnAnimString,TRUE,0);
 }
 void ZombieToPlayerParticle(float x,float y,int health){
     CP_Vector dirToPlayer = CP_Vector_Set((CP_System_GetWindowWidth()*0.05f)-x,(GetGridPlayingArea()/2)+GetGridTopBuffer() - y);
@@ -137,8 +136,6 @@ void CreateParticleEmission(float x, float y,int burstCount, float duration){
 
 //Function that handles the animation and drawing of the particle to screen. Sets the color but not the alignment.
 void DrawParticle(Particle* particlePointer){
-    // CP_Font currentFont = CP_Font_Load("Assets/PressStart2P-Regular.ttf");
-    // CP_Font_Set(CP_Font_GetDefault());
     if(particlePointer->lifeTime >= 0 && particlePointer->timeBeforeActive <=0){
 
         CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
@@ -163,23 +160,22 @@ void DrawParticle(Particle* particlePointer){
         singleCharFrame[1]='\0';    //set the null char or drawtext will have undefined behaviour reading indefinitely
         CP_Font_DrawText(&singleCharFrame, particlePointer->x, particlePointer->y);
     }
-    // CP_Font_Set(currentFont);
 }
 
 //Function that is required to be called to update all particles. If particles don't work, check that this is in update loop.
 void UpdateEffects(void){
     //Testing radial particle. Not sure if input should be checked here. Maybe it should be.
-    if(CP_Input_MouseClicked()){
-        // ZombieDeathParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
-        // NukeParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
-        PlaySoundEx(TETROMINOEXPLODE,CP_SOUND_GROUP_SFX);
-        SendDamage(PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()),1);
-    }
-    if(CP_Input_MouseClicked())
-    {
-        CreateParticleEmission(CP_Input_GetMouseX(),CP_Input_GetMouseY(),5,0.5f);
-        //  RadialParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY(),20,8.f);
-    }
+    // if(CP_Input_MouseClicked()){
+    //     // ZombieDeathParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+    //     // NukeParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+    //     PlaySoundEx(TETROMINOEXPLODE,CP_SOUND_GROUP_SFX);
+    //     SendDamage(PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()),1);
+    // }
+    // if(CP_Input_MouseClicked())
+    // {
+    //     CreateParticleEmission(CP_Input_GetMouseX(),CP_Input_GetMouseY(),5,0.5f);
+    //     //  RadialParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY(),20,8.f);
+    // }
     //Main loop for handling particle movement and rendering.
     //Important to loop through the whole array because the index wraps around.
     for(short i =0; i< PARTICLECOUNT; ++i){
