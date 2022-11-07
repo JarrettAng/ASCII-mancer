@@ -63,7 +63,7 @@ void UpdateWave(){
 		//Iterates through the wave array and starts spawning the enemies
 		if(waveIndex < enemyCount){
 			//Can probably be wrapped to a spawn enemy function
-			WaveObjects[waveIndex].x = TOTAL_XGRID-1;//Start at far right
+			WaveObjects[waveIndex].x = TOTAL_XGRID;//Start at far right
 			unsigned int enemy_StatingPosY = (CP_Random_RangeInt(0, TOTAL_YGRID-1));//Spawn at random y pos
 			WaveObjects[waveIndex].y = enemy_StatingPosY;
 			WaveObjects[waveIndex].is_Alive = TRUE;
@@ -75,7 +75,6 @@ void UpdateWave(){
 		}
 
 		//MOVE ENEMIES
-		//int liveEnemyCount = 0;
 		for(short i =0; i<waveIndex;++i)		//will probably refactor this
 		{
 			if(WaveObjects[i].is_Alive)
@@ -95,14 +94,6 @@ void UpdateWave(){
 	
 }
 
-// EnemyInfo* GetEnemyFromGrid(int x, int y){
-// 	for(short i=0; i< waveIndex;++i){
-// 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
-// 			return &WaveObjects[i];
-// 		}
-// 	}
-// 	return NULL;
-// }
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	for(short i=0; i< waveIndex;++i){
 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
@@ -112,6 +103,7 @@ EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	return NULL;
 }
 void SendDamage(int x, int y,int damage){
+	if(!IsInPlayingArea(GridXToPosX(x),GridYToPosY(y)))return;
 	if (GetAliveEnemyFromGrid(x, y) == NULL) return;
 	EnemyInfo* enemy = GetAliveEnemyFromGrid(x,y);
 	enemy->Health-=damage;

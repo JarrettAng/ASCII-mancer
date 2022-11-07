@@ -10,8 +10,8 @@
 
 
 #define ENEMY1 1,1,1,"1"
-#define ENEMY2 2,2,2,"2"
-#define ENEMY3 3,3,3,"3"
+#define ENEMY2 5,2,2,"2"
+#define ENEMY3 10,3,3,"3"
 //Not gonna use externs for this case because it gets messy
 EnemyInfo Enemy[ENEMYPOOL];
 int enemyPoolIndex = 0;

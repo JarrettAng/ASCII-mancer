@@ -12,7 +12,7 @@ void UpdateWave(void);
 //Function that increments wave and generates the next one
 void NextWave(void);
 
-
+void SendDamage(int x, int y, float damage);
 // EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now
 void ClearWaveArray(void);

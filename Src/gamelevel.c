@@ -25,7 +25,6 @@ void gameLevelUpdate(void){
     UpdateCameraShaker();
 
     GameLoopUpdate();
-	Render();
     //MAIN GAME LOOP GOES HERE
     UpdateWave();
 
@@ -40,6 +39,7 @@ void gameLevelUpdate(void){
 
     //UPDATE VFX
     UpdateEffects();
+	RenderHand();
     //CLEAR SCREEN
     CP_Graphics_ClearBackground(BLACK);
 }

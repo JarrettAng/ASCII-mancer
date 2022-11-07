@@ -19,6 +19,8 @@ float area_Bottom = 80.f;
 //Area sizes
 float grid_Top = 0;
 float grid_Bottom = 0;
+float grid_Left = 0;
+float grid_Right = 0;
 float grid_PlayArea = 0;
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
 int xpos = TOTAL_XGRID;
@@ -33,15 +35,22 @@ CurrentGridPos grid_Info;
 void grid_init(void) {
 	gridXOffset = WINDOWLENGTH*0.1f; 	//10% of screen on left side reserved for player
 	grid_Top = WINDOWHEIGHT*0.1f;
+	grid_Left = gridXOffset/2;
+	grid_Right = WINDOWLENGTH-gridXOffset;
 
 	//Calculations for adjusting buffers according to cell size
-	float x = (WINDOWLENGTH*.9f)/TOTAL_XGRID;	//Width of playing space is 90% of screen width
+	float x = (WINDOWLENGTH*.8f)/TOTAL_XGRID;	//Width of playing space is 80% of screen width
 	float y = (WINDOWHEIGHT*.65f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
 	float size = min(x,y);						//Get whichever is smaller
-	if(WINDOWLENGTH-(size*TOTAL_XGRID)>gridXOffset){	//We prioritise adjusting by length
-	gridXOffset = WINDOWLENGTH-(size*TOTAL_XGRID);		//Set the X Buffer first
-	grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/4;		//have to adjust top accordingly (10% to top, 30% to bottom)
+	// if(WINDOWLENGTH-(size*TOTAL_XGRID)>(gridXOffset)){	//We prioritise adjusting by length
+	// gridXOffset = (WINDOWLENGTH-(size*TOTAL_XGRID));		//Set the X Buffer first
+	// grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/4;		//have to adjust top accordingly (10% to top, 30% to bottom)
+	// }
+	if((WINDOWLENGTH-(size*TOTAL_XGRID))/2 > gridXOffset){
+		gridXOffset =(WINDOWLENGTH-(size*TOTAL_XGRID))/2;
+		grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/4;		//have to adjust top accordingly (10% to top, 30% to bottom)
 	}
+
 	//Regardless of anything adjustments, bottom is always playarea+grid_top
 	grid_Bottom = ((size*TOTAL_YGRID)+grid_Top);
 
@@ -79,12 +88,12 @@ float GridYToPosY(int index){
 	return PositionWithoutOffset+grid_Top+(cube_Length/2);
 }
 float GridXToPosX(int index){
-	float PositionWithoutOffset = (float)(index*((CP_System_GetWindowWidth()-gridXOffset)/TOTAL_XGRID));
+	float PositionWithoutOffset = (float)(index*((WINDOWLENGTH-(gridXOffset*2))/TOTAL_XGRID));
 	return PositionWithoutOffset+gridXOffset+(cube_Length/2);
 }
 
 int PosXToGridX(float pos){
-	int x = (pos-gridXOffset)/(WINDOWLENGTH-gridXOffset)*TOTAL_XGRID;
+	int x = (pos-gridXOffset)/(WINDOWLENGTH-gridXOffset*2)*TOTAL_XGRID;
 	return x;
 }
 int PosYToGridY(float pos){
@@ -100,17 +109,9 @@ int GetGridCenterY(float pos){
 }
 //Check if poiont is in playing area
 _Bool IsInPlayingArea(float x,float y)
-{
-	return ((x > gridXOffset && x < WINDOWLENGTH)&&(y > grid_Top && y < grid_Bottom)) ? TRUE : FALSE;
-	//Return value if inside playing area
-	// if (CP_Input_GetMouseY() > grid_Top && CP_Input_GetMouseY() < grid_Bottom && CP_Input_GetMouseX() > gridXOffset)
-	// {
-	// 	return TRUE;
-	// }
-	// else
-	// {
-	// 	return FALSE;
-	// }
+{	//GridX playing area starts from gridxOffset to the window width - (gridxoffset + 1 cube length)
+	//GridY playing area starts from the grid top buffer to the grid bottom.
+	return ((x > gridXOffset && x < WINDOWLENGTH-gridXOffset-(float)cube_Length)&&(y > grid_Top && y < grid_Bottom)) ? TRUE : FALSE;
 }
 struct CurrentGridPos CurrentPos(int x,int y)
 {
@@ -125,7 +126,7 @@ void DrawLineGrid()
 {
 	//Line =/ Grid position
 	CP_Graphics_ClearBackground(BLACK);
-	CP_Settings_Stroke(GREEN);
+	CP_Settings_Stroke(GRID_COLOR);
 	float grid_CurrentIndex = 0;
 
 	CP_Graphics_DrawLine(0.f, grid_Top, (float)WINDOWLENGTH, grid_Top);
@@ -133,13 +134,13 @@ void DrawLineGrid()
 	//Control Y grid
 	while (grid_CurrentIndex < TOTAL_YGRID)
 	{
-		CP_Graphics_DrawLine(gridXOffset, grid_Top + (grid_CurrentIndex * (float)cube_Length), (float)WINDOWLENGTH, grid_Top + (grid_CurrentIndex * (float)cube_Length));
+		CP_Graphics_DrawLine(gridXOffset, grid_Top + (grid_CurrentIndex * (float)cube_Length), (float)WINDOWLENGTH-gridXOffset-(float)cube_Length, grid_Top + (grid_CurrentIndex * (float)cube_Length));
 		grid_CurrentIndex++;
 	}
 	//Control XGrid
 	for (int x = 0; x < TOTAL_XGRID; x++)
 	{
-		CP_Graphics_DrawLine(gridXOffset + ((WINDOWLENGTH-gridXOffset)/TOTAL_XGRID) * x, grid_Top, gridXOffset + (((WINDOWLENGTH-gridXOffset)/TOTAL_XGRID) * x), grid_Bottom);
+		CP_Graphics_DrawLine(gridXOffset + ((WINDOWLENGTH-gridXOffset*2)/TOTAL_XGRID) * x, grid_Top, gridXOffset + (((WINDOWLENGTH-gridXOffset*2)/TOTAL_XGRID) * x), grid_Bottom);
 	}
 
 }
