@@ -25,6 +25,7 @@ void InitSoundManager(Clip BGMName){
     AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER,.1f);
     AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART,1.f);
     AddSoundToArray(CP_Sound_Load("Assets/ZombieSpawn.wav"), ZOMBIESPAWN,.5f);
+    AddSoundToArray(CP_Sound_Load("Assets/ZombieMove.wav"), ZOMBIEMOVE, 1.f);
 
     if (BGMName == NONE) return;
     //CP_Sound_PlayMusic(GetSound(BGMName));

@@ -8,6 +8,8 @@ ________________________________________________________________________________
 #include "ColorTable.h"
 #include "Grid.h" // For grid information
 #include "WaveSystem.h" // For enemy damaging on grid
+#include "Particles.h" // For particles on play
+#include "Screenshake.h" // For screenshake on play
 
 #include "TPlayer.h" 
 #include "TPlayerHeld.h"
@@ -196,9 +198,15 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 			case LEFT: ++grid_y; break;
 			}
 
+			// Add a explosion effect particles on hit
+			RadialParticle(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
+
 			SendDamage(grid_x, grid_y, 1);
 		}
 	}
+
+	// Screen the shake
+	trauma += 0.3f;
 
 	RemovePieceHeldFromHand();
 }

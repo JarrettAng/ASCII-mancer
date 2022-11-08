@@ -19,6 +19,7 @@ typedef enum Clip{
     GAMEOVER,
     GAINHEART,
     ZOMBIESPAWN,
+    ZOMBIEMOVE,
     NONE
 } Clip;
 

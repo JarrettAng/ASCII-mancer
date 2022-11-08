@@ -40,7 +40,7 @@ void grid_init(void) {
 
 	//Calculations for adjusting buffers according to cell size
 	float x = (WINDOWLENGTH*.8f)/TOTAL_XGRID;	//Width of playing space is 80% of screen width
-	float y = (WINDOWHEIGHT*.65f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
+	float y = (WINDOWHEIGHT*.625f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
 	float size = min(x,y);						//Get whichever is smaller
 	// if(WINDOWLENGTH-(size*TOTAL_XGRID)>(gridXOffset)){	//We prioritise adjusting by length
 	// gridXOffset = (WINDOWLENGTH-(size*TOTAL_XGRID));		//Set the X Buffer first
@@ -48,7 +48,7 @@ void grid_init(void) {
 	// }
 	if((WINDOWLENGTH-(size*TOTAL_XGRID))/2 > gridXOffset){
 		gridXOffset =(WINDOWLENGTH-(size*TOTAL_XGRID))/2;
-		grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/4;		//have to adjust top accordingly (10% to top, 30% to bottom)
+		grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/2.75f;		//have to adjust top accordingly (10% to top, 30% to bottom)
 	}
 
 	//Regardless of anything adjustments, bottom is always playarea+grid_top
@@ -145,14 +145,22 @@ void DrawLineGrid()
 
 }
 
-void RenderGridCells(void){
-	for(short x =0; x< TOTAL_XGRID-1; ++x){
-		for(short y = 0; y< TOTAL_YGRID; ++y){
+void RenderGridCells(void) {
+	for (short x = 0; x < TOTAL_XGRID - 1; ++x) {
+		for (short y = 0; y < TOTAL_YGRID; ++y) {
 			CP_Settings_Stroke(BLACK);
 			CP_Settings_StrokeWeight(cube_Length * 0.1f);
 			CP_Settings_Fill(GRID_COLOR);
 			CP_Settings_RectMode(CP_POSITION_CENTER);
-			CP_Graphics_DrawRect(GridXToPosX(x),GridYToPosY(y),cube_Length,cube_Length);
+			CP_Graphics_DrawRect(GridXToPosX(x), GridYToPosY(y), cube_Length, cube_Length);
+			CP_Settings_RectMode(CP_POSITION_CORNER);
+
+			// Draw a dot in the cell if there is not zombie in it
+			if (HasLiveEnemyInCell(x, y))continue;
+			CP_Settings_RectMode(CP_POSITION_CENTER);
+			CP_Settings_Fill(MENU_WHITE);
+			CP_Settings_StrokeWeight(cube_Length * 0.05f);
+			CP_Graphics_DrawRect(GridXToPosX(x), GridYToPosY(y), cube_Length * 0.15f, cube_Length * 0.15f);
 			CP_Settings_RectMode(CP_POSITION_CORNER);
 		}
 	}
