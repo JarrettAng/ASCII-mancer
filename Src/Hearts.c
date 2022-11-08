@@ -9,6 +9,7 @@ HeartContainer heart_stats[MAX_HEART_COUNT];
 CP_Image heart_image;
 TextOnlyHearts life_text;
 TextOnlyHearts game_over_text;
+Rect TitleBoxBG;
 
 // Initializes the life counter
 // Remember spacing to be a value of above 1
@@ -31,8 +32,9 @@ void InitializeLife(void) {
 	life_text.words = "HEARTS";
 }
 
-void EndTitleInit() {
-	
+void YouLoseTitleInit() {
+	// Make box for You Lose title card after losing all life
+
 }
 
 //-----------------------
