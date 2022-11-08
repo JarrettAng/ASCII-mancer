@@ -4,6 +4,7 @@
 #include "Grid.h"
 
 #define WAVEOBJECTCOUNT 20
+#define TOMBSTONECOUNT 3
 //Initialises the wave system. MUST BE CALLED AT LEAST ONCE.
 void InitWaveSystem(void);
 //Generates the wave using wave credits and populates wave array

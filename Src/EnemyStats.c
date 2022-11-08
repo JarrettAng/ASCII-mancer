@@ -14,6 +14,8 @@
 #define ENEMY1 1,1,1,"1"
 #define ENEMY2 5,2,2,"2"
 #define ENEMY3 10,3,3,"3"
+#define ENEMY4 1,0,1,"4"//Tomdstone
+//Gonna use their char sprite value to indicate type of enemy
 //Not gonna use externs for this case because it gets messy
 EnemyInfo Enemy[ENEMYPOOL];
 int enemyPoolIndex = 0;
@@ -25,6 +27,7 @@ void InitEnemyPool(){
 	CreateEnemy(ENEMY1);
 	CreateEnemy(ENEMY2);
 	CreateEnemy(ENEMY3);
+	CreateEnemy(ENEMY4);
 }
 
 //Function that creates enemies and adds them to the enemy pool
@@ -64,7 +67,8 @@ void SpawnEnemy(EnemyInfo* enemy, int x, int y){
 void MoveEnemy(EnemyInfo* enemy){
 	//If the enemy has reach last x element, it'll die and damage player
 	for(short i =1; i<= enemy->MovementSpeed; ++i){
-		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)==NULL){
+		//Check enemy in front of them
+		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)==NULL || enemy->CharSprite != "4"){//if no enemy or tombstone, will continue movement
 			continue;
 		}
 		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->is_Alive){
@@ -90,16 +94,24 @@ void MoveEnemy(EnemyInfo* enemy){
 	// else enemy->x-= enemy->MovementSpeed;
 	PlaySound(ZOMBIEMOVE, CP_SOUND_GROUP_SFX);
 }
-void DrawEnemy(EnemyInfo* enemy){
-	
+void DrawEnemy(EnemyInfo* enemy) {
+
 	CP_Settings_Fill(MENU_RED);
-	CP_Settings_TextSize(GetCellSize()*((float)enemy->Health/(float)enemy->MaxHealth));
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER,CP_TEXT_ALIGN_V_MIDDLE);
+	CP_Settings_TextSize(GetCellSize() * ((float)enemy->Health / (float)enemy->MaxHealth));
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
-    char buffer[25] = {0};
-	sprintf_s(buffer,25,"%d",enemy->Health);
+	char buffer[25] = { 0 };
+	sprintf_s(buffer, 25, "%d", enemy->Health);
 
-	CP_Font_DrawText("Z", GridXToPosX(enemy->x),GridYToPosY(enemy->y));
+	if (enemy->CharSprite == "4")
+	{
+		CP_Settings_Fill(GREEN);
+		CP_Font_DrawText("T", GridXToPosX(enemy->x), GridYToPosY(enemy->y));
+	}
+	else
+	{
+		CP_Font_DrawText("Z", GridXToPosX(enemy->x), GridYToPosY(enemy->y));
+	}
 
 }
 void OnDeath()
