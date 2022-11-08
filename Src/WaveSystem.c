@@ -10,9 +10,10 @@ int waveCredits = 0; 		//Arbritarily set to currentWave * 10
 int spawnInterval = 0;		//How much time in between spawns. (Time referring to turns.)
 int waveIndex = 0;			//Used to keep track of which enemy to spawn in the wavearray, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
 
-int spawnTimer = 0;			//Turns left before it will spawn. Checks against spawn interval
+int spawnTimer = 0;	//Turns left before it will spawn. Checks against spawn interval
 //Enemy Array, cost, contains all available enemies
 //Wave array, Filled with enemies based off of cost.
+int x_SpawnPos = TOTAL_XGRID - 1;//Enemy x-grid spawn position
 
 /*
 @Brief (just in case anyone wants to know the logic)
@@ -25,7 +26,7 @@ int spawnTimer = 0;			//Turns left before it will spawn. Checks against spawn in
 //Initialises the wave system
 void InitWaveSystem(){
 	InitEnemyPool();				//Starts up the enemy prefabs array
-	GenerateWave();					
+	GenerateWave();	
 }
 //Generates the wave by deducting credits and adding enemies to the wave
 void GenerateWave(){
@@ -74,8 +75,13 @@ void UpdateWave(){
 			for(short y = 0; y<TOTAL_YGRID-1;++y){
 				int randNum = CP_Random_RangeInt(0,4);
 				if(!randNum){ //20% chance!
-
-					WaveObjects[waveIndex%WAVEOBJECTCOUNT].x = TOTAL_XGRID-1;			//Start at far right
+					int chaceRandSpawn = CP_Random_RangeInt(0, 10);
+					//very primitive.
+					if (!chaceRandSpawn)
+					{
+						x_SpawnPos = CP_Random_RangeInt(7, 10);
+					}
+					WaveObjects[waveIndex%WAVEOBJECTCOUNT].x = x_SpawnPos;			//Start at far right
 					int enemyStartY = (CP_Random_RangeInt(0, TOTAL_YGRID-1));			//Spawn at random y pos
 					//We have to make sure the cell is not already occupied before spawning
 					if(!HasLiveEnemyInCell(WaveObjects[waveIndex%WAVEOBJECTCOUNT].x,enemyStartY)){
