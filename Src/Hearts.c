@@ -8,8 +8,8 @@
 HeartContainer heart_stats[MAX_HEART_COUNT];
 CP_Image heart_image;
 TextOnlyHearts life_text;
-TextOnlyHearts game_over_text;
-Rect TitleBoxBG;
+TextOnlyHearts lose_text;
+RectHearts lose_bg;
 
 // Initializes the life counter
 // Remember spacing to be a value of above 1
@@ -30,11 +30,48 @@ void InitializeLife(void) {
 	life_text.xpos = CP_System_GetDisplayWidth() / 12.f - 137.f;
 	life_text.ypos = CP_System_GetDisplayHeight() / 16.f - 40.f;
 	life_text.words = "HEARTS";
+
+	// Make box for You Lose title card after losing all life
+	lose_bg.xpos = CP_System_GetDisplayWidth() / 2.f;
+	lose_bg.ypos = CP_System_GetDisplayHeight() / 2.f;
+	lose_bg.width = CP_System_GetDisplayWidth();
+	lose_bg.height = CP_System_GetDisplayHeight() / 3.f;
+
+	// Text for You Lose title card after losing all life
+	lose_text.color = TETRIS_SLOT_COLOR;
+	lose_text.font_size = CP_System_GetDisplayHeight() / 10.f;
+	lose_text.xpos = CP_System_GetDisplayWidth() / 2.f;
+	lose_text.ypos = CP_System_GetDisplayHeight() / 2.f;
+	lose_text.words = "YOU DIED!";
 }
 
-void YouLoseTitleInit() {
-	// Make box for You Lose title card after losing all life
+float time_elapsed_lose = 0.f;
+void YouLoseTitleRender() {
+	float bg_transistion_time_max = 2.f;
+	float stay_time_max = 8.f;
 
+	time_elapsed_lose += CP_System_GetDt();
+
+	// BG Drawing
+	float bg_transistion_time = time_elapsed_lose / bg_transistion_time_max;
+	float stay_time = time_elapsed_lose / stay_time_max;
+	int alpha_bg = CP_Math_ClampInt((int)(255 * bg_transistion_time), 0, 255);
+	// Draw BG
+	CP_Settings_RectMode(CP_POSITION_CENTER);
+	CP_Settings_Stroke(GRID_COLOR);
+	CP_Settings_StrokeWeight(CP_System_GetDisplayHeight() / 250.f);
+	CP_Settings_Fill(CP_Color_Create(35, 35, 35, alpha_bg));
+	CP_Graphics_DrawRect(lose_bg.xpos, lose_bg.ypos, lose_bg.width, lose_bg.height);
+	// Draw Text
+	CP_Settings_Fill(CP_Color_Create(227, 23, 23, alpha_bg)); // Color of text
+	CP_Settings_TextSize(lose_text.font_size); // Size of text
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE); // Origin of text is it's absolute center
+	CP_Font_DrawText(lose_text.words, lose_text.xpos, lose_text.ypos);
+
+	if (stay_time >= 0.9f) {
+		time_elapsed_lose = 0.f;
+		CP_Engine_SetNextGameState(GameOverInit, GameOverUpdate, GameOverExit);
+	}
 }
 
 //-----------------------
@@ -71,7 +108,7 @@ void LoseLife(int lose_life) {
 //-----------------------
 
 // Check if total life = 0, if 0 bring to Game Over Screen
-void CheckLoseCondition(void) {
+int CheckLoseCondition(void) {
 	// Sum the total of heartAlive in heart_stats to total_life
 	int total_life = 0;
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
@@ -79,8 +116,10 @@ void CheckLoseCondition(void) {
 	}
 	if (total_life == 0) {
 		PlaySound(GAMEOVER, CP_SOUND_GROUP_SFX);
+		return 1;
 		//CP_Engine_SetNextGameState(GameOverInit, GameOverUpdate, GameOverExit);
 	}
+	return 0;
 }
 
 //-----------------------
@@ -94,7 +133,7 @@ void DrawLife(void) {
 	}
 }
 
-void RenderHeartText() {
+void RenderHeartText(void) {
 	CP_Settings_Fill(life_text.color); // Color of text
 	CP_Settings_TextSize(life_text.font_size); // Size of text
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP); // Origin of text is it's absolute center
@@ -146,6 +185,7 @@ void UpdateLife(void) {
 	DrawLife();
 
 	AnimationLife();
+	if (CheckLoseCondition() == 1) YouLoseTitleRender();
 }
 
 void ClearHearts() {

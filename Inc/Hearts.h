@@ -23,11 +23,19 @@ typedef struct TextOnlyHearts {
 	char* words;
 } TextOnlyHearts;
 
+typedef struct RectHearts {
+	float xpos;
+	float ypos;
+	float height;
+	float width;
+} RectHearts;
+
 void InitializeLife(void);
 void GainLife(int gain_life);
 void LoseLife(int lose_life);
 void DrawLife(void);
-void CheckLoseCondition(void);
+int CheckLoseCondition(void);
+void RenderHeartText(void);
 float BezierCurve(float);
 void AnimationLife(void);
 void UpdateLife(void);
