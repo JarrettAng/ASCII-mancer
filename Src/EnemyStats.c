@@ -8,6 +8,7 @@
 #include "ColorTable.h"
 #include "Particles.h"
 #include "Hearts.h"
+#include "SoundManager.h"
 
 
 #define ENEMY1 1,1,1,"1"
@@ -87,6 +88,7 @@ void MoveEnemy(EnemyInfo* enemy){
 	}
 	// if((enemy->x-enemy->MovementSpeed)<0) enemy->x = 0;
 	// else enemy->x-= enemy->MovementSpeed;
+	PlaySound(ZOMBIEMOVE, CP_SOUND_GROUP_SFX);
 }
 void DrawEnemy(EnemyInfo* enemy){
 	
