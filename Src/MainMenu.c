@@ -52,9 +52,6 @@ Timer buttonBlink = {
 	.elaspedTime = 0,
 };
 
-// Cache menu button that player clicked on. To know which button to blink.
-Button* buttonClicked = NULL;
-
 #pragma endregion
 
 //___________________________________________________________________
@@ -105,10 +102,10 @@ void MainMenuUpdate(void) {
 }
 
 void MainMenuExit(void) {
-	buttonClicked = NULL;
 	CP_Image_Free(&title);
 	CP_Image_Free(&selectPointer);
 	KillSoundManager();
+	ClearInteractCache();
 	FreeUI();
 }
 
@@ -208,8 +205,8 @@ void IntializeSelectPointer(){
 void DrawSelectPointer(){
 
 	// When player click on a button, pointer will not move from the clicked button.
-	if (buttonClicked){
-		CP_Image_Draw(selectPointer, buttonClicked->transform.cachedPos.x - (pointerOffset * GetWidthScale()), buttonClicked->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
+	if (GetBtnClicked() != NULL){
+		CP_Image_Draw(selectPointer, GetBtnClicked()->transform.cachedPos.x - (pointerOffset * GetWidthScale()), GetBtnClicked()->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
 		return;
 	}
 
@@ -237,7 +234,7 @@ void DrawSelectPointer(){
 
 void HandleCarouselButton(){
 	// Don't move button if transitioning.
-	if (buttonClicked){
+	if (GetBtnClicked() != NULL){
 		// Return early to prevent further checks.
 		return;
 	}
@@ -257,13 +254,13 @@ void HandleCarouselButton(){
 }
 
 void HandleMenuButtonClick(){
-	if (buttonClicked != NULL){
+	if (GetBtnClicked() != NULL){
 		// Blink button that the player clicked on and then go to next scene.
-		HandleTransition(buttonClicked);
+		HandleTransition(GetBtnClicked());
 	}
 	else {
 		// Check if player clicked any button.
-		buttonClicked = GetButtonClick();
+		GetButtonClick();
 	}
 }
 
