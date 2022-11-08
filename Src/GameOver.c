@@ -131,5 +131,6 @@ void GameOverUpdate(void) {
 }
 
 void GameOverExit(void) {
-	FreeButton();
+	ClearInteractCache();
+	FreeUI();
 }

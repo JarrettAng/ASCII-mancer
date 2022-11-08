@@ -34,12 +34,14 @@ void gameLevelUpdate(void){
 
     //DRAWING AND UPDATING OF GRID
 
-    //UPDATE HEARTS
-    UpdateLife();
 
     //UPDATE VFX
     UpdateEffects();
 	RenderHand();
+
+    //UPDATE HEARTS
+    UpdateLife();
+
     //CLEAR SCREEN
     CP_Graphics_ClearBackground(BLACK);
 }
