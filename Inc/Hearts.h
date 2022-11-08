@@ -1,7 +1,8 @@
 #pragma once
 #define MAX_HEART_COUNT 3
 #define IMAGE_HEART_LENGTH 263
-#define HEART_SIZE 0.24f
+#define HEART_SPACING 0.25f
+#define HEART_SIZE 4.f
 #define HEART_ALPHA 255
 #define HEART_ROTATION 0.f
 

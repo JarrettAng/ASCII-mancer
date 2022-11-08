@@ -16,16 +16,16 @@ void InitializeLife(void) {
 	heart_image = CP_Image_Load("Assets/Heart.png");
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		heart_stats[i].heartAlive = 1; // Boolean True
-		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 5.f + 30.f + IMAGE_HEART_LENGTH * HEART_SIZE * i + 32.f * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
+		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 5.f + 30.f + IMAGE_HEART_LENGTH * HEART_SPACING * i + 32.f * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
 		heart_stats[i].ypos = (CP_System_GetDisplayHeight() / 20.f) - 120.f;
-		heart_stats[i].size = HEART_SIZE;
+		heart_stats[i].size = CP_System_GetDisplayWidth() / (CP_System_GetDisplayWidth() * HEART_SIZE);
 		heart_stats[i].alpha = HEART_ALPHA;
 		heart_stats[i].rotation = HEART_ROTATION;
 	}
 
 	// Initialize text for life
 	life_text.color = TETRIS_COLOR;
-	life_text.font_size = 55.f;
+	life_text.font_size = CP_System_GetDisplayHeight() / 20.f;
 	life_text.xpos = CP_System_GetDisplayWidth() / 12.f - 137.f;
 	life_text.ypos = CP_System_GetDisplayHeight() / 16.f - 40.f;
 	life_text.words = "HEARTS";
