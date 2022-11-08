@@ -131,11 +131,11 @@ void RenderHand(void) {
 
 		// Render the background square surrounding each piece
 		CP_Settings_Fill(MENU_BLACK);
-		CP_Settings_Stroke(current->piece.color);
+		CP_Settings_Stroke(MENU_GRAY);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, peek_slot_length, peek_slot_length);
 
 		// Settings for tile rendering
-		CP_Settings_Fill(current->piece.color);
+		CP_Settings_Fill(MENU_GRAY);
 		CP_Settings_Stroke(current->piece.color_stroke);
 		// Render each tile in the Tetris Piece
 		float* x_screen_length = &current->piece.x_screen_length;
@@ -202,6 +202,7 @@ void RecalculateHandRenderPositions(void) {
 	PlayerHandSlot* current;
 	for (int index = 0; index < HAND_SIZE; ++index) {
 		current = &hand[index];
+
 		current->pos.x = hand_left_buffer + hand_left_extra_buffer + (hand_slot_length + hand_slot_spacing) * index;
 		current->pos.y = (float)CP_System_GetWindowHeight() - hand_slot_length - hand_bottom_buffer;
 		current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * hand_tile_length;

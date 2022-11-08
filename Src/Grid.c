@@ -145,14 +145,22 @@ void DrawLineGrid()
 
 }
 
-void RenderGridCells(void){
-	for(short x =0; x< TOTAL_XGRID-1; ++x){
-		for(short y = 0; y< TOTAL_YGRID; ++y){
+void RenderGridCells(void) {
+	for (short x = 0; x < TOTAL_XGRID - 1; ++x) {
+		for (short y = 0; y < TOTAL_YGRID; ++y) {
 			CP_Settings_Stroke(BLACK);
 			CP_Settings_StrokeWeight(cube_Length * 0.1f);
 			CP_Settings_Fill(GRID_COLOR);
 			CP_Settings_RectMode(CP_POSITION_CENTER);
-			CP_Graphics_DrawRect(GridXToPosX(x),GridYToPosY(y),cube_Length,cube_Length);
+			CP_Graphics_DrawRect(GridXToPosX(x), GridYToPosY(y), cube_Length, cube_Length);
+			CP_Settings_RectMode(CP_POSITION_CORNER);
+
+			// Draw a dot in the cell if there is not zombie in it
+			if (HasLiveEnemyInCell(x, y))continue;
+			CP_Settings_RectMode(CP_POSITION_CENTER);
+			CP_Settings_Fill(MENU_WHITE);
+			CP_Settings_StrokeWeight(cube_Length * 0.05f);
+			CP_Graphics_DrawRect(GridXToPosX(x), GridYToPosY(y), cube_Length * 0.15f, cube_Length * 0.15f);
 			CP_Settings_RectMode(CP_POSITION_CORNER);
 		}
 	}
