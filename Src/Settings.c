@@ -4,54 +4,38 @@
 #include "MainMenu.h"
 #include "Utils.h"
 
-
-Slider volumeSlider;
-SliderKnob volumeKnob;
-
 Text settingsTxt;
+
+Text masterTxt;
 Text masterVolumeTxt;
+
+Text sfxTxt;
 Text sfxVolumeTxt;
+
 Text windowSizeTxt;
 
 Button backBtn;
 
+Slider masterVolumeSlider;
+Slider sfxVolumeSlider;
+
+int masterVolume = 100;
+int sfxVolume = 100;
+
 #pragma region FORWARD_DECLARATIONS
 
-void IntializeTexts(void);
-void IntializeButtons(void);
-void DrawSlider(void);
-void DrawSliderBob(void);
-
+void InitializeTexts(void);
+void InitializeSliders(void);
+static void InitializeButtons(void);
 void LoadMainMenu(void);
 
 #pragma endregion
 
 
 void SettingsInit(void){
-
-	Slider sliderData = {
-	.start = CP_Vector_Set(500, 500),
-	.end = CP_Vector_Set(1000, 500),
-
-	.stroke = MENU_RED,
-	.strokeWeight = 10
-	};
-
-	SliderKnob knobData = {
-	.x = sliderData.start.x,
-	.y = sliderData.start.y,
-	.bobRadius = 25,
-
-	.colour = WHITE,
-	.stroke = MENU_RED,
-	.strokeWeight = 10
-	};
-
-	volumeKnob = knobData;
-	volumeSlider = sliderData;
-
-	IntializeTexts();
-	IntializeButtons();
+	InitializeTexts();
+	InitializeSliders();
+	InitializeButtons();
 }
 
 void SettingsUpdate(void){
@@ -59,90 +43,144 @@ void SettingsUpdate(void){
 
 	// Settings header
 	RenderTexts();
+	RenderSliders();
 	DrawButtons();
 	HandleButtonClick();
-
-	DrawSlider();
-	DrawSliderBob();
 }
 
 void SettingsExit(void){
+	ClearInteractCache();
 	FreeUI();
 }
 
-void DrawSlider(){
-	CP_Settings_Stroke(volumeSlider.stroke);
-	CP_Settings_StrokeWeight(volumeSlider.strokeWeight);
+void InitializeTexts(){
+	// Offfset between the volume texts.
+	float volumeOffset = GetWindowHeight() / 4 * GetHeightScale();
+	// Offfset between the volume text and volume value text.
+	float volumeValueOffset = GetWindowHeight() / 25 * GetHeightScale();
 
-	CP_Graphics_DrawLine(volumeSlider.start.x, volumeSlider.start.y, volumeSlider.end.x, volumeSlider.end.y);
-}
-
-void DrawSliderBob(){
-	CP_Settings_Fill(volumeKnob.colour);
-	CP_Settings_Stroke(volumeKnob.stroke);
-	CP_Settings_StrokeWeight(volumeKnob.strokeWeight);
-
-	CP_Graphics_DrawCircle(CP_Math_ClampFloat(volumeKnob.x, volumeSlider.start.x, volumeSlider.end.x), CP_Math_ClampFloat(volumeKnob.y, volumeSlider.start.y, volumeSlider.end.y), volumeKnob.bobRadius * 2);
-}
-
-void IntializeTexts(){
-	/*=======================Text Settings===================*/
-	// Currently all texts in settings are using header/subHeader setting
+	/*==============================Text Settings========================*/
 	TextData baseTextData = {
 		.color = MENU_WHITE,
 		.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
 		.hAlign = CP_TEXT_ALIGN_H_CENTER,
 		.vAlign = CP_TEXT_ALIGN_V_MIDDLE,
 	};
-
+	// Settings text.
 	TextData headerData = baseTextData;
 	headerData.textSize = 80 * GetHeightScale();
 
+	// Sub header includes master, sfx and window size.
 	TextData subHeaderData = baseTextData;
-	subHeaderData.textSize = 50 * GetHeightScale();
+	subHeaderData.textSize = 60 * GetHeightScale();
 
-	/*========================Settings Header============================*/
+	// Master and sfx volume amount.
+	TextData volumeValueData = baseTextData;
+	volumeValueData.textSize = 30 * GetHeightScale();
+
+	/*======================Settings Text==========================*/
 	Rect settingsTxtRect = {
 		.x = GetWindowWidth() / 2,
 		.y = GetWindowHeight() / 9,
 	};
-
 	headerData.text = "SETTINGS";
-	IntializeText(&settingsTxt, settingsTxtRect, headerData);
+	InitializeText(&settingsTxt, settingsTxtRect, headerData);
+	/*=============================================================*/
 
-	/*========================Volume Sub Headers============================*/
+	/*========================Master Text==========================*/
 	Rect masterTxtRect = {
-		.x = GetWindowWidth() / 5,
+		.x = GetWindowWidth() / 4,
 		.y = GetWindowHeight() / 3,
 	};
-
 	subHeaderData.text = "MASTER";
-	IntializeText(&masterVolumeTxt, masterTxtRect, subHeaderData);
+	InitializeText(&masterTxt, masterTxtRect, subHeaderData);
+	/*=============================================================*/
 
-	Rect sfxTxtRect = {
-		.x = GetWindowWidth() / 5,
-		.y = GetWindowHeight() - GetWindowHeight() / 3,
+	/*====================Master Volume Text=======================*/
+	Rect masterVolumeTextRect = {
+		.x = masterTxtRect.x,
+		.y = masterTxtRect.y + volumeValueOffset
 	};
+	volumeValueData.text = "-100-";
+	InitializeText(&masterVolumeTxt, masterVolumeTextRect, volumeValueData);
+	/*=============================================================*/
 
+	/*========================SFX Text=============================*/
+	Rect sfxTxtRect = {
+		.x = GetWindowWidth() / 4,
+		.y = masterTxtRect.y + volumeOffset,
+	};
 	subHeaderData.text = "SFX";
-	IntializeText(&sfxVolumeTxt, sfxTxtRect, subHeaderData);
+	InitializeText(&sfxTxt, sfxTxtRect, subHeaderData);
+	/*==============================================================*/
 
-	/*========================Window Size Headers============================*/
+	/*=======================SFX Volume Text========================*/
+	Rect sfxVolumeTextRect = {
+		.x = sfxTxtRect.x,
+		.y = sfxTxtRect.y + volumeValueOffset
+	};
+	volumeValueData.text = "-100-";
+	InitializeText(&sfxVolumeTxt, sfxVolumeTextRect, volumeValueData);
+	/*==============================================================*/
+
+	/*====================Window Size Text==========================*/
 	Rect windowSizeTxtRect = {
-	.x = GetWindowWidth() - GetWindowWidth() / 5,
+	.x = GetWindowWidth() - GetWindowWidth() / 4,
 	.y = GetWindowHeight() / 3,
 	};
-
 	subHeaderData.text = "WINDOW SIZE";
-	IntializeText(&windowSizeTxt, windowSizeTxtRect, subHeaderData);
+	InitializeText(&windowSizeTxt, windowSizeTxtRect, subHeaderData);
+	/*==============================================================*/
 }
 
-void IntializeButtons(){
+void InitializeSliders(){
+	float sliderOffset = GetWindowHeight() / 10 * GetHeightScale();
+	CP_Image sliderImg = CP_Image_Load("Assets/Slider.png");
+	CP_Image knobImg = CP_Image_Load("Assets/Knob.png");
+
+	SliderKnob knobData = {
+		.img = knobImg,
+		.radius = (float)CP_Image_GetWidth(knobImg) / 2,
+		.transform.width = (float)CP_Image_GetWidth(knobImg),
+		.transform.heigth = (float)CP_Image_GetHeight(knobImg),
+	};
+
+	/*=================Master Volume Slider=========================*/
+	Rect masterVolumeRect = {
+		.x = masterTxt.transform.x,
+		.y = masterTxt.transform.y + sliderOffset,
+		.width = (float)CP_Image_GetWidth(sliderImg),
+		.heigth = (float)CP_Image_GetHeight(sliderImg),
+	};
+
+	Line masterVolumeLine = {
+		.start = CP_Vector_Set(masterVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2, masterVolumeRect.y),
+		.end = CP_Vector_Set(masterVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2, masterVolumeRect.y),
+	};
+	InitializeSlider(&masterVolumeSlider, masterVolumeRect, masterVolumeLine, sliderImg, knobData);
+	/*==============================================================*/
+
+	/*=================SFX Volume Slider============================*/
+	Rect sfxVolumeRect = {
+		.x = sfxTxt.transform.x,
+		.y = sfxTxt.transform.y + sliderOffset,
+		.width = (float)CP_Image_GetWidth(sliderImg),
+		.heigth = (float)CP_Image_GetHeight(sliderImg),
+	};
+
+	Line sfxVolumeLine = {
+		.start = CP_Vector_Set(sfxVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2, sfxVolumeRect.y),
+		.end = CP_Vector_Set(sfxVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2, sfxVolumeRect.y),
+	};
+	InitializeSlider(&sfxVolumeSlider, sfxVolumeRect, sfxVolumeLine, sliderImg, knobData);
+	/*==============================================================*/
+}
+
+void InitializeButtons(){
 	GraphicData graphicData = {
 		.color = TRANSPERANT,
 		.strokeColor = TRANSPERANT,
 		.strokeWeight = 0,
-		// Draw from top left corner so menu button aligns.
 		.imagePosMode = CP_POSITION_CENTER
 	};
 
@@ -150,14 +188,12 @@ void IntializeButtons(){
 		.color = MENU_WHITE,
 		.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
 		.textSize = 70 * GetHeightScale(),
-		// Text will be drawn on the X Y pos of btn rect (which is top left corner),
-		// So we shift text to top left.
 		.hAlign = CP_TEXT_ALIGN_H_CENTER,
 		.vAlign = CP_TEXT_ALIGN_V_MIDDLE,
 		.text = "BACK"
 	};
 
-	/*========================Start Button============================*/
+	/*========================Back Button===========================*/
 	Rect backBtnRect = {
 		.x = GetWindowWidth() / 2,
 		.y = GetWindowHeight() - GetWindowHeight() / 8,
@@ -165,6 +201,7 @@ void IntializeButtons(){
 		.width = 400 * GetWidthScale(),
 	};
 	InitializeButton(&backBtn, backBtnRect, graphicData, textData, LoadMainMenu);
+	/*==============================================================*/
 }
 
 void LoadMainMenu(){

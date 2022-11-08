@@ -12,17 +12,20 @@ int btnsCount = 0;
 Text* texts[MAX_UI_TEXT];
 int textsCount = 0;
 
-SliderKnob* knobs[MAX_UI_KNOBS];
-int knobsCount = 0;
+Slider* sliders[MAX_UI_SLIDERS];
+int sliderCount = 0;
 
 #pragma endregion
 
 #pragma region UI_INTERACT_CACHE
 
+Button* btnClicked = NULL;
 Button* btnHovered = NULL;
 Button* prevBtnHovered = NULL;
 
 #pragma endregion
+
+#pragma region INITIALIZE
 
 /// <summary>
 /// Intialize button with the given data. Also store btn address in array so it manager can draw them all at once.
@@ -41,13 +44,25 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 /// <summary>
 /// Intialize text with the given data.Also store text address in array so it manager can draw them all at once.
 /// </summary>
-void IntializeText(Text* txt, Rect transform, TextData data){
+void InitializeText(Text* txt, Rect transform, TextData data){
 	txt->transform = transform;
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
 	txt->textData = data;
 
 	texts[textsCount++] = txt;
 }
+
+void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, SliderKnob knobData){
+	slider->transform = transform;
+	slider->line = line;
+	slider->img = img;
+	slider->knob = knobData;
+	sliders[sliderCount++] = slider;
+}
+
+#pragma endregion
+
+#pragma region RENDERING
 
 /// <summary>
 /// Require button to be intialized before drawing.
@@ -97,6 +112,13 @@ void RenderTexts(){
 	}
 }
 
+void RenderSliders(Void){
+	for (int i = 0; i < sliderCount; ++i) {
+		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);
+		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->knob.transform.width, sliders[i]->knob.transform.heigth, 255);
+	}
+}
+
 /// <summary>
 /// For updating engine graphic settings before drawing an UI element.
 /// </summary>
@@ -119,37 +141,16 @@ void SetTextSetting(TextData data) {
 	CP_Settings_TextAlignment(data.hAlign, data.vAlign);
 }
 
-/// <summary>
-/// Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
-/// </summary>
-void FreeUI(){
-	FreeButton();
-	FreeText();
-}
-
-/// <summary>
-/// Empty button array when exiting a scene, so that next scene can reuse the array.
-/// </summary>
-void FreeButton(){
-	// Empty array so next scene can use.
-	memset(btns, 0, sizeof(btns));
-	btnsCount = 0;
-}
-
-/// <summary>
-/// Empty text array when exiting a scene, so that next scene can reuse the array.
-/// </summary>
-void FreeText(){
-	// Empty array so next scene can use.
-	memset(texts, 0, sizeof(texts));
-	textsCount = 0;
-}
-
+#pragma endregion
 
 #pragma region UI_INTERACTION
 
 Button* GetPrevBtnHovered(){
 	return prevBtnHovered;
+}
+
+Button* GetBtnClicked(){
+	return btnClicked;
 }
 
 /// <summary>
@@ -158,7 +159,7 @@ Button* GetPrevBtnHovered(){
 void HandleButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
-		Button* btnClicked = NULL;
+		//Button* btnClicked = NULL;
 
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
@@ -197,6 +198,7 @@ Button* GetButtonClick() {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
+				btnClicked = btns[i];
 				return btns[i];
 			}
 		}
@@ -236,8 +238,47 @@ SliderKnob* GetSliderKnobHeld(){
 	if (CP_Input_MouseDown(MOUSE_BUTTON_LEFT)){
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
-		//if (pointWithinCircle())
+
+		// Loop through all buttons initialized in this scene.
+		for (int i = 0; i < sliderCount; i++) {
+			if (pointWithinCircle(xPos, yPos, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.radius)){
+				return &sliders[i]->knob;
+			}
+		}
 	}
+	return NULL;
 }
 
 #pragma endregion
+
+void ClearInteractCache(){
+	btnClicked = NULL;
+	btnHovered = NULL;
+	prevBtnHovered = NULL;
+}
+
+/// <summary>
+/// Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
+/// </summary>
+void FreeUI(){
+	FreeButton();
+	FreeText();
+}
+
+/// <summary>
+/// Empty button array when exiting a scene, so that next scene can reuse the array.
+/// </summary>
+void FreeButton(){
+	// Empty array so next scene can use.
+	memset(btns, 0, sizeof(btns));
+	btnsCount = 0;
+}
+
+/// <summary>
+/// Empty text array when exiting a scene, so that next scene can reuse the array.
+/// </summary>
+void FreeText(){
+	// Empty array so next scene can use.
+	memset(texts, 0, sizeof(texts));
+	textsCount = 0;
+}
