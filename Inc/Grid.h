@@ -6,7 +6,7 @@
 #define WINDOWLENGTH CP_System_GetWindowWidth()
 //GRID VALUE MUST ALWYAS BE EVEN
 #define	TOTAL_YGRID 7
-#define TOTAL_XGRID 12
+#define TOTAL_XGRID 13
 
 typedef struct SpaceInfo
 {

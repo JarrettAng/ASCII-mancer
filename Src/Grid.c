@@ -40,7 +40,7 @@ void grid_init(void) {
 
 	//Calculations for adjusting buffers according to cell size
 	float x = (WINDOWLENGTH*.8f)/TOTAL_XGRID;	//Width of playing space is 80% of screen width
-	float y = (WINDOWHEIGHT*.65f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
+	float y = (WINDOWHEIGHT*.625f)/TOTAL_YGRID;	//Height of playing space is 70% of screen height
 	float size = min(x,y);						//Get whichever is smaller
 	// if(WINDOWLENGTH-(size*TOTAL_XGRID)>(gridXOffset)){	//We prioritise adjusting by length
 	// gridXOffset = (WINDOWLENGTH-(size*TOTAL_XGRID));		//Set the X Buffer first
@@ -48,7 +48,7 @@ void grid_init(void) {
 	// }
 	if((WINDOWLENGTH-(size*TOTAL_XGRID))/2 > gridXOffset){
 		gridXOffset =(WINDOWLENGTH-(size*TOTAL_XGRID))/2;
-		grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/4;		//have to adjust top accordingly (10% to top, 30% to bottom)
+		grid_Top = (WINDOWHEIGHT-(size*TOTAL_YGRID))/2.75f;		//have to adjust top accordingly (10% to top, 30% to bottom)
 	}
 
 	//Regardless of anything adjustments, bottom is always playarea+grid_top

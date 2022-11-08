@@ -161,11 +161,11 @@ void RenderHand(void) {
 void RecalculateHandRenderPositions(void) {
 	//______________________________________________________________
 	// Initialize player hand factors
-	hand_total_height = (float)CP_System_GetWindowHeight() * .2f; // The hand queue takes up 20% of the height
-	hand_bottom_buffer = hand_total_height * .2f; // The bottom buffer takes up 20% of the hand height
+	hand_total_height = (float)CP_System_GetWindowHeight() * .175f; // The hand queue takes up 17.5% of the height
+	hand_bottom_buffer = hand_total_height * .175f; // The bottom buffer takes up 17.5% of the hand height
 
 	float total_width = (float)CP_System_GetWindowWidth();
-	hand_total_length = total_width * .65f; // The hand queue takes up 65% of the width
+	hand_total_length = total_width * .55f; // The hand queue takes up 55% of the width
 	hand_left_buffer = hand_total_length * .1f; // The hand edge buffers takes up 10% of the hand queue
 	hand_slot_length = min(hand_total_height, (hand_total_length - hand_left_buffer) * .9f / HAND_SIZE); // The length of each slot depends on whether height or 90% of the hand queue width is shorter
 	hand_slot_spacing = (hand_total_length - hand_left_buffer - (hand_slot_length * HAND_SIZE)) / HAND_SIZE; // The spacing of each slot is the remaining space
