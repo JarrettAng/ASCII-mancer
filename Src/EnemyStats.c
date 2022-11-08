@@ -7,6 +7,7 @@
 #include "Grid.h"
 #include "ColorTable.h"
 #include "Particles.h"
+#include "Hearts.h"
 
 
 #define ENEMY1 1,1,1,"1"
@@ -82,6 +83,7 @@ void MoveEnemy(EnemyInfo* enemy){
 		//Special despawn animation over here
 		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y),enemy->Health);
 		enemy->is_Alive = FALSE;//Should put this in OnDeath()
+		LoseLife(1); // LOSE ONE LIFE FOR EACH ENEMY ENTERING THE WALL
 	}
 	// if((enemy->x-enemy->MovementSpeed)<0) enemy->x = 0;
 	// else enemy->x-= enemy->MovementSpeed;

@@ -3,9 +3,12 @@
 #include "Hearts.h"
 #include "SoundManager.h"
 #include "UIManager.h"
+#include "ColorTable.h"
 
 HeartContainer heart_stats[MAX_HEART_COUNT];
 CP_Image heart_image;
+TextOnlyHearts life_text;
+TextOnlyHearts game_over_text;
 
 // Initializes the life counter
 // Remember spacing to be a value of above 1
@@ -13,12 +16,23 @@ void InitializeLife(void) {
 	heart_image = CP_Image_Load("Assets/Heart.png");
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		heart_stats[i].heartAlive = 1; // Boolean True
-		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 10.f + IMAGE_HEART_LENGTH * HEART_SIZE * i + 25.f * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
-		heart_stats[i].ypos = CP_System_GetDisplayWidth() / 16.f - 50.f;
+		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 5.f + 30.f + IMAGE_HEART_LENGTH * HEART_SIZE * i + 32.f * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
+		heart_stats[i].ypos = (CP_System_GetDisplayHeight() / 20.f) - 120.f;
 		heart_stats[i].size = HEART_SIZE;
 		heart_stats[i].alpha = HEART_ALPHA;
 		heart_stats[i].rotation = HEART_ROTATION;
 	}
+
+	// Initialize text for life
+	life_text.color = TETRIS_COLOR;
+	life_text.font_size = 55.f;
+	life_text.xpos = CP_System_GetDisplayWidth() / 12.f - 137.f;
+	life_text.ypos = CP_System_GetDisplayHeight() / 16.f - 40.f;
+	life_text.words = "HEARTS";
+}
+
+void EndTitleInit() {
+	
 }
 
 //-----------------------
@@ -32,7 +46,7 @@ void GainLife(int gain_life) {
 			break;
 		}
 	}
-	if (heart_stats[MAX_HEART_COUNT - 1].heartAlive != 1) PlaySound(GAINHEART, CP_SOUND_GROUP_SFX);
+	PlaySound(GAINHEART, CP_SOUND_GROUP_SFX);
 	// TO DO : Add Gain Life Animation
 }
 
@@ -78,6 +92,13 @@ void DrawLife(void) {
 	}
 }
 
+void RenderHeartText() {
+	CP_Settings_Fill(life_text.color); // Color of text
+	CP_Settings_TextSize(life_text.font_size); // Size of text
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP); // Origin of text is it's absolute center
+	CP_Font_DrawText(life_text.words, life_text.xpos, life_text.ypos); // Draw text
+}
+
 float BezierCurve(float t) {
 	return t * t * (3.0f - 2.0f * t);
 }
@@ -110,6 +131,8 @@ void AnimationLife() {
 	
 }
 
+//void EndTitleRender()
+
 void UpdateLife(void) {
 	// DEBUGGING CHANGE TO THE GAIN LIFE AND LOSE LIFE CONDITIONS LATER
 	if (CP_Input_KeyReleased(KEY_O) == 1) LoseLife(1);
@@ -117,7 +140,9 @@ void UpdateLife(void) {
 	//Checks
 	CheckLoseCondition();
 	//Renders
+	RenderHeartText();
 	DrawLife();
+
 	AnimationLife();
 }
 
