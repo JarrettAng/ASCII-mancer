@@ -10,14 +10,19 @@
 #include "GameLoop.h"
 #include "TManager.h"
 #include "TPlayer.h"
+#include "EnemyDisplay.h"
 
 void gameLevelInit(void){
     grid_init();
+
     InitWaveSystem();
     InitializeLife();
+    
     InitSoundManager(GAMEBGM);
 	TManagerInit(DEFAULT_SPAWN_SEED);
+
 	TPlayerInit();
+    EnemyDisplayInit();
 
 	// Initialize game loop last, after all the events have been subscribed
 	GameLoopInit();
@@ -25,25 +30,23 @@ void gameLevelInit(void){
 void gameLevelUpdate(void){
     UpdateCameraShaker();
 
+    // Call the functions subscribed to the update events
     GameLoopUpdate();
-    //MAIN GAME LOOP GOES HERE
+
+    // DRAWING AND UPDATING OF GRID
     grid_update();
+
     UpdateWave();
 
-
-
-
-    //DRAWING AND UPDATING OF GRID
-
-
-    //UPDATE VFX
+    // UPDATE VFX
     UpdateEffects();
 	RenderHand();
     ShowCurrentWave();
-    //UPDATE HEARTS
+    
+    // UPDATE HEARTS
     UpdateLife();
 
-    //CLEAR SCREEN
+    // CLEAR SCREEN
     CP_Graphics_ClearBackground(BLACK);
 }
 

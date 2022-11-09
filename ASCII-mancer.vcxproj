@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="Inc\ColorTable.h" />
     <ClInclude Include="Inc\Credits.h" />
+    <ClInclude Include="Inc\EnemyDisplay.h" />
     <ClInclude Include="Inc\EnemyStats.h" />
     <ClInclude Include="Inc\gamelevel.h" />
     <ClInclude Include="Inc\GameLoop.h" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Credits.c" />
+    <ClCompile Include="Src\EnemyDisplay.c" />
     <ClCompile Include="Src\EnemyStats.c" />
     <ClCompile Include="Src\gamelevel.c" />
     <ClCompile Include="Src\GameLoop.c" />

@@ -14,6 +14,7 @@ ________________________________________________________________________________
 
 #include "TPlayer.h" 
 #include "TPlayerHeld.h"
+#include "GameLoop.h" // For turn swapping
 
 PlayerPieceHeld piece_held; // Information on the piece held
 
@@ -212,6 +213,9 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 
 	// Play tetris piece sound
 	PlaySoundEx(TETROMINOEXPLODE, CP_SOUND_GROUP_SFX);
+
+	// Swap to the zombie's turn
+	GameLoopSwitch(TURN_ZOMBIE);
 
 	RemovePieceHeldFromHand();
 }

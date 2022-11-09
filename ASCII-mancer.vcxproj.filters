@@ -87,6 +87,9 @@
     <ClInclude Include="Inc\TPlayerHeld.h">
       <Filter>Header Files\Tetris Pieces</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\EnemyDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Grid.c">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="Src\TPlayerHeld.c">
       <Filter>Source Files\Tetris Pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\EnemyDisplay.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
