@@ -102,7 +102,7 @@ void DrawButtons() {
 //}
 
 /// <summary>
-/// Draw all buttons cached in texts array.
+/// Draw all texts cached in texts array.
 /// </summary>
 void RenderTexts(){
 	for (int i = 0; i < textsCount; ++i) {
@@ -115,7 +115,7 @@ void RenderTexts(){
 void RenderSliders(Void){
 	for (int i = 0; i < sliderCount; ++i) {
 		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);
-		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->knob.transform.width, sliders[i]->knob.transform.heigth, 255);
+		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.transform.width, sliders[i]->knob.transform.heigth, 255);
 	}
 }
 
@@ -145,6 +145,10 @@ void SetTextSetting(TextData data) {
 
 #pragma region UI_INTERACTION
 
+Button* GetBtnHovered(){
+	return btnHovered;
+}
+
 Button* GetPrevBtnHovered(){
 	return prevBtnHovered;
 }
@@ -152,6 +156,7 @@ Button* GetPrevBtnHovered(){
 Button* GetBtnClicked(){
 	return btnClicked;
 }
+
 
 /// <summary>
 /// Triggers button's callback when player click on it.
@@ -234,17 +239,18 @@ Button* GetButtonHover(){
 	return NULL;
 }
 
-SliderKnob* GetSliderKnobHeld(){
+Slider* GetSliderHeld(){
 	if (CP_Input_MouseDown(MOUSE_BUTTON_LEFT)){
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
 
 		// Loop through all buttons initialized in this scene.
-		for (int i = 0; i < sliderCount; i++) {
+		for (int i = 0; i < sliderCount; ++i) {
 			if (pointWithinCircle(xPos, yPos, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.radius)){
-				return &sliders[i]->knob;
+				return sliders[i];
 			}
 		}
+		return NULL;
 	}
 	return NULL;
 }

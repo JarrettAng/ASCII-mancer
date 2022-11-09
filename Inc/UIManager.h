@@ -57,9 +57,12 @@ typedef struct SliderKnob{
 typedef struct Slider{
 	Rect transform;
 	Line line;
+	float lerpFactor;
 	CP_Image img;
 	SliderKnob knob;
 }Slider;
+
+
 
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack);
 void InitializeText(Text* txt, Rect transform, TextData data);
@@ -84,9 +87,9 @@ Button* GetButtonClick(void);
 Button* GetBtnClicked(void);
 Button* GetButtonHover(void);
 Button* GetPrevBtnHovered(void);
-
-SliderKnob* GetSliderKnobHeld(void);
-
+Button* GetBtnHovered(void);
+Slider* GetSliderHeld(void);
+Slider* GetSliderHeldd(void);
 void ClearInteractCache(void);
 
 void FreeUI();

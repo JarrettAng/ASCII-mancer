@@ -104,8 +104,8 @@ void MainMenuUpdate(void) {
 void MainMenuExit(void) {
 	CP_Image_Free(&title);
 	CP_Image_Free(&selectPointer);
-	KillSoundManager();
 	ClearInteractCache();
+	//KillSoundManager();
 	FreeUI();
 }
 
