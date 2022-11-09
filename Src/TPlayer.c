@@ -97,7 +97,8 @@ void RenderHand(void) {
 
 		// Render the background square surrounding each piece
 		CP_Settings_Fill(MENU_BLACK);
-		CP_Settings_Stroke(current->piece.color);
+		// The stroke color depends on if it is a wall or attack piece, index 0 is wall, the rest is attack
+		index == 0 ? CP_Settings_Stroke(TETRIS_SLOT_WALL_COLOR) : CP_Settings_Stroke(TETRIS_SLOT_ATTACK_COLOR);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
 		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
@@ -203,7 +204,7 @@ void RecalculateHandRenderPositions(void) {
 	for (int index = 0; index < HAND_SIZE; ++index) {
 		current = &hand[index];
 
-		current->pos.x = hand_left_buffer + hand_left_extra_buffer + (hand_slot_length + hand_slot_spacing) * index;
+		current->pos.x = hand_left_buffer + hand_left_extra_buffer + hand_slot_length * index;
 		current->pos.y = (float)CP_System_GetWindowHeight() - hand_slot_length - hand_bottom_buffer;
 		current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * hand_tile_length;
 		current->piece.draw_pos.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * hand_tile_length;

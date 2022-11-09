@@ -10,6 +10,7 @@ ________________________________________________________________________________
 #include "WaveSystem.h" // For enemy damaging on grid
 #include "Particles.h" // For particles on play
 #include "Screenshake.h" // For screenshake on play
+#include "SoundManager.h" // For sounds when pieces are played
 
 #include "TPlayer.h" 
 #include "TPlayerHeld.h"
@@ -201,12 +202,16 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 			// Add a explosion effect particles on hit
 			RadialParticle(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
 
+			// Damage the enemy on the grid, if any
 			SendDamage(grid_x, grid_y, 1);
 		}
 	}
 
 	// Screen the shake
-	trauma += 0.3f;
+	trauma += 0.35f;
+
+	// Play tetris piece sound
+	PlaySoundEx(TETROMINOEXPLODE, CP_SOUND_GROUP_SFX);
 
 	RemovePieceHeldFromHand();
 }
