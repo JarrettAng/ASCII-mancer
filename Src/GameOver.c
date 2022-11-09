@@ -45,7 +45,7 @@ void InitializeButtonsGameOverScreen(void) {
 	TextData GameOverTextData = {
 	.color = MENU_WHITE,
 	.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
-	.textSize = 50,
+	.textSize = 50 * GetHeightScale(),
 	// Text will be drawn on the X Y pos of btn rect (which is top left corner),
 	// So we shift text to top left.
 	.hAlign = CP_TEXT_ALIGN_H_LEFT,
@@ -56,8 +56,8 @@ void InitializeButtonsGameOverScreen(void) {
 	Rect BackMainMenuBtnRect = {
 	.x = xPos - 120,
 	.y = yPos + 340,
-	.heigth = 110,
-	.width = 880,
+	.heigth = GameOverTextData.textSize,
+	.width = 400 * GetWidthScale(),
 	};
 
 	GameOverTextData.text = "MAIN MENU";
@@ -70,20 +70,48 @@ void InitializeButtonsGameOverScreen(void) {
 // Text and Button function definitions
 //===========================================
 
-TextOnly CreateText(char* words, float size) {
-	TextOnly New_Text;
-	New_Text.font_size = size;
-	New_Text.color;
+/*
+void CreateText(TextOnly New_Text ,char* words, float font_size, CP_Color color, float xpos, float ypos) {
+	New_Text.font_size = font_size;
+	New_Text.color = color;
 	New_Text.words = words;
-	return New_Text;
+	New_Text.xpos = xpos;
+	New_Text.xpos = ypos;
 }
+*/
 
-void RenderText(TextOnly Rendered_Text, float pos_x, float pos_y, CP_Color color) {
-	Rendered_Text.color = color;
+void RenderGOText(TextOnly Rendered_Text) {
 	CP_Settings_Fill(Rendered_Text.color); // Color of text
 	CP_Settings_TextSize(Rendered_Text.font_size); // Size of text
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE); // Origin of text is it's absolute center
-	CP_Font_DrawText(Rendered_Text.words, pos_x, pos_y);
+	CP_Font_DrawText(Rendered_Text.words, Rendered_Text.xpos, Rendered_Text.ypos);
+}
+
+void InitializeAllText(void) {
+	Game_Over_Title.color = MENU_RED;
+	Game_Over_Title.font_size = CP_System_GetDisplayWidth() / 15.f;
+	Game_Over_Title.words = "GAME OVER! :(";
+	Game_Over_Title.xpos = CP_System_GetDisplayWidth() / 2.f;
+	Game_Over_Title.ypos = CP_System_GetDisplayHeight() / 4.f;
+
+	Enemies_Killed.words = "ZOMBOIYOS KILLED :";
+	Enemies_Killed.font_size = CP_System_GetDisplayWidth() / 30.f;
+	Enemies_Killed.color = MENU_WHITE;
+	Enemies_Killed.xpos = CP_System_GetDisplayWidth() / 2.f;
+	Enemies_Killed.ypos = CP_System_GetDisplayHeight() * 1.5f / 3.f;
+
+
+	Turns_Made.words = "TURNS MADE :";
+	Turns_Made.font_size = CP_System_GetDisplayWidth() / 30.f;
+	Turns_Made.color = MENU_WHITE;
+	Turns_Made.xpos = CP_System_GetDisplayWidth() / 2.f;
+	Turns_Made.ypos = CP_System_GetDisplayHeight() * 1.3f / 2.f;
+}
+
+void RenderAllText(void) {
+	RenderGOText(Game_Over_Title);
+	RenderGOText(Enemies_Killed);
+	RenderGOText(Turns_Made);
 }
 
 //=========================================================
@@ -103,22 +131,15 @@ void GameOverInit(void) {
 	// Populate buttons with positional, size and text values
 	InitializeButtonsGameOverScreen();
 	// Create the texts
-	Game_Over_Title = CreateText("GAME OVER! :(", HeaderFontSize);
-	Enemies_Killed = CreateText("ZOMBOIYOS KILLED : 10", 50.f);
-	Turns_Made = CreateText("TURNS MADE : 7", 50.f);
+	InitializeAllText();
 }
 
 void GameOverUpdate(void) {
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	CP_Font_Set(main_font); // Uses main_font for all fonts
 
-	// Create and Render Header //
-	RenderText(Game_Over_Title, CP_System_GetDisplayWidth() / 2.f, CP_System_GetDisplayHeight() / 2.f - 300.f, MENU_RED);
-
-	//Render Text//
-	RenderText(Enemies_Killed, CP_System_GetDisplayWidth() / 2.f, CP_System_GetDisplayHeight() / 2.f - 50.f, MENU_WHITE);
-	RenderText(Turns_Made, CP_System_GetDisplayWidth() / 2.f, CP_System_GetDisplayHeight() / 2.f + 150.f, MENU_WHITE);
-
+	// Render text
+	RenderAllText();
 
 	// Draw buttons
 	DrawButtons();

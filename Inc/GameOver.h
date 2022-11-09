@@ -1,8 +1,8 @@
 #pragma once
 
 #include "cprocessing.h"
-#define HeaderFontSize 120.f
-#define DefaultFontSize 48.f
+#define HEADER_FONT_SIZE 120.f
+#define DEFAULT_FONT_SIZE 48.f
 
 
 //------------------------------
@@ -12,14 +12,18 @@
 // Making the struct of text
 typedef struct TextOnly {
 	float font_size;
+	float xpos;
+	float ypos;
 	CP_Color color;
 	char* words;
 } TextOnly;
 
 //-------------------------------
 
-TextOnly CreateText(char* words, float size);
-void RenderText(TextOnly Rendered_Text, float pos_x, float pos_y, CP_Color color);
+TextOnly CreateText(char* words, float font_size, CP_Color color, float xpos, float ypos);
+void RenderGOText(TextOnly Rendered_Text);
+void InitializeAllText(void);
+void RenderAllText(void);
 
 void InitializeButtonsGameOverScreen(void);
 void BackToMainMenu(void);

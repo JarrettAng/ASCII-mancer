@@ -4,6 +4,7 @@
 #include "SoundManager.h"
 #include "UIManager.h"
 #include "ColorTable.h"
+#include "Grid.h"
 
 HeartContainer heart_stats[MAX_HEART_COUNT];
 CP_Image heart_image;
@@ -17,8 +18,8 @@ void InitializeLife(void) {
 	heart_image = CP_Image_Load("Assets/Heart.png");
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		heart_stats[i].heartAlive = 1; // Boolean True
-		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 5.f + 30.f + IMAGE_HEART_LENGTH * HEART_SPACING * i + 32.f * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
-		heart_stats[i].ypos = (CP_System_GetDisplayHeight() / 20.f) - 120.f;
+		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 4.f + (CP_System_GetDisplayWidth() / 7.5f) * HEART_SPACING * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
+		heart_stats[i].ypos = (CP_System_GetDisplayHeight() / 10.f);
 		heart_stats[i].size = CP_System_GetDisplayWidth() / (CP_System_GetDisplayWidth() * HEART_SIZE);
 		heart_stats[i].alpha = HEART_ALPHA;
 		heart_stats[i].rotation = HEART_ROTATION;
@@ -27,8 +28,8 @@ void InitializeLife(void) {
 	// Initialize text for life
 	life_text.color = TETRIS_COLOR;
 	life_text.font_size = CP_System_GetDisplayHeight() / 20.f;
-	life_text.xpos = CP_System_GetDisplayWidth() / 12.f - 137.f;
-	life_text.ypos = CP_System_GetDisplayHeight() / 16.f - 40.f;
+	life_text.xpos = GetCellSize();
+	life_text.ypos = CP_System_GetDisplayHeight() / 16.f;
 	life_text.words = "HEARTS";
 
 	// Make box for You Lose title card after losing all life
@@ -48,7 +49,7 @@ void InitializeLife(void) {
 float time_elapsed_lose = 0.f;
 void YouLoseTitleRender() {
 	float bg_transistion_time_max = 2.f;
-	float stay_time_max = 8.f;
+	float stay_time_max = 5.8f;
 
 	time_elapsed_lose += CP_System_GetDt();
 
@@ -158,7 +159,7 @@ void AnimationLife() {
 
 	// Animate each heart
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
-		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetDisplayWidth() / 16.f - 60.f, (CP_System_GetDisplayWidth() / 16.f - 60.f) - 12.f, BezierCurve(tick));
+		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetDisplayWidth() / 20.f, (CP_System_GetDisplayWidth() / 20.f) - (CP_System_GetDisplayWidth() / 20.f) * 0.10f, BezierCurve(tick));
 	}
 	// Check if it should be down ticking or up ticking
 	if (time_elapsed >= duration) {
