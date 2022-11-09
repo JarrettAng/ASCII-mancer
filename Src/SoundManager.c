@@ -39,6 +39,7 @@ void AddSoundToArray(CP_Sound sound,Clip clipName,float volumeModifier){
         .volumeModifier = volumeModifier,
         .clipName = clipName
     };
+    
     SoundArray[SoundIndex] = newSoundClip;
     SoundIndex++;
 }
@@ -99,9 +100,9 @@ void ToggleMuteBGM(void){
 //Stops all sounds and frees them. Remember to call on exit.
 void KillSoundManager(){
     CP_Sound_StopAll();
-    for(short i=0; i< SoundIndex; ++i){
-        CP_Sound_Free(&SoundArray[i].sound);
-    }
+    // for(short i=0; i< SoundIndex; ++i){
+    //     CP_Sound_Free(&SoundArray[i].sound);
+    // }
     SoundIndex = 0;
     memset(SoundArray, 0, sizeof(SoundClip) * SOUNDCOUNT);
 }

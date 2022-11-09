@@ -36,8 +36,8 @@ void gameLevelUpdate(void){
     // DRAWING AND UPDATING OF GRID
     grid_update();
 
-    UpdateWave();
-
+    //]UpdateWave();
+    RenderEnemy();
     // UPDATE VFX
     UpdateEffects();
 	RenderHand();
@@ -55,7 +55,7 @@ void ShowCurrentWave(void){
     CP_Settings_TextSize(CP_System_GetDisplayHeight() / 20.0f);
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT,CP_TEXT_ALIGN_V_MIDDLE);
     char buffer[25] = {0};
-    sprintf_s(buffer,25,"Wave %02d",GetCurrentWave());
+    sprintf_s(buffer,25,"WAVE %02d",GetCurrentWave());
     float xPosition = WINDOWLENGTH - GetCellSize();
     float yPosition = GetCellSize();
     CP_Font_DrawText(buffer,xPosition ,yPosition);
@@ -65,5 +65,5 @@ void gameLevelExit(void){
     ClearWaveArray();
     UnsubscribeAllEvents();
     ClearHearts();
-    KillSoundManager();
+    // KillSoundManager();
 }

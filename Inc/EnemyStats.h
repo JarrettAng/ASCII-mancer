@@ -17,6 +17,7 @@ typedef struct EnemyInfo
 	int MaxHealth;
 	//For the time being, it's the "sprite"
 	char* CharSprite;
+	CP_Color Color;
 	//in the future, width height for size
 
 	//Helps check if the enemy needs to be rendered or not
@@ -38,5 +39,6 @@ void DrawEnemy(EnemyInfo* enemy);
 //Helper functions
 int GetEnemyCount();
 EnemyInfo* GetEnemyPrefab(int index);
-
+EnemyInfo* GetRandomEnemyPrefab(void);
+void ClearEnemyPool(void);
 void SendDamage(int x, int y,int damage);

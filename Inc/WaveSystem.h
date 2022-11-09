@@ -3,7 +3,7 @@
 #include "EnemyStats.h"
 #include "Grid.h"
 
-#define WAVEOBJECTCOUNT 20
+#define WAVEOBJECTCOUNT 50
 #define TOMBSTONECOUNT 3
 //Initialises the wave system. MUST BE CALLED AT LEAST ONCE.
 void InitWaveSystem(void);
@@ -17,6 +17,8 @@ EnemyInfo* GetAliveEnemyFromGrid(int x, int y);
 BOOL HasLiveEnemyInCell(int x, int y);
 void SendDamage(int x, int y, int damage);
 int GetCurrentWave(void);
+void SpawnEnemy(void);
+void RenderEnemy(void);
 // EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now
 void ClearWaveArray(void);
