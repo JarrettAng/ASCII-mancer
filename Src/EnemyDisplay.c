@@ -23,9 +23,9 @@ void EnemyDisplayInit(void) {
 
 	float offset = GetCellSize() * 0.5f - text_size;
 	// Initialize the offset positions for the corners
-	display[TOP_RIGHT] = CP_Vector_Set(offset, offset);
-	display[BOTTOM_RIGHT] = CP_Vector_Set(offset, -offset);
-	display[BOTTOM_LEFT] = CP_Vector_Set(offset, -offset);
+	display[TOP_RIGHT] = CP_Vector_Set(offset, -offset);
+	display[BOTTOM_RIGHT] = CP_Vector_Set(offset, offset);
+	display[BOTTOM_LEFT] = CP_Vector_Set(offset, offset);
 	display[TOP_LEFT] = CP_Vector_Set(offset, -offset);
 }
 

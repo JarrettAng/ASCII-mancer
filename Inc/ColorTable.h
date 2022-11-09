@@ -32,3 +32,4 @@
 #define TETRIS_SLOT_WALL_COLOR CP_Color_Create(197, 197, 197, 255)
 #define TETRIS_SLOT_ATTACK_COLOR CP_Color_Create(227, 23, 23, 255)
 #define TETRIS_HOVER_COLOR CP_Color_Create(197, 197, 197, 130)
+#define TETRIS_HOVER_RED_COLOR CP_Color_Create(227, 23, 23, 130)

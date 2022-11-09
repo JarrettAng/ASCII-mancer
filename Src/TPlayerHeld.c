@@ -166,15 +166,24 @@ void RenderPieceHeld(void) {
 	if (!IsPieceHeld()) return;
 
 	// Settings for tile rendering
-	CP_Settings_Fill(piece_held.color);
 	CP_Settings_Stroke(piece_held.color_stroke);
 
+	// Color whole piece red if not in grid
+	_Bool hand_in_grid = IsInPlayingArea(CP_Input_GetMouseX(), CP_Input_GetMouseY());
+
 	// Render each tile in the Tetris Piece
+	CP_Vector current_pos;
 	PieceHeldCell *current;
 	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
 		current = &piece_held_shapeCurrent->grid[index];
 		if (current->cell) {
-			CP_Graphics_DrawRect(piece_held.draw_pos.x + current->grid_x * piece_held.x_screen_length, piece_held.draw_pos.y + current->grid_y * piece_held.y_screen_length, piece_held.x_screen_length, piece_held.y_screen_length);
+			current_pos.x = piece_held.draw_pos.x + current->grid_x * piece_held.x_screen_length;
+			current_pos.y = piece_held.draw_pos.y + current->grid_y * piece_held.y_screen_length;
+
+			// Color setting, red if piece is outside of grid
+			hand_in_grid && IsInPlayingArea(current_pos.x + piece_held.x_screen_length / 2.0f, current_pos.y + piece_held.y_screen_length / 2.0f) ? CP_Settings_Fill(piece_held.color) : CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+
+			CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
 		}
 	}
 }
@@ -190,6 +199,7 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 	PieceHeldCell* current = &piece_held_shapeCurrent->grid;
 	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
 		if (current[index].cell) {
+
 			int grid_x = mouse_x + IndexToShapeX(index) - piece_held_shape_centre;
 			int grid_y = mouse_y + IndexToShapeY(index) - piece_held_shape_centre;
 
@@ -200,11 +210,14 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 			case LEFT: ++grid_y; break;
 			}
 
-			// Add a explosion effect particles on hit
-			RadialParticle(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
+			// If it is outside the grid, continue instead
+			if (IsIndexInPlayingArea(grid_x, grid_y)) {
+				// Add a explosion effect particles on hit
+				RadialParticle(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
 
-			// Damage the enemy on the grid, if any
-			SendDamage(grid_x, grid_y, 1);
+				// Damage the enemy on the grid, if any
+				SendDamage(grid_x, grid_y, 1);
+			}
 		}
 	}
 

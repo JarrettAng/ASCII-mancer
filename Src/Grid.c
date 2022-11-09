@@ -114,7 +114,7 @@ _Bool IsInPlayingArea(float x,float y)
 	return ((x > gridXOffset && x < WINDOWLENGTH-gridXOffset-(float)cube_Length)&&(y > grid_Top && y < grid_Bottom)) ? TRUE : FALSE;
 }
 _Bool IsIndexInPlayingArea(int x, int y){
-	return (IsInPlayingArea(PosXToGridX(x),PosYToGridY(y)));
+	return (IsInPlayingArea(GridXToPosX(x), GridYToPosY(y)));
 }
 struct CurrentGridPos CurrentPos(int x,int y)
 {

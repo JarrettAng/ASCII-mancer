@@ -100,13 +100,14 @@ void MoveEnemy(EnemyInfo* enemy){
 void DrawEnemy(EnemyInfo* enemy) {
 
 	CP_Settings_Fill(enemy->Color);
-	CP_Settings_TextSize(GetCellSize() * ((float)enemy->Health / (float)enemy->MaxHealth));
+	CP_Settings_TextSize(GetCellSize() / 3.0f);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
 	char buffer[25] = { 0 };
 	sprintf_s(buffer, 25, "%d", enemy->Health);
-	RenderEnemyDisplay(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Color, enemy->Health, -1);
 	CP_Font_DrawText(enemy->CharSprite, GridXToPosX(enemy->x), GridYToPosY(enemy->y));
+
+	RenderEnemyDisplay(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Color, enemy->Health, -1);
 	// if (enemy->CharSprite == "4")
 	// {
 	// 	CP_Font_DrawText("T", GridXToPosX(enemy->x), GridYToPosY(enemy->y));

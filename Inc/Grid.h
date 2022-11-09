@@ -36,6 +36,7 @@ void grid_exit(void);
 
 //Check if given point is in playing area
 _Bool IsInPlayingArea(float x,float y);
+_Bool IsIndexInPlayingArea(int x, int y);
 
 //For drawing the grid
 void DrawLineGrid();
