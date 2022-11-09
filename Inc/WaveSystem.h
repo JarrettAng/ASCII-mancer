@@ -16,6 +16,7 @@ void NextWave(void);
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y);
 BOOL HasLiveEnemyInCell(int x, int y);
 void SendDamage(int x, int y, int damage);
+int GetCurrentWave(void);
 // EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now
 void ClearWaveArray(void);

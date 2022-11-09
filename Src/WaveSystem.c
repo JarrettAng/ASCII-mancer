@@ -183,6 +183,11 @@ BOOL HasLiveEnemyInCell(int x, int y){
 	return FALSE;
 }
 
+int GetCurrentWave(){
+	return currentWave;
+}
+
+
 //Function to send damage to enemy in grid
 void SendDamage(int x, int y,int damage){
 	//Make sure the thing we want to send damage to is in the playing area
