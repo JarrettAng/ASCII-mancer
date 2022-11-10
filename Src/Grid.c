@@ -118,11 +118,12 @@ _Bool IsIndexInPlayingArea(int x, int y){
 }
 struct CurrentGridPos CurrentPos(int x,int y)
 {
-	struct CurrentGridPos CGP;
-	CGP.x_Index = x;
-	CGP.y_Index = y;
-	CGP.x_CenterPos = GridXToPosX(x);
-	CGP.y_CenterPos = GridYToPosY(y);
+	struct CurrentGridPos CGP = {
+		.x_Index = x,
+		.y_Index = y,
+		.x_CenterPos = GridXToPosX(x),
+		.y_CenterPos = GridYToPosY(y),
+	};
 	return CGP;
 }
 void DrawLineGrid()

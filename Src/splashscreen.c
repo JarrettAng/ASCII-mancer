@@ -29,7 +29,7 @@ void SplashScreenInit() {
 
 	//Initialise static duration prefabs
 	InitEnemyPool();			//Initialise enemies 
-	InitSoundManager(NONE);		//Initialise sounds
+	InitSoundManager();		//Initialise sounds
 }
 
 void SplashScreenUpdate() {

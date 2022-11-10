@@ -26,6 +26,8 @@ void InitSoundManager(void){
     AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART,1.f);
     AddSoundToArray(CP_Sound_Load("Assets/ZombieSpawn.wav"), ZOMBIESPAWN,.5f);
     AddSoundToArray(CP_Sound_Load("Assets/ZombieMove.wav"), ZOMBIEMOVE, 1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/WallBuild.wav"), WALLBUILD, 1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/WallBreak.wav"), WALLBREAK, 1.f);
 
 }
 //Adds sound to array of soundclips

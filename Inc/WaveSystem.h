@@ -21,6 +21,7 @@ void ZombieDealDamage(int x, int y,int damage);
 void SpawnTombEnemies(void);
 int GetCurrentWave(void);
 void SpawnEnemy(EnemyInfo* enemy);
+
 void RenderEnemy(void);
 // EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now

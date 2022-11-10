@@ -34,7 +34,7 @@ void InitWaveSystem(){
 	GenerateWave();	
 	// UpdateWave();
 	SpawnEnemy(&WaveObjects[waveIndex%WAVEOBJECTCOUNT]);
-
+	SubscribeEvent(PLAYER_END,SpawnTombEnemies,1);
 	SubscribeEvent(ZOMBIE_START,UpdateWave,0);
 }
 //Generates the wave by deducting credits and adding enemies to the wave
@@ -74,7 +74,7 @@ void UpdateWave(){
 		if((waveIndex) < (enemyCount)){					
 			//Loop through the Y axis of the grid
 			for(short y = 0; y<TOTAL_YGRID-1;++y){
-			int randNum = CP_Random_RangeInt(0,spawnChance);
+			int randNum = CP_Random_RangeInt(0,spawnChance);	//hardcoded value to 4 for now, basically 1/(n+1) chance that increases with each failed attempt.
 				if(!randNum){ //20% chance!
 					SpawnEnemy(&WaveObjects[waveIndex%WAVEOBJECTCOUNT]);
 					//Since waveindex is incremented on spawn, we need to check if it's finished
@@ -104,16 +104,18 @@ void RenderEnemy(void){
 }
 void SpawnEnemy(EnemyInfo* enemy){
 	//SET ENEMY X VALUES
-	//if the enemy is a tombstone
+	//if the enemy is a wall, skip it don't spawn
 	if(enemy->Cost ==0){
 		waveIndex++;
 		return;
 	}
+	//If the enemy is a tombstone, spawn it between index 9 to 11
 	if(enemy->MovementSpeed <=0){
 		enemy->x = CP_Random_RangeInt(TOTAL_XGRID-2, TOTAL_XGRID-4);
-	}//else it's a normal zombie
+	}
+	//else it's a normal zombie
 	else{
-		enemy->x = TOTAL_XGRID-1;
+		enemy->x = TOTAL_XGRID-1;		//this puts it outside of the grid
 	}
 	//SET ENEMY Y VALUES
 	int randomYPos = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));			//Spawn at random y pos
@@ -133,9 +135,23 @@ void CreateWall(int x, int y){
 		WaveObjects[enemyCount % WAVEOBJECTCOUNT].x = x;
 		WaveObjects[enemyCount % WAVEOBJECTCOUNT].y = y;
 		enemyCount++;
+		PlaySound(WALLBUILD,CP_SOUND_GROUP_SFX);
 	}
 }
 
+void SpawnTombEnemies(void){
+	for(short i=0; i<WAVEOBJECTCOUNT; ++i){
+		if(HasLiveEnemyInCell(WaveObjects[i].x,WaveObjects[i].y)){
+			if(WaveObjects[i].MovementSpeed <=0 &&WaveObjects[i].Cost >0){
+				EnemyInfo newEnemy = *GetRandomEnemyPrefab();
+				newEnemy.x = WaveObjects[i].x;	//we still need the xy pos of the tombstone
+				newEnemy.y = WaveObjects[i].y;
+				WaveObjects[i] = newEnemy;		//replace tombstone with random enemy
+				WaveObjects[i].is_Alive = TRUE;
+			}
+		}
+	}
+}
 
 //Returns address of live enemy in the grid
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
@@ -153,21 +169,9 @@ EnemyInfo* GetEnemyFromGrid(int x, int y){
 			return &WaveObjects[i];
 		}
 	}
+	return NULL;
 }
 
-// void SpawnTombEnemies(void){
-// 	for(short i=0; i<(enemyCount%WAVEOBJECTCOUNT); ++i){
-// 		 if(WaveObjects[i].Health <=0)
-// 		 {
-// 			continue;
-// 		 }
-// 		if(WaveObjects[i].is_Alive){
-// 			if(WaveObjects[i].MovementSpeed ==0 && WaveObjects[i].Cost > 0){
-// 				WaveObjects[i] = *GetRandomEnemyPrefab();
-// 			}
-// 		}
-// 	}
-// }
 
 BOOL HasLiveEnemyInCell(int x, int y){
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){

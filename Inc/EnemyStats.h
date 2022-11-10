@@ -29,16 +29,15 @@ typedef struct EnemyInfo
 
 //Set how many types are there
 //int enemy_TotalType;
-void CreateEnemy(int cost,int speed,int health,const char* sprite);
+void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,CP_Color color);
 void InitEnemyPool(void);		//Fills the enemyArray with predefined enemies
-void SpawnEnemy(EnemyInfo* enemy, int x, int y);
 void MoveEnemy(EnemyInfo* enemy);
 void OnDeath(void);
 
 void DrawEnemy(EnemyInfo* enemy);
 
 //Helper functions
-int GetEnemyCount();
+int GetEnemyCount(void);
 EnemyInfo* GetEnemyPrefab(int index);
 EnemyInfo* GetRandomEnemyPrefab(void);
 void ClearEnemyPool(void);

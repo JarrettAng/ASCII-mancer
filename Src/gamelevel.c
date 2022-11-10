@@ -13,6 +13,7 @@
 #include "EnemyDisplay.h"
 
 void gameLevelInit(void){
+    PlayBGM(GAMEBGM);
     grid_init();
 
     InitWaveSystem();
@@ -37,6 +38,9 @@ void gameLevelUpdate(void){
     if(CP_Input_KeyTriggered(KEY_K)){
         CreateWall(PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()));
         // SpawnTombEnemies();
+    }
+    if(CP_Input_KeyTriggered(KEY_V)){
+        SpawnTombEnemies();
     }
     //]UpdateWave();
     RenderEnemy();
