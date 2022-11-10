@@ -79,7 +79,6 @@ void MainMenuInit(void) {
 
 	// Populate buttons with positional, size and text values.
 	InitializeButtons();
-	InitSoundManager(MAINMENU);
 	IntializeSelectPointer();
 }
 

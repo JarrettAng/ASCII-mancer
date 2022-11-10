@@ -3,7 +3,8 @@
 #include "MainMenu.h"
 #include "ColorTable.h"
 #include "Utils.h"
-
+#include "EnemyStats.h"
+#include "SoundManager.h"
 // TODO: For change back to 3f before release
 const float FADE_IN_DURATION = .1f;
 
@@ -16,8 +17,8 @@ void SplashScreenInit() {
 	// Intialize logo
 	logo = CP_Image_Load("Assets/DigiPen_RED.png");
 
-	CP_System_Fullscreen();
-	//CP_System_SetWindowSize(1280, 720);
+	//CP_System_Fullscreen();
+	CP_System_SetWindowSize(1920, 1080);
 
 	// Update the scale for the UI elements based on window size.
 	UpdateUIScale();
@@ -25,6 +26,10 @@ void SplashScreenInit() {
 	CP_System_SetFrameRate(60.f);
 
 	CP_System_SetWindowTitle("ASCII-mancer");
+
+	//Initialise static duration prefabs
+	InitEnemyPool();			//Initialise enemies 
+	InitSoundManager(NONE);		//Initialise sounds
 }
 
 void SplashScreenUpdate() {

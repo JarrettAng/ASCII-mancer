@@ -12,6 +12,7 @@ typedef struct EnemyInfo
 	int Cost;
 	//Movement of tiles per turn
 	int MovementSpeed;
+	int damage;
 	//Health
 	int Health;
 	int MaxHealth;

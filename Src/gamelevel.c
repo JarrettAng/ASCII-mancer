@@ -18,7 +18,6 @@ void gameLevelInit(void){
     InitWaveSystem();
     InitializeLife();
     
-    InitSoundManager(GAMEBGM);
 	TManagerInit(DEFAULT_SPAWN_SEED);
 
 	TPlayerInit();
@@ -35,7 +34,10 @@ void gameLevelUpdate(void){
 
     // DRAWING AND UPDATING OF GRID
     grid_update();
-
+    if(CP_Input_KeyTriggered(KEY_K)){
+        CreateWall(PosXToGridX(CP_Input_GetMouseX()),PosYToGridY(CP_Input_GetMouseY()));
+        // SpawnTombEnemies();
+    }
     //]UpdateWave();
     RenderEnemy();
     // UPDATE VFX
@@ -62,8 +64,7 @@ void ShowCurrentWave(void){
 }
 
 void gameLevelExit(void){
-    ClearWaveArray();
+    ResetGame();
     UnsubscribeAllEvents();
     ClearHearts();
-    // KillSoundManager();
 }

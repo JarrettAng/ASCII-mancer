@@ -34,7 +34,9 @@ typedef struct SoundClip{
 //========= MUST DECLARE FUNCTIONS ========================
 
 //Inits sounds, and also starts the BGM playing
-void InitSoundManager(Clip clipName);
+void InitSoundManager(void);
+void PlayBGM(Clip clipName);
+void StopAllSounds(void);
 //Clears the sound array and frees up the sounds from memory.
 void KillSoundManager(void);
 

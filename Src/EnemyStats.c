@@ -10,11 +10,11 @@
 #include "SoundManager.h"
 
 
-#define ENEMY1 1,1,1,"Z"
-#define ENEMY2 5,3,1,"L"
-#define ENEMY3 10,1,3,"B"
-#define TOMBSTONE 1,0,1,"T"//Tomdstone
-#define WALL 0,0,2,"[]"
+#define ENEMY1 1,1,1,1,"Z"
+#define ENEMY2 5,3,1,1,"L"
+#define ENEMY3 10,1,3,2,"B"
+#define TOMBSTONE 2,0,2,0,"T"//Tomdstone
+#define WALL 0,0,2,0,"|x|"
 //Gonna use their char sprite value to indicate type of enemy
 //Not gonna use externs for this case because it gets messy
 EnemyInfo Enemy[ENEMYPOOL];
@@ -23,19 +23,21 @@ int enemyPoolIndex = 0;
 ///TEST
 //Initialises the enemy pool. Edit this to add more enemy types
 void InitEnemyPool(){
+	enemyPoolIndex = 0;
 	//Manual way of adding enemies
-	CreateEnemy(WALL,GREEN);
-	CreateEnemy(ENEMY1,MENU_GRAY);
+	CreateEnemy(WALL,MENU_GRAY);
+	CreateEnemy(ENEMY1,MENU_RED);
 	CreateEnemy(ENEMY2,MENU_RED);
 	CreateEnemy(ENEMY3,MENU_RED);
 	CreateEnemy(TOMBSTONE,GREEN);
 }
 
 //Function that creates enemies and adds them to the enemy pool
-void CreateEnemy(int cost, int speed, int health, const char* sprite,CP_Color color){
+void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,CP_Color color){
 	EnemyInfo newEnemy = {
 		.Cost = cost,
 		.Health = health,
+		.damage = damage,
 		.MaxHealth = 3,
 		.CharSprite = sprite,
 		.MovementSpeed = speed,
@@ -59,32 +61,38 @@ EnemyInfo* GetRandomEnemyPrefab(void){
 	return &Enemy[CP_Random_GetInt(1,GetEnemyCount())];
 }
 
-//void SpawnEnemy(EnemyInfo* enemy, int x, int y){
-//	//Maybe check enemy type here to spawn the specific particle effect for that enemy
-//
-//	//Spawn anim here if needed
-//	enemy->x = x;
-//	enemy->y = y;
-//}
-
 void MoveEnemy(EnemyInfo* enemy){
+	if(enemy->MovementSpeed<=0)return;
 	//If the enemy has reach last x element, it'll die and damage player
 	for(short i =1; i<= enemy->MovementSpeed; ++i){
 		//Check enemy in front of them
 		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)==NULL){//if no enemy or tombstone, will continue movement
 			continue;
 		}
-		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->is_Alive){
+		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->is_Alive){	//if its a live enemy
 
-			if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->y == enemy->y){
+			if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->y == enemy->y){	//if they are in the same row
 
-				if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){
-					enemy->x = GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x+1;
+				if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){	//get first live enemy infront
+
+					if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->Cost==0){	//if it's a wall
+
+						ZombieDealDamage(enemy->x-i,enemy->y,enemy->damage);
+						if(!GetAliveEnemyFromGrid(enemy->x-i,enemy->y)){
+							enemy->x = enemy->x-i;
+						}
+					//GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->Health--;
+					//Play whatever damage anim here for walls
+					}
+					else{
+						enemy->x = enemy->x-i+1;
+					}
 					return;
 				}
 			}
 		} 
 	}
+
 	enemy->x -= enemy->MovementSpeed;
 	if (enemy->x < 0 && enemy->is_Alive)
 	{
@@ -107,14 +115,7 @@ void DrawEnemy(EnemyInfo* enemy) {
 	sprintf_s(buffer, 25, "%d", enemy->Health);
 	CP_Font_DrawText(enemy->CharSprite, GridXToPosX(enemy->x), GridYToPosY(enemy->y));
 
-	RenderEnemyDisplay(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Color, enemy->Health, -1);
-	// if (enemy->CharSprite == "4")
-	// {
-	// 	CP_Font_DrawText("T", GridXToPosX(enemy->x), GridYToPosY(enemy->y));
-	// }
-	// else
-	// {
-	// }
+	RenderEnemyDisplay(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Color, enemy->Health, enemy->damage);
 
 }
 void OnDeath()

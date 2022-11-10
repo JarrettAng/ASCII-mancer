@@ -13,7 +13,7 @@ _Bool toggleMuteBGM = FALSE;
 
 
 //Inits sounds to soundclip array and PLAYS BGM. 
-void InitSoundManager(Clip BGMName){
+void InitSoundManager(void){
     AddSoundToArray(CP_Sound_Load("Assets/GameBGM.wav"),GAMEBGM,.8f);
     AddSoundToArray(CP_Sound_Load("Assets/MainMenu.wav"),MAINMENU,.1f);
     AddSoundToArray(CP_Sound_Load("Assets/EnemyDeathSound.wav"),ENEMYDEATH,1);
@@ -27,11 +27,7 @@ void InitSoundManager(Clip BGMName){
     AddSoundToArray(CP_Sound_Load("Assets/ZombieSpawn.wav"), ZOMBIESPAWN,.5f);
     AddSoundToArray(CP_Sound_Load("Assets/ZombieMove.wav"), ZOMBIEMOVE, 1.f);
 
-    if (BGMName == NONE) return;
-    //CP_Sound_PlayMusic(GetSound(BGMName));
-    CP_Sound_PlayAdvanced(GetSound(BGMName), GetVolume(BGMName), 1, TRUE, CP_SOUND_GROUP_MUSIC);
 }
-
 //Adds sound to array of soundclips
 void AddSoundToArray(CP_Sound sound,Clip clipName,float volumeModifier){
     SoundClip newSoundClip = {
@@ -39,11 +35,15 @@ void AddSoundToArray(CP_Sound sound,Clip clipName,float volumeModifier){
         .volumeModifier = volumeModifier,
         .clipName = clipName
     };
-    
     SoundArray[SoundIndex] = newSoundClip;
     SoundIndex++;
 }
 
+//Stops the current BGM playing and plays provided clip as BGM
+void PlayBGM(Clip clipName){
+    CP_Sound_StopGroup(CP_SOUND_GROUP_MUSIC);
+    CP_Sound_PlayAdvanced(GetSound(clipName), GetVolume(clipName), 1, TRUE, CP_SOUND_GROUP_MUSIC);
+}
 //Returns sound from SoundArray based off clip name
 CP_Sound GetSound(Clip clipName){
     for(short i=0; i<SoundIndex; ++i){
@@ -97,6 +97,10 @@ void ToggleMuteBGM(void){
     toggleMuteSFX ? CP_Sound_PauseGroup(CP_SOUND_GROUP_MUSIC) : CP_Sound_ResumeGroup(CP_SOUND_GROUP_MUSIC);
 }
 
+
+void StopAllSounds(){
+    CP_Sound_StopAll();
+}
 //Stops all sounds and frees them. Remember to call on exit.
 void KillSoundManager(){
     CP_Sound_StopAll();

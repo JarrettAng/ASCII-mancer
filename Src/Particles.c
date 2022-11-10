@@ -125,13 +125,19 @@ void ZombieToPlayerParticle(float x,float y,int health){
 }
 
 void CreateParticleEmission(float x, float y,int burstCount, float duration){
-   for(short i=0; i<burstCount; ++i){
-        for(short j =0; j<20;++j){
-            float angle = (float)360/20*j;
-            CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),8.f);
-            CreateParticle(x,y,1.0f,55.f,0.f,MENU_RED,forceDirection,SparkleAnimString,TRUE,(duration/(float)burstCount)*i);
-        }
-   }
+    for(short i=0; i<burstCount; ++i){
+            for(short j =0; j<20;++j){
+                float angle = (float)360/20*j;
+                CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),8.f);
+                CreateParticle(x,y,1.0f,55.f,0.f,MENU_RED,forceDirection,SparkleAnimString,TRUE,(duration/(float)burstCount)*i);
+            }
+    }
+}
+
+void CreateMovementAnimation(int x, int y, int moveSpeed, float duration){
+    for(short i=0; i<moveSpeed; ++i){
+        CreateParticle(GridXToPosX(x),GridYToPosY(y),1.0f,GetCellSize(),0.f,MENU_GRAY,CP_Vector_Zero(),"<<<",FALSE,(duration*i));
+    }
 }
 
 //Function that handles the animation and drawing of the particle to screen. Sets the color but not the alignment.
