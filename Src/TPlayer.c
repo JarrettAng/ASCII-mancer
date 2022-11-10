@@ -97,13 +97,24 @@ void RenderHand(void) {
 
 		// Render the background square surrounding each piece
 		CP_Settings_Fill(MENU_BLACK);
-		// The stroke color depends on if it is a wall or attack piece, index 0 is wall, the rest is attack
-		index == 0 ? CP_Settings_Stroke(TETRIS_SLOT_WALL_COLOR) : CP_Settings_Stroke(TETRIS_SLOT_ATTACK_COLOR);
+		CP_Settings_Stroke(current->piece.color_stroke);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
+
+		// Draw attack/defend icon
+		CP_Settings_StrokeWeight(0.0f);
+		if (index == 0) { // If wall piece
+			CP_Settings_Fill(TETRIS_ICON_WALL_COLOR);
+			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size);
+		}
+		else { // If attack piece
+			CP_Settings_Fill(TETRIS_ICON_ATTACK_COLOR);
+			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size);
+		}
 
 		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
 
 		// Settings for tile rendering
+		CP_Settings_StrokeWeight(hand_tile_stroke);
 		CP_Settings_Fill(current->piece.color);
 		CP_Settings_Stroke(current->piece.color_stroke);
 		// Render each tile in the Tetris Piece
@@ -171,10 +182,10 @@ void RecalculateHandRenderPositions(void) {
 	hand_slot_length = min(hand_total_height, (hand_total_length - hand_left_buffer) * .9f / HAND_SIZE); // The length of each slot depends on whether height or 90% of the hand queue width is shorter
 	hand_slot_spacing = (hand_total_length - hand_left_buffer - (hand_slot_length * HAND_SIZE)) / HAND_SIZE; // The spacing of each slot is the remaining space
 
-	// If the spacing between slots are too wide (more than 33% the length of a slot), add more padding to the left
-	if ((hand_slot_spacing - hand_slot_length / 3.0f) > 0) {
-		hand_left_extra_buffer = (hand_slot_spacing - hand_slot_length / 3.0f) * HAND_SIZE;
-		hand_slot_spacing = hand_slot_length / 3.0f;
+	// If the spacing between slots are too wide (more than 20% the length of a slot), add more padding to the left
+	if ((hand_slot_spacing - hand_slot_length * 0.2f) > 0) {
+		hand_left_extra_buffer = (hand_slot_spacing - hand_slot_length * 0.2f) * HAND_SIZE;
+		hand_slot_spacing = hand_slot_length * 0.2f;
 	}
 
 	hand_tile_length = hand_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
@@ -198,18 +209,25 @@ void RecalculateHandRenderPositions(void) {
 	text_peek_pos = CP_Vector_Set(hand_total_length, (float)CP_System_GetWindowHeight() - hand_total_height - hand_bottom_buffer);
 	text_peek_size = hand_total_height * 0.25f;
 
+	// Text icon size is 20% of slot length
+	text_icon_size = hand_slot_length * 0.2f;
+
 	//______________________________________________________________
 	// Update the positions
 	PlayerHandSlot* current;
 	for (int index = 0; index < HAND_SIZE; ++index) {
 		current = &hand[index];
 
-		current->pos.x = hand_left_buffer + hand_left_extra_buffer + hand_slot_length * index;
+		current->pos.x = hand_left_buffer + hand_left_extra_buffer + (hand_slot_length + hand_slot_spacing) * index;
 		current->pos.y = (float)CP_System_GetWindowHeight() - hand_slot_length - hand_bottom_buffer;
 		current->piece.draw_pos.x = current->pos.x + (SHAPE_BOUNDS - current->piece.x_length) / 2.0f * hand_tile_length;
 		current->piece.draw_pos.y = current->pos.y + (SHAPE_BOUNDS - current->piece.y_length) / 2.0f * hand_tile_length;
 		current->piece.x_screen_length = hand_tile_length;
 		current->piece.y_screen_length = hand_tile_length;
+
+		// Position for icon type
+		current->icon_pos.x = current->pos.x + text_icon_size - hand_tile_length / 2.0f;
+		current->icon_pos.y = current->pos.y + text_icon_size - hand_tile_length / 2.0f;
 	}
 
 	for (int index = 0; index < PEEK_SIZE; ++index) {

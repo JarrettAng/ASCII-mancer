@@ -24,6 +24,10 @@ typedef enum {
 	DAMAGE = BOTTOM_RIGHT
 } E_DisplayType;
 
+#define TEXT_MOVEMENT "<<"
+#define TEXT_MOVEMENT_END_TOP "\\/"
+#define TEXT_MOVEMENT_END_BOTTOM "/\\"
+
 /*______________________________________________________________
 @brief Calculates the offset for the corner displays based on the grid cell size
 */
@@ -38,3 +42,5 @@ void EnemyDisplayInit(void);
 @param[in] wall_damage - The damage to walls the entity does, set to negative number if should not be rendered
 */
 void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int wall_damage);
+
+void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement);
