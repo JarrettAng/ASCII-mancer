@@ -43,13 +43,13 @@ void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, in
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
 	// Render health
-	if (health >= 0) {
+	if (health > 0) {
 		sprintf_s(text_buffer, _countof(text_buffer), "%d", health);
 		CP_Font_DrawText(text_buffer, pos_x + display[HEALTH].x, pos_y + display[HEALTH].y);
 	}
 
 	// Render wall damage if any
-	if (wall_damage >= 0) {
+	if (wall_damage > 0) {
 		sprintf_s(text_buffer, _countof(text_buffer), "%d", wall_damage);
 		CP_Font_DrawText(text_buffer, pos_x + display[DAMAGE].x, pos_y + display[DAMAGE].y);
 	}

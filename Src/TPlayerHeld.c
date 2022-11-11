@@ -18,6 +18,11 @@ ________________________________________________________________________________
 
 PlayerPieceHeld piece_held; // Information on the piece held
 
+// Icon information
+CP_Vector icon_pos; // Each cell will have a attack/defend icon at the top left
+CP_Vector icon_size; // The size of the icon for rendering
+float piece_stroke; // How thick the stroke of each cell should be
+
 // Shape information
 PieceHeldShape piece_held_shapeA; // Two matrices for rotation, ping-ponging between the two
 PieceHeldShape piece_held_shapeB;
@@ -74,6 +79,17 @@ void TPlayerHeldInit(void) {
 		piece_held_shapeCurrent->grid[index].grid_y = IndexToShapeY(index);
 		piece_held_shapeCurrent->grid[index].cell = 0;
 	}
+
+	// Initialize the icon pos offset, the top left corner of each cell
+	icon_pos.x = -GetCellSize() / 2.0f;
+	icon_pos.y = -GetCellSize() / 2.0f;
+
+	// The size of the icon is 35% of cell length
+	icon_size.x = GetCellSize() * 0.35f;
+	icon_size.y = GetCellSize() * 0.35f;
+
+	// Update the stroke to be 5% of the cell size
+	piece_stroke = GetCellSize() * 0.05f;
 }
 
 /*______________________________________________________________
@@ -95,7 +111,7 @@ _Bool IsThisPieceHeld(TetrisPiece const *piece_to_compare) {
 @brief Called by TPlayer when a click has been detected on one of the slots
 	   The information of the piece clicked will be passed through here.
 */
-void NewPieceHeld(TetrisPiece const *new_piece) {
+void NewPieceHeld(TetrisPiece const *new_piece, int slot_index) {
 	// We found the slot clicked! Set the flags to true
 	piece_held.piece = new_piece;
 
@@ -120,6 +136,9 @@ void NewPieceHeld(TetrisPiece const *new_piece) {
 	piece_held.center_offset.x = (piece_held_shape_centre + 0.5f) * piece_held.x_screen_length;
 	piece_held.center_offset.y = (piece_held_shape_centre + 0.5f) * piece_held.y_screen_length;
 	current_rotation = UP;
+
+	// Update the slot index to match
+	piece_held.slot_index = slot_index;
 }
 
 /*______________________________________________________________
@@ -180,9 +199,32 @@ void RenderPieceHeld(void) {
 			current_pos.x = piece_held.draw_pos.x + current->grid_x * piece_held.x_screen_length;
 			current_pos.y = piece_held.draw_pos.y + current->grid_y * piece_held.y_screen_length;
 
-			// Color setting, red if piece is outside of grid
-			hand_in_grid && IsInPlayingArea(current_pos.x + piece_held.x_screen_length / 2.0f, current_pos.y + piece_held.y_screen_length / 2.0f) ? CP_Settings_Fill(piece_held.color) : CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+			// Draw the piece type icon on the top left corner
+			CP_Settings_StrokeWeight(0.0f);
+			if (piece_held.slot_index == 0) { // If wall piece
+				CP_Settings_Fill(TETRIS_ICON_WALL_COLOR);
+				CP_Graphics_DrawCircle(current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x);
+			}
+			else { // If attack piece
+				CP_Settings_Fill(TETRIS_ICON_ATTACK_COLOR);
+				CP_Graphics_DrawCircle(current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x);
+			}
 
+			// Set the stroke of the cell
+			CP_Settings_StrokeWeight(piece_stroke);
+
+			// Color setting, red if piece is outside of grid, or invalid placement
+			if (hand_in_grid && IsInPlayingArea(current_pos.x + piece_held.x_screen_length / 2.0f, current_pos.y + piece_held.y_screen_length / 2.0f)) {
+				if (piece_held.slot_index == 0 && HasLiveEnemyInCell(PosXToGridX(current_pos.x + piece_held.x_screen_length / 2.0f), PosYToGridY(current_pos.y + piece_held.y_screen_length / 2.0f))) {
+					CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+				}
+				else {
+					CP_Settings_Fill(piece_held.color);
+				}
+			}
+			else {
+				CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+			}
 			CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
 		}
 	}
@@ -215,8 +257,8 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 				// Add a explosion effect particles on hit
 				RadialParticle(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
 
-				// Damage the enemy on the grid, if any
-				SendDamage(grid_x, grid_y, 1);
+				// Depending on type, build a wall or send damage
+				piece_held.slot_index == 0 ? CreateWall(grid_x, grid_y) : SendDamage(grid_x, grid_y, 1);
 			}
 		}
 	}

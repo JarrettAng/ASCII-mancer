@@ -18,6 +18,8 @@ typedef struct {
 
     CP_Color color;
     CP_Color color_stroke;
+
+    int slot_index;
 } PlayerPieceHeld;
 
 typedef struct {
@@ -58,7 +60,7 @@ _Bool IsThisPieceHeld(TetrisPiece const* piece_to_compare);
 @brief Called by TPlayer when a click has been detected on one of the slots
        The information of the piece clicked will be passed through here.
 */
-void NewPieceHeld(TetrisPiece const *new_piece);
+void NewPieceHeld(TetrisPiece const *new_piece, int slot_index);
 
 /*______________________________________________________________
 @brief Called by TPlayer during its process input, this function will 

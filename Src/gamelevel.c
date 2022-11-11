@@ -13,6 +13,9 @@
 #include "EnemyDisplay.h"
 
 void gameLevelInit(void){
+    // Zero out all the events in the event system first!
+    UnsubscribeAllEvents();
+
     PlayBGM(GAMEBGM);
     grid_init();
 

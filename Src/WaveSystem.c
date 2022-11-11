@@ -35,6 +35,7 @@ void InitWaveSystem(){
 	// UpdateWave();
 	SpawnEnemy(&WaveObjects[waveIndex%WAVEOBJECTCOUNT]);
 	SubscribeEvent(PLAYER_END,SpawnTombEnemies,1);
+	SubscribeEvent(ZOMBIE_START, UpdateWave, 2);
 	SubscribeEvent(ZOMBIE_START,UpdateWave,0);
 }
 //Generates the wave by deducting credits and adding enemies to the wave

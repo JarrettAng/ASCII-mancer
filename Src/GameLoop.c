@@ -31,6 +31,7 @@ void GameLoopInit(void) {
 	// Set the turn to start as player
 	current_turn_type = TURN_PLAYER;
 	current_turn = &player_turn;
+
 	// Call the start events for the current turn
 	int total_events_subscribed = current_turn->start.count;
 	for (int index = 0; index < total_events_subscribed; ++index) {
@@ -111,6 +112,51 @@ void UnsubscribeEvent(TurnEventType event_type, void(*function_pointer)(void)) {
 }
 
 /*______________________________________________________________
+@brief Similar to UnsubscribeAllEvents but this forces ALL events to be zeroed out, even the NULL ones
+*/
+void ZeroOutAllEvents(void) {
+	// Remove references to all events to player start
+	for (int index = 0; index < MAX_EVENTS_BUFFER; ++index) {
+		player_turn.start.events[index].event = NULL;
+		player_turn.start.events[index].priority = -9999;
+	}
+	// Remove references to all events to player update
+	for (int index = 0; index < MAX_EVENTS_BUFFER; ++index) {
+		player_turn.update.events[index].event = NULL;
+		player_turn.update.events[index].priority = -9999;
+	}
+	// Remove references to all events to player end
+	for (int index = 0; index < MAX_EVENTS_BUFFER; ++index) {
+		player_turn.end.events[index].event = NULL;
+		player_turn.end.events[index].priority = -9999;
+	}
+	// Remove references to all events to zombie start
+	for (int index = 0; index < MAX_EVENTS_BUFFER; ++index) {
+		zombie_turn.start.events[index].event = NULL;
+		zombie_turn.start.events[index].priority = -9999;
+	}
+	// Remove references to all events to zombie update
+	for (int index = 0; index < MAX_EVENTS_BUFFER; ++index) {
+		zombie_turn.update.events[index].event = NULL;
+		zombie_turn.update.events[index].priority = -9999;
+	}
+	// Remove references to all events to zombie end
+	for (int index = 0; index < MAX_EVENTS_BUFFER; ++index) {
+		zombie_turn.end.events[index].event = NULL;
+		zombie_turn.end.events[index].priority = -9999;
+	}
+
+	// Reset the counters to 0 as well
+	player_turn.start.count = 0;
+	player_turn.update.count = 0;
+	player_turn.end.count = 0;
+
+	zombie_turn.start.count = 0;
+	zombie_turn.update.count = 0;
+	zombie_turn.end.count = 0;
+}
+
+/*______________________________________________________________
 @brief It is important this function is called when the game level exits!!
 */
 void UnsubscribeAllEvents(void) {
@@ -178,7 +224,7 @@ void InsertToArrayAt(TurnEvent *turn_array, void(*function_pointer)(void), int p
 	}
 
 	// Shift all functions with lower priority backwards to make space for the new function
-	for (int index = max; index > insert_index; --index) {
+	for (int index = max - 1; index > insert_index; --index) {
 		turn_array->events[index + 1] = turn_array->events[index];
 	}
 	// Finally, insert the new function

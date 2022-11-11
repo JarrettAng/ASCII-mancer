@@ -70,7 +70,7 @@ void TPlayerProcessInput(void) {
 			// If we found the slot clicked on,
 			if (pointWithinArea(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length, mouse_pos.x, mouse_pos.y, CP_POSITION_CORNER)) {
 				// Update the piece held render settings
-				NewPieceHeld(&current->piece);
+				NewPieceHeld(&current->piece, index);
 
 				// Play "piece selected" sound
 				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
@@ -97,18 +97,18 @@ void RenderHand(void) {
 
 		// Render the background square surrounding each piece
 		CP_Settings_Fill(MENU_BLACK);
-		CP_Settings_Stroke(current->piece.color_stroke);
+		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
 		// Draw attack/defend icon
 		CP_Settings_StrokeWeight(0.0f);
 		if (index == 0) { // If wall piece
 			CP_Settings_Fill(TETRIS_ICON_WALL_COLOR);
-			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size);
+			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size.x);
 		}
 		else { // If attack piece
 			CP_Settings_Fill(TETRIS_ICON_ATTACK_COLOR);
-			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size);
+			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size.x);
 		}
 
 		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
@@ -209,8 +209,9 @@ void RecalculateHandRenderPositions(void) {
 	text_peek_pos = CP_Vector_Set(hand_total_length, (float)CP_System_GetWindowHeight() - hand_total_height - hand_bottom_buffer);
 	text_peek_size = hand_total_height * 0.25f;
 
-	// Text icon size is 20% of slot length
-	text_icon_size = hand_slot_length * 0.2f;
+	// Text icon size is 30% of slot length
+	text_icon_size.x = hand_slot_length * 0.3f;
+	text_icon_size.y = hand_slot_length * 0.3f;
 
 	//______________________________________________________________
 	// Update the positions
@@ -226,8 +227,8 @@ void RecalculateHandRenderPositions(void) {
 		current->piece.y_screen_length = hand_tile_length;
 
 		// Position for icon type
-		current->icon_pos.x = current->pos.x + text_icon_size - hand_tile_length / 2.0f;
-		current->icon_pos.y = current->pos.y + text_icon_size - hand_tile_length / 2.0f;
+		current->icon_pos.x = current->pos.x + text_icon_size.x / 2.0f - hand_tile_length / 2.0f;
+		current->icon_pos.y = current->pos.y + text_icon_size.y / 2.0f - hand_tile_length / 2.0f;
 	}
 
 	for (int index = 0; index < PEEK_SIZE; ++index) {

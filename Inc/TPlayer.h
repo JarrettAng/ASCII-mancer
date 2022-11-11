@@ -38,7 +38,7 @@ float peek_tile_length;
 float peek_tile_stroke;
 
 float text_peek_size;
-float text_icon_size;
+CP_Vector text_icon_size;
 
 /*______________________________________________________________
 @brief Needs to be called at the start of the game level (and after the Tetris Pieces

@@ -50,6 +50,11 @@ void UnsubscribeEvent(TurnEventType event_type, void(*function_pointer)(void));
 */
 void UnsubscribeAllEvents(void);
 
+/*______________________________________________________________
+@brief Similar to UnsubscribeAllEvents but this forces ALL events to be zeroed out, even the NULL ones
+*/
+void ZeroOutAllEvents(void);
+
 //______________________________________________________________
 // Turn & Events structs
 
