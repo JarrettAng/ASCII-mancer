@@ -18,31 +18,31 @@ void InitializeLife(void) {
 	heart_image = CP_Image_Load("Assets/Heart.png");
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		heart_stats[i].heartAlive = 1; // Boolean True
-		heart_stats[i].xpos = CP_System_GetDisplayWidth() / 4.f + (CP_System_GetDisplayWidth() / 7.5f) * HEART_SPACING * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
-		heart_stats[i].ypos = (CP_System_GetDisplayHeight() / 10.f);
-		heart_stats[i].size = CP_System_GetDisplayWidth() / (CP_System_GetDisplayWidth() * HEART_SIZE);
+		heart_stats[i].xpos = CP_System_GetWindowWidth() / 4.f + (CP_System_GetWindowWidth() / 7.5f) * HEART_SPACING * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
+		heart_stats[i].ypos = (CP_System_GetWindowHeight() / 10.f - GetCellSize());
+		heart_stats[i].size = CP_System_GetWindowWidth() / (CP_System_GetWindowWidth() * HEART_SIZE);
 		heart_stats[i].alpha = HEART_ALPHA;
 		heart_stats[i].rotation = HEART_ROTATION;
 	}
 
 	// Initialize text for life
 	life_text.color = TETRIS_COLOR;
-	life_text.font_size = CP_System_GetDisplayHeight() / 20.f;
+	life_text.font_size = CP_System_GetWindowHeight() / 20.f;
 	life_text.xpos = GetCellSize();
-	life_text.ypos = CP_System_GetDisplayHeight() / 16.f;
+	life_text.ypos = CP_System_GetWindowHeight() / 17.5f;
 	life_text.words = "HEARTS";
 
 	// Make box for You Lose title card after losing all life
-	lose_bg.xpos = CP_System_GetDisplayWidth() / 2.f;
-	lose_bg.ypos = CP_System_GetDisplayHeight() / 2.f;
-	lose_bg.width = CP_System_GetDisplayWidth();
-	lose_bg.height = CP_System_GetDisplayHeight() / 3.f;
+	lose_bg.xpos = CP_System_GetWindowWidth() / 2.f;
+	lose_bg.ypos = CP_System_GetWindowHeight() / 2.f;
+	lose_bg.width = CP_System_GetWindowWidth();
+	lose_bg.height = CP_System_GetWindowHeight() / 3.f;
 
 	// Text for You Lose title card after losing all life
 	lose_text.color = TETRIS_SLOT_COLOR;
-	lose_text.font_size = CP_System_GetDisplayHeight() / 10.f;
-	lose_text.xpos = CP_System_GetDisplayWidth() / 2.f;
-	lose_text.ypos = CP_System_GetDisplayHeight() / 2.f;
+	lose_text.font_size = CP_System_GetWindowHeight() / 10.f;
+	lose_text.xpos = CP_System_GetWindowWidth() / 2.f;
+	lose_text.ypos = CP_System_GetWindowHeight() / 2.f;
 	lose_text.words = "YOU DIED!";
 }
 
@@ -60,7 +60,7 @@ void YouLoseTitleRender() {
 	// Draw BG
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Stroke(GRID_COLOR);
-	CP_Settings_StrokeWeight(CP_System_GetDisplayHeight() / 250.f);
+	CP_Settings_StrokeWeight(CP_System_GetWindowHeight() / 250.f);
 	CP_Settings_Fill(CP_Color_Create(35, 35, 35, alpha_bg));
 	CP_Graphics_DrawRect(lose_bg.xpos, lose_bg.ypos, lose_bg.width, lose_bg.height);
 	// Draw Text
@@ -159,7 +159,7 @@ void AnimationLife() {
 
 	// Animate each heart
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
-		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetDisplayWidth() / 20.f, (CP_System_GetDisplayWidth() / 20.f) - (CP_System_GetDisplayWidth() / 20.f) * 0.10f, BezierCurve(tick));
+		heart_stats[i].ypos = CP_Math_LerpFloat(CP_System_GetWindowWidth() / 22.f, (CP_System_GetWindowWidth() / 22.f) - (CP_System_GetWindowWidth() / 22.f) * 0.1f, BezierCurve(tick));
 	}
 	// Check if it should be down ticking or up ticking
 	if (time_elapsed >= duration) {

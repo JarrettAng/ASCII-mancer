@@ -89,23 +89,23 @@ void RenderGOText(TextOnly Rendered_Text) {
 
 void InitializeAllText(void) {
 	Game_Over_Title.color = MENU_RED;
-	Game_Over_Title.font_size = CP_System_GetDisplayWidth() / 15.f;
+	Game_Over_Title.font_size = CP_System_GetWindowWidth() / 15.f;
 	Game_Over_Title.words = "GAME OVER! :(";
-	Game_Over_Title.xpos = CP_System_GetDisplayWidth() / 2.f;
-	Game_Over_Title.ypos = CP_System_GetDisplayHeight() / 4.f;
+	Game_Over_Title.xpos = CP_System_GetWindowWidth() / 2.f;
+	Game_Over_Title.ypos = CP_System_GetWindowHeight() / 4.f;
 
 	Enemies_Killed.words = "ZOMBOIYOS KILLED :";
-	Enemies_Killed.font_size = CP_System_GetDisplayWidth() / 30.f;
+	Enemies_Killed.font_size = CP_System_GetWindowWidth() / 30.f;
 	Enemies_Killed.color = MENU_WHITE;
-	Enemies_Killed.xpos = CP_System_GetDisplayWidth() / 2.f;
-	Enemies_Killed.ypos = CP_System_GetDisplayHeight() * 1.5f / 3.f;
+	Enemies_Killed.xpos = CP_System_GetWindowWidth() / 2.f;
+	Enemies_Killed.ypos = CP_System_GetWindowHeight() * 1.5f / 3.f;
 
 
 	Turns_Made.words = "TURNS MADE :";
-	Turns_Made.font_size = CP_System_GetDisplayWidth() / 30.f;
+	Turns_Made.font_size = CP_System_GetWindowWidth() / 30.f;
 	Turns_Made.color = MENU_WHITE;
-	Turns_Made.xpos = CP_System_GetDisplayWidth() / 2.f;
-	Turns_Made.ypos = CP_System_GetDisplayHeight() * 1.3f / 2.f;
+	Turns_Made.xpos = CP_System_GetWindowWidth() / 2.f;
+	Turns_Made.ypos = CP_System_GetWindowHeight() * 1.3f / 2.f;
 }
 
 void RenderAllText(void) {
