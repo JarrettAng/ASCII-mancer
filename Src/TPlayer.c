@@ -19,6 +19,9 @@ PlayerHandSlot hand[HAND_SIZE];
 PlayerHandSlot peek_hand[PEEK_SIZE];
 
 CP_Vector text_peek_pos;
+CP_Image attack_Icon;
+CP_Image shield_Icon;
+
 
 #pragma region
 void RecalculateHandRenderPositions(void);
@@ -56,6 +59,9 @@ void TPlayerInit(void) {
 
 	// Initialize the settings for piece held
 	TPlayerHeldInit();
+	attack_Icon = CP_Image_Load("Assets/AttackIcon.png");
+	shield_Icon = CP_Image_Load("Assets/ShieldIcon.png");
+
 }
 
 void TPlayerProcessInput(void) {
@@ -104,11 +110,12 @@ void RenderHand(void) {
 		CP_Settings_StrokeWeight(0.0f);
 		if (index == 0) { // If wall piece
 			CP_Settings_Fill(TETRIS_ICON_WALL_COLOR);
-			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size.x);
+
+			CP_Image_Draw(shield_Icon, current->icon_pos.x, current->icon_pos.y, 70, 70, 255);
 		}
 		else { // If attack piece
 			CP_Settings_Fill(TETRIS_ICON_ATTACK_COLOR);
-			CP_Graphics_DrawCircle(current->icon_pos.x, current->icon_pos.y, text_icon_size.x);
+			CP_Image_Draw(attack_Icon, current->icon_pos.x, current->icon_pos.y, 70, 70, 255);
 		}
 
 		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
@@ -249,7 +256,7 @@ void RecalculateHandRenderPositions(void) {
 @brief When a Tetris Piece is dropped onto the grid, remove the piece and update the player's hand
 */
 void RemovePieceHeldFromHand() {
-	PlayerHandSlot *current;
+	PlayerHandSlot* current;
 	int played_index = 0;
 	for (; played_index < HAND_SIZE; ++played_index) {
 		current = &hand[played_index];
