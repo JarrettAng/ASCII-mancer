@@ -14,7 +14,7 @@
 
 void gameLevelInit(void){
     // Zero out all the events in the event system first!
-    UnsubscribeAllEvents();
+    ZeroOutAllEvents();
 
     PlayBGM(GAMEBGM);
     grid_init();

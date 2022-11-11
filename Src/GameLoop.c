@@ -216,15 +216,15 @@ void InsertToArrayAt(TurnEvent *turn_array, void(*function_pointer)(void), int p
 	// Check with functions has a priority lower than the new one, we will ignore those
 	int insert_index = 0, max = turn_array->count;
 
-	for (int index = 0; index < max; ++index) {
-		if (turn_array->events[index].priority > priority) {
+	for (int index = 0; index <= max; ++index) {
+		if (turn_array->events[index].priority < priority) {
 			insert_index = index;
 			break;
 		}
 	}
 
 	// Shift all functions with lower priority backwards to make space for the new function
-	for (int index = max - 1; index > insert_index; --index) {
+	for (int index = max; index >= insert_index; --index) {
 		turn_array->events[index + 1] = turn_array->events[index];
 	}
 	// Finally, insert the new function
@@ -249,7 +249,7 @@ void RemoveFromArrayAt(TurnEvent *turn_array, void(*function_pointer)(void)) {
 	if (remove_index < 0) return;
 
 	// Else, shift all the functions forward
-	for (int index = remove_index; index < max - 1; ++index) {
+	for (int index = remove_index; index < max; ++index) {
 		turn_array->events[index] = turn_array->events[index + 1];
 	}
 
