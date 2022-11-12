@@ -3,6 +3,7 @@
 #include "ColorTable.h"
 #include <math.h>           //Remember to move to a utils.c!!
 #include <string.h>
+#include "EnemyStats.h"
 
 #define VECTOR_UP CP_Vector_Set(0,-1)
 #define VECTOR_DOWN CP_Vector_Set(0,1)
@@ -37,7 +38,7 @@ CP_Color LerpedHSLColor(CP_Color color,float timeStep);
 void RadialParticle(float x, float y,int particleCount,float force);
 void RadialParticleVaried(float x, float y);
 //Temp function for zombie despawn particle
-void ZombieDeathParticle(float x, float y);
+void ZombieDeathParticle(float x, float y,ZombieType type);
 void ZombieSpawnParticle(float x, float y);
 void ZombieToPlayerParticle(float x,float y,int health);
 

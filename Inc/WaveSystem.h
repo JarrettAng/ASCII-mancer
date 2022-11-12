@@ -18,6 +18,7 @@ BOOL HasLiveEnemyInCell(int x, int y);
 void SendDamage(int x, int y, int damage);
 void ZombieDealDamage(int x, int y,int damage);
 void SpawnTombEnemies(void);
+int GetEnemiesKilled(void);
 int GetCurrentWave(void);
 void SpawnEnemy(EnemyInfo* enemy);
 

@@ -10,12 +10,12 @@
 #include "SoundManager.h"
 
 
-#define ZOMBIE 1,1,1,1,"Z"
-#define LEAPER 5,3,1,1,"L"
-#define TANK 10,1,3,1,"T"
-#define GRAVE 18,0,1,0,"G"
-#define WALLBREAKER 15,1,3,2,"B"
-#define WALL 0,0,2,0,"|x|"
+#define ZOMBIE 1,1,1,1,"Z",ZOMBIE
+#define LEAPER 5,2,1,1,"L",LEAPER
+#define TANK 10,1,3,1,"T",TANK
+#define WALLBREAKER 15,1,2,2,"B",BREAKER
+#define GRAVE 18,0,1,0,"G",GRAVE
+#define WALL 0,0,2,0,"|x|",WALL
 //Gonna use their char sprite value to indicate type of enemy
 //Not gonna use externs for this case because it gets messy
 EnemyInfo Enemy[ENEMYPOOL];
@@ -34,7 +34,7 @@ void InitEnemyPool(){
 }
 
 //Function that creates enemies and adds them to the enemy pool
-void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,CP_Color color){
+void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,ZombieType type,CP_Color color){
 	EnemyInfo newEnemy = {
 		.Cost = cost,
 		.Health = health,
@@ -42,7 +42,9 @@ void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,
 		.MaxHealth = health,
 		.CharSprite = sprite,
 		.MovementSpeed = speed,
-		.Color = color
+		.Color = color,
+		.type = type,
+		.moveCooldown = FALSE
 	};
 	Enemy[enemyPoolIndex] = newEnemy;
 	enemyPoolIndex++;
@@ -59,7 +61,8 @@ EnemyInfo* GetEnemyPrefab(int index){
 }
 //Returns the the EnemyInfo in the stored index
 EnemyInfo* GetRandomEnemyPrefab(void){
-	return &Enemy[CP_Random_RangeInt(1,GetEnemyCount()-1)];
+	//Need to use GetEnemyCount()-2 so you don't get graves that spawn graves
+	return &Enemy[CP_Random_RangeInt(1,GetEnemyCount()-2)];
 }
 
 void MoveEnemy(EnemyInfo* enemy){
@@ -76,16 +79,17 @@ void MoveEnemy(EnemyInfo* enemy){
 
 				if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){	//get first live enemy infront
 
-					if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->Cost==0){	//if it's a wall
-						enemy->x = enemy->x-i+1;								//stop right behind it
+					if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->type == WALL){	//if it's a wall
 						ZombieDealDamage(enemy->x-i,enemy->y,enemy->damage);	//Zombie deals damage to zombie
 						if(!GetAliveEnemyFromGrid(enemy->x-i,enemy->y)){		//Check if the wall is still there
 							enemy->x = enemy->x-i;								//Moves into the wall's space if not there
 							PlaySound(WALLBREAK,CP_SOUND_GROUP_SFX);
+							return;
 							//Play whatever damage anim here for walls
 						}
+						enemy->x = enemy->x-i+1;								//stop right behind it
 					}
-					else{
+					else{ //If not behind a wall
 						enemy->x = enemy->x-i+1;								//stop right behind it
 					}
 					return;

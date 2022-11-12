@@ -55,6 +55,7 @@ void gameLevelUpdate(void){
 	UpdateEffects();
 	RenderHand();
 	ShowCurrentWave();
+	ShowTestEnemiesKilled();
 	
 	// UPDATE WIZARD
 	UpdateWizard();
@@ -73,6 +74,17 @@ void ShowCurrentWave(void){
 	char buffer[25] = { 0 };
 	sprintf_s(buffer, 25, "WAVE %02d", GetCurrentWave());
 	float xPosition = WINDOWLENGTH - GetCellSize();
+	float yPosition = GetCellSize();
+	CP_Font_DrawText(buffer, xPosition, yPosition);
+}
+//!Only used for testing!! remove on release!!
+void ShowTestEnemiesKilled(void){
+	CP_Settings_Fill(TETRIS_COLOR);
+	CP_Settings_TextSize(GetCellSize()/5.f);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+	char buffer[25] = { 0 };
+	sprintf_s(buffer, 25, "TEST ENEMIES KILLED %02d", GetEnemiesKilled());
+	float xPosition = WINDOWLENGTH/2.f;
 	float yPosition = GetCellSize();
 	CP_Font_DrawText(buffer, xPosition, yPosition);
 }

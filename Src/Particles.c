@@ -3,6 +3,7 @@
 #include "SoundManager.h"
 #include "WaveSystem.h"
 #include "Grid.h"
+
 //Particle Array. Will use some form of Object Pooling.
 //ParticleCount defined in particles.h, 1000. 
 Particle particleArray[PARTICLECOUNT];
@@ -11,6 +12,11 @@ particleIndex =0;
 //This is where I'll declare "anim strings for animation"
 char* SparkleAnimString = "x+*\".";
 char* ZombieDeathAnimString = "ZZZZ    ZZZZ    ZZZZ    ZZZNNzznncu*\'`";
+char* LeaperDeathAnimString = "LLLL    LLLL    LLLL    LLL[[ii;;::*\'`";
+char* GraveDeathAnimString = "GGGG    GGGG    GGGG    zznncu*\'`";
+char* BreakerDeathAnimString = "BBBB    BBBB    BBBB    BBB33bbcccu*\'`";
+char* TankDeathAnimString = "TTTT    TTTT    TTTT    TTTYYwwnncu*\'`";
+char* WallDeathAnimString = "XXXX    XXXX    XXXX    XXXvvwwnncu*\'`";
 char* ZombieAnim = "ZzZzZzZzZzZzZzZz";
 char* ZombieSpawnAnimString = "@Oo*\'";
 
@@ -108,9 +114,33 @@ void RadialParticle(float x, float y,int particleCount,float force){
     }
 }
 
-void ZombieDeathParticle(float x, float y){
-    CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString,FALSE,0);
-    trauma+=0.5f;
+void ZombieDeathParticle(float x, float y,ZombieType type){
+    switch (type)
+    {
+    case ZOMBIE:
+        CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString,FALSE,0);
+        trauma+=0.3f;
+        break;
+    case LEAPER:
+        CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),LeaperDeathAnimString,FALSE,0);
+        trauma+=0.3f;
+        break;
+    case TANK:
+        CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),TankDeathAnimString,FALSE,0);
+        trauma+=0.5f;
+        break;
+    case BREAKER:
+        CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),BreakerDeathAnimString,FALSE,0);
+        trauma+=0.5f;
+        break;
+    case GRAVE:
+        CreateParticle(x,y,1.8f,GetCellSize()/3,0,GREEN,CP_Vector_Zero(),GraveDeathAnimString,FALSE,0);
+        trauma+=0.5f;
+        break;
+    default:
+        CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString,FALSE,0);
+        break;
+    }
 }
 
 void ZombieSpawnParticle(float x, float y){

@@ -2,6 +2,15 @@
 
 #define ENEMYPOOL 10
 
+
+typedef enum ZombieType{
+    ZOMBIE,
+    LEAPER,
+    TANK,
+    BREAKER,
+    GRAVE,
+	WALL
+}ZombieType;
 typedef struct EnemyInfo
 {
 	//Maybe have an enum for enemy type
@@ -19,17 +28,15 @@ typedef struct EnemyInfo
 	//For the time being, it's the "sprite"
 	char* CharSprite;
 	CP_Color Color;
-	//in the future, width height for size
-
+	ZombieType type;
+	BOOL moveCooldown;	//IUsed for grave spawn cooldowns
 	//Helps check if the enemy needs to be rendered or not
 	BOOL is_Alive;
 
 }EnemyInfo;
-
-
 //Set how many types are there
 //int enemy_TotalType;
-void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,CP_Color color);
+void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,ZombieType type,CP_Color color);
 void InitEnemyPool(void);		//Fills the enemyArray with predefined enemies
 void MoveEnemy(EnemyInfo* enemy);
 void OnDeath(void);

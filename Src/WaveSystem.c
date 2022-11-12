@@ -5,21 +5,16 @@
 int currentWave=1;			
 int enemyThreshold = 10;			//Set to a ratio of the current wave credits (used later)
 
+int enemiesKilled = 0;
+
 EnemyInfo WaveObjects[WAVEOBJECTCOUNT];	//Max size of the array probably = gridsize. I don't think we'll have more enemies than that
-// EnemyInfo TombstoneObjects[TOMBSTONECOUNT]; // Max size of tombstone avilable on grid
 int tombstoneObjectCount = 0;
 int enemyCount =0; 			//Keeps track of how many enemies are generated, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
 int tombstoneCount = 0;			//Keep track of how many tombstone are there in the grid currently
 int waveCredits = 0; 		//Arbritarily set to currentWave * 10
-int spawnInterval = 0;		//How much time in between spawns. (Time referring to turns.)
 int waveIndex = 0;			//Used to keep track of which enemy to spawn in the wavearray, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
-int spawnChance = 4;		//this creates a 1/(num+1) chance of spawning enemies in a col
-int spawnTimer = 0;	//Turns left before it will spawn. Checks against spawn interval
-//Enemy Array, cost, contains all available enemies
 //Wave array, Filled with enemies based off of cost.
 int x_SpawnPos = TOTAL_XGRID - 1;//Enemy x-grid spawn position
-int ts_MaxX = 9;
-int ts_MinX = 5;
 /*
 @Brief (just in case anyone wants to know the logic)
 1) Define enemy types in an array. This will be like your enemy prefabs that you will not touch but only reference. The equivalent is the EnemyPool.
@@ -39,7 +34,7 @@ void InitWaveSystem(){
 }
 //Generates the wave by deducting credits and adding enemies to the wave
 void GenerateWave(){
-	waveCredits = currentWave *4;								//magic number, will tweak
+	waveCredits = currentWave;								//magic number, will tweak
 	while(waveCredits > 0 && enemyThreshold <=10){				//Spawn as long as we have credits or lesser than 10 enemies to spawn
 		//Gets random enemy index for prefab from enemystats.c
 		//1 is Wall so do not spawn it
@@ -65,30 +60,42 @@ void UpdateWave(){
 		//MOVE ENEMIES
 		for (short i = 0; i < WAVEOBJECTCOUNT; ++i)
 		{
-			if (WaveObjects[i].is_Alive)
+			if(WaveObjects[i].moveCooldown){			//check for enemies just spawned in by tomb enemies
+				WaveObjects[i].moveCooldown = FALSE;
+				continue;
+			}
+			if (WaveObjects[i].is_Alive && WaveObjects[i].MovementSpeed >0)
 			{
 				MoveEnemy(&WaveObjects[i]);
 			}
 		}
-		//Iterates through the wave array and starts spawning the enemies
-		if((waveIndex) < (enemyCount)){					
-			//Loop through the Y axis of the grid
-			for(short y = 0; y<TOTAL_YGRID-1;++y){
-			int randNum = CP_Random_RangeInt(0,spawnChance);	//hardcoded value to 4 for now, basically 1/(n+1) chance that increases with each failed attempt.
-				if(!randNum){ //20% chance!
-					SpawnEnemy(&WaveObjects[waveIndex%WAVEOBJECTCOUNT]);
-					//Since waveindex is incremented on spawn, we need to check if it's finished
-					if ((waveIndex) >= (enemyCount)) break;
+		//Gets the number of enemies left to spawn
+		int enemiesRemainingToSpawn = enemyCount-waveIndex;
+		//Gets a random number that is either the column size or the enemies left to spawn, whichever is lesser.
+		int randEnemyCount = CP_Random_RangeInt(1,min((TOTAL_YGRID-1),enemiesRemainingToSpawn));
+		int currCount = 0;
+		//Gets a random position in Y axis, accounting for randEnemyCount
+		int randYPosBuffer = CP_Random_RangeInt(0,(TOTAL_YGRID-1)-randEnemyCount);
+		if(waveIndex < enemyCount){
+			//We loop through all the enemies we wanna spawn
+			while(currCount < randEnemyCount){
+				//we skip the walls
+				if (WaveObjects[waveIndex % WAVEOBJECTCOUNT].Cost == 0) {
+					waveIndex++;
 				}
-				else{
-					//If no enemy has been spawned, increase the chance of spawning.
-					spawnChance--;
-				}
+				//Spawn the enemies
+				SpawnEnemy(&WaveObjects[waveIndex%WAVEOBJECTCOUNT]);
+				currCount++;	//gotta increment
+				//If we hit the maxenemycount, it means this wave has ended
+				if(waveIndex >= enemyCount){
+					NextWave();
+					break;
+				} 
 			}
 		}
 		else{
+			//extra catch just in case
 			NextWave();
-			spawnChance = 4;
 		}
 	GameLoopSwitch(TURN_PLAYER);
 }
@@ -102,15 +109,17 @@ void RenderEnemy(void){
 		} 
 	}
 }
+
+//Tries to spawn enemy in random grid square. If it fails, whileloop tries again.
 void SpawnEnemy(EnemyInfo* enemy){
 	//SET ENEMY X VALUES
 	//if the enemy is a wall, skip it don't spawn
-	if(enemy->Cost ==0){
+	if(enemy->type == WALL){
 		waveIndex++;
 		return;
 	}
 	//If the enemy is a tombstone, spawn it between index 9 to 11
-	if(enemy->MovementSpeed <=0){
+	if(enemy->type == GRAVE){
 		enemy->x = CP_Random_RangeInt(TOTAL_XGRID-2, TOTAL_XGRID-4);
 	}
 	//else it's a normal zombie
@@ -146,8 +155,10 @@ void SpawnTombEnemies(void){
 				EnemyInfo newEnemy = *GetRandomEnemyPrefab();
 				newEnemy.x = WaveObjects[i].x;	//we still need the xy pos of the tombstone
 				newEnemy.y = WaveObjects[i].y;
+				ZombieSpawnParticle(GridXToPosX(newEnemy.x),GridYToPosY(newEnemy.y));
 				WaveObjects[i] = newEnemy;		//replace tombstone with random enemy
 				WaveObjects[i].is_Alive = TRUE;
+				WaveObjects[i].moveCooldown = TRUE;
 			}
 		}
 	}
@@ -176,6 +187,9 @@ BOOL HasLiveEnemyInCell(int x, int y){
 int GetCurrentWave(){
 	return currentWave;
 }
+int GetEnemiesKilled(void){
+	return enemiesKilled;
+}
 
 //Function to send damage to enemy in grid
 void SendDamage(int x, int y,int damage){
@@ -183,14 +197,16 @@ void SendDamage(int x, int y,int damage){
 	if(!IsInPlayingArea(GridXToPosX(x),GridYToPosY(y)))return;
 	//Make sure it's not null/dead lol
 	if (GetAliveEnemyFromGrid(x, y) == NULL) return;
-	if(GetAliveEnemyFromGrid(x, y)->Cost == 0) return;
+	if(GetAliveEnemyFromGrid(x, y)->type == WALL) return;
 	EnemyInfo* enemy = GetAliveEnemyFromGrid(x,y);
 	enemy->Health-=damage;
 	if(enemy->Health <=0){
 		enemy->is_Alive = FALSE;
-		ZombieDeathParticle(GridXToPosX(x),GridYToPosY(y));
+		ZombieDeathParticle(GridXToPosX(x),GridYToPosY(y),enemy->type);
+		enemiesKilled++;
 	}
 }
+//Function for zombies to deal damage to walls
 void ZombieDealDamage(int x, int y,int damage){
 	//Make sure the thing we want to send damage to is in the playing area
 	if(!IsInPlayingArea(GridXToPosX(x),GridYToPosY(y)))return;
@@ -200,14 +216,13 @@ void ZombieDealDamage(int x, int y,int damage){
 	enemy->Health-=damage;
 	if(enemy->Health <=0){
 		enemy->is_Alive = FALSE;
-		ZombieDeathParticle(GridXToPosX(x),GridYToPosY(y));
+
 	}
 }
 
 void NextWave()
 {
 	//Once the wave is done spawning, it waits for more turns
-	spawnTimer = spawnInterval*3; //arbritrary number, just makes it so it takes longer between each wave
 	currentWave++;
 	GenerateWave();				//generates the next wave
 }
