@@ -68,7 +68,7 @@ void gameLevelUpdate(void){
 
 void ShowCurrentWave(void){
 	CP_Settings_Fill(TETRIS_COLOR);
-	CP_Settings_TextSize(CP_System_GetDisplayHeight() / 20.0f);
+	CP_Settings_TextSize(CP_System_GetWindowHeight() / 20.0f);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT, CP_TEXT_ALIGN_V_MIDDLE);
 	char buffer[25] = { 0 };
 	sprintf_s(buffer, 25, "WAVE %02d", GetCurrentWave());

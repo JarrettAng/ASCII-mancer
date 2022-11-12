@@ -10,10 +10,11 @@
 #include "SoundManager.h"
 
 
-#define ENEMY1 1,1,1,1,"Z"
-#define ENEMY2 5,3,1,1,"L"
-#define ENEMY3 10,1,3,2,"B"
-#define TOMBSTONE 2,0,1,0,"T"//Tomdstone
+#define ZOMBIE 1,1,1,1,"Z"
+#define LEAPER 5,3,1,1,"L"
+#define TANK 10,1,3,1,"T"
+#define GRAVE 18,0,1,0,"G"
+#define WALLBREAKER 15,1,3,2,"B"
 #define WALL 0,0,2,0,"|x|"
 //Gonna use their char sprite value to indicate type of enemy
 //Not gonna use externs for this case because it gets messy
@@ -26,10 +27,10 @@ void InitEnemyPool(){
 	enemyPoolIndex = 0;
 	//Manual way of adding enemies
 	CreateEnemy(WALL,MENU_GRAY);
-	CreateEnemy(ENEMY1,MENU_RED);
-	CreateEnemy(ENEMY2,MENU_RED);
-	CreateEnemy(ENEMY3,MENU_RED);
-	CreateEnemy(TOMBSTONE,GREEN);
+	CreateEnemy(ZOMBIE,MENU_RED);
+	CreateEnemy(LEAPER,MENU_RED);
+	CreateEnemy(WALLBREAKER,MENU_RED);
+	CreateEnemy(GRAVE,GREEN);
 }
 
 //Function that creates enemies and adds them to the enemy pool
@@ -38,7 +39,7 @@ void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,
 		.Cost = cost,
 		.Health = health,
 		.damage = damage,
-		.MaxHealth = 3,
+		.MaxHealth = health,
 		.CharSprite = sprite,
 		.MovementSpeed = speed,
 		.Color = color
@@ -76,7 +77,7 @@ void MoveEnemy(EnemyInfo* enemy){
 				if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){	//get first live enemy infront
 
 					if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->Cost==0){	//if it's a wall
-
+						enemy->x = enemy->x-i+1;								//stop right behind it
 						ZombieDealDamage(enemy->x-i,enemy->y,enemy->damage);	//Zombie deals damage to zombie
 						if(!GetAliveEnemyFromGrid(enemy->x-i,enemy->y)){		//Check if the wall is still there
 							enemy->x = enemy->x-i;								//Moves into the wall's space if not there
@@ -85,7 +86,7 @@ void MoveEnemy(EnemyInfo* enemy){
 						}
 					}
 					else{
-						enemy->x = enemy->x-i+1;								//if it's not a wall, stop right behind it
+						enemy->x = enemy->x-i+1;								//stop right behind it
 					}
 					return;
 				}
