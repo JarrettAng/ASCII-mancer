@@ -19,8 +19,7 @@ PlayerHandSlot hand[HAND_SIZE];
 PlayerHandSlot peek_hand[PEEK_SIZE];
 
 CP_Vector text_peek_pos;
-CP_Image attack_Icon;
-CP_Image shield_Icon;
+CP_Image attack_icon, shield_icon;
 
 
 #pragma region
@@ -59,9 +58,11 @@ void TPlayerInit(void) {
 
 	// Initialize the settings for piece held
 	TPlayerHeldInit();
-	attack_Icon = CP_Image_Load("Assets/AttackIcon.png");
-	shield_Icon = CP_Image_Load("Assets/ShieldIcon.png");
 
+	// Load the icons
+	attack_icon = CP_Image_Load("Assets/AttackIcon.png");
+	shield_icon = CP_Image_Load("Assets/ShieldIcon.png");
+	LoadIconImages(attack_icon, shield_icon); // For player held piece
 }
 
 void TPlayerProcessInput(void) {
@@ -106,16 +107,12 @@ void RenderHand(void) {
 		CP_Settings_Stroke(current->piece.color);
 		CP_Graphics_DrawRect(current->pos.x, current->pos.y, hand_slot_length, hand_slot_length);
 
-		// Draw attack/defend icon
-		CP_Settings_StrokeWeight(0.0f);
+		// Render the icon in the top-left corner
 		if (index == 0) { // If wall piece
-			CP_Settings_Fill(TETRIS_ICON_WALL_COLOR);
-
-			CP_Image_Draw(shield_Icon, current->icon_pos.x, current->icon_pos.y, 70, 70, 255);
+			CP_Image_Draw(shield_icon, current->icon_pos.x, current->icon_pos.y, text_icon_size.x, text_icon_size.y, 255);
 		}
 		else { // If attack piece
-			CP_Settings_Fill(TETRIS_ICON_ATTACK_COLOR);
-			CP_Image_Draw(attack_Icon, current->icon_pos.x, current->icon_pos.y, 70, 70, 255);
+			CP_Image_Draw(attack_icon, current->icon_pos.x, current->icon_pos.y, 70, 70, 255);
 		}
 
 		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
@@ -300,4 +297,9 @@ void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end) {
 	for (int index = start; index < end; ++index) {
 		array[index].piece = array[index + 1].piece;
 	}
+}
+
+void FreeIconImages(void) {
+	CP_Image_Free(&attack_icon);
+	CP_Image_Free(&shield_icon);
 }

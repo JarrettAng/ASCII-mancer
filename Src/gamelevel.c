@@ -81,4 +81,5 @@ void gameLevelExit(void){
 	ResetGame();
 	UnsubscribeAllEvents();
 	ClearHearts();
+	FreeIconImages();
 }

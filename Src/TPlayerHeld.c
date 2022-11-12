@@ -49,6 +49,8 @@ int IndexToShapeX(int index);
 int IndexToShapeY(int index);
 #pragma endregion Forward Declarations
 
+CP_Image *attack_icon, *shield_icon;
+
 //______________________________________________________________
 // All "public" functions (Basically those in the TPlayer.h)
 
@@ -90,6 +92,11 @@ void TPlayerHeldInit(void) {
 
 	// Update the stroke to be 5% of the cell size
 	piece_stroke = GetCellSize() * 0.05f;
+}
+
+void LoadIconImages(CP_Image *attack, CP_Image *shield) {
+	attack_icon = attack;
+	shield_icon = shield;
 }
 
 /*______________________________________________________________
@@ -199,17 +206,6 @@ void RenderPieceHeld(void) {
 			current_pos.x = piece_held.draw_pos.x + current->grid_x * piece_held.x_screen_length;
 			current_pos.y = piece_held.draw_pos.y + current->grid_y * piece_held.y_screen_length;
 
-			// Draw the piece type icon on the top left corner
-			CP_Settings_StrokeWeight(0.0f);
-			if (piece_held.slot_index == 0) { // If wall piece
-				CP_Settings_Fill(TETRIS_ICON_WALL_COLOR);
-				CP_Graphics_DrawCircle(current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x);
-			}
-			else { // If attack piece
-				CP_Settings_Fill(TETRIS_ICON_ATTACK_COLOR);
-				CP_Graphics_DrawCircle(current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x);
-			}
-
 			// Set the stroke of the cell
 			CP_Settings_StrokeWeight(piece_stroke);
 
@@ -226,6 +222,14 @@ void RenderPieceHeld(void) {
 				CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
 			}
 			CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+
+			// Draw the piece type icon in the center
+			if (piece_held.slot_index == 0) { // If wall piece
+				CP_Image_Draw(shield_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
+			}
+			else { // If attack piece
+				CP_Image_Draw(attack_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
+			}
 		}
 	}
 }

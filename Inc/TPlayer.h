@@ -54,3 +54,5 @@ void RenderHand(void);
 @brief When a Tetris Piece is dropped onto the grid, update the player's hand
 */
 void RemovePieceHeldFromHand(void);
+
+void FreeIconImages(void);

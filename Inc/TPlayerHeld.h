@@ -45,6 +45,8 @@ typedef enum {
 */
 void TPlayerHeldInit(void);
 
+void LoadIconImages(CP_Image* attack, CP_Image* shield);
+
 /*______________________________________________________________
 @brief Returns true if a piece is currently held by the player.
 */

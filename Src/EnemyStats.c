@@ -116,6 +116,7 @@ void DrawEnemy(EnemyInfo* enemy) {
 	CP_Font_DrawText(enemy->CharSprite, GridXToPosX(enemy->x), GridYToPosY(enemy->y));
 
 	RenderEnemyDisplay(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Color, enemy->Health, enemy->damage);
+	RenderEnemyMovement(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Color, enemy->MovementSpeed);
 
 }
 void OnDeath()
