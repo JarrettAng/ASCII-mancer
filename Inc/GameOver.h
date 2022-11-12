@@ -30,6 +30,6 @@ void BackToMainMenu(void);
 
 //-------------------------------
 
-void GameOverInit();
-void GameOverUpdate();
-void GameOverExit();
+void GameOverInit(void);
+void GameOverUpdate(void);
+void GameOverExit(void);

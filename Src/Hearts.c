@@ -35,7 +35,7 @@ void InitializeLife(void) {
 	// Make box for You Lose title card after losing all life
 	lose_bg.xpos = CP_System_GetWindowWidth() / 2.f;
 	lose_bg.ypos = CP_System_GetWindowHeight() / 2.f;
-	lose_bg.width = CP_System_GetWindowWidth();
+	lose_bg.width = (float)CP_System_GetWindowWidth();
 	lose_bg.height = CP_System_GetWindowHeight() / 3.f;
 
 	// Text for You Lose title card after losing all life
@@ -97,6 +97,7 @@ void LoseLife(int lose_life) {
 		while (heart_stats[i].heartAlive == 1) {
 			++i;
 		}
+		if (i == 0) ++i;
 		heart_stats[i - 1].heartAlive = 0;
 		heart_stats[i - 1].alpha = 0;
 	}
