@@ -163,15 +163,6 @@ EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	return NULL;
 }
 
-EnemyInfo* GetEnemyFromGrid(int x, int y){
-	for(short i=0; i< WAVEOBJECTCOUNT;++i){
-		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
-			return &WaveObjects[i];
-		}
-	}
-	return NULL;
-}
-
 
 BOOL HasLiveEnemyInCell(int x, int y){
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){

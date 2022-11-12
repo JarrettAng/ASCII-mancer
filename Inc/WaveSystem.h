@@ -13,7 +13,6 @@ void UpdateWave(void);
 //Function that increments wave and generates the next one
 void NextWave(void);
 void CreateWall(int x, int y);
-EnemyInfo* GetEnemyFromGrid(int x, int y);
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y);
 BOOL HasLiveEnemyInCell(int x, int y);
 void SendDamage(int x, int y, int damage);
