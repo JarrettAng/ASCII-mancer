@@ -41,6 +41,6 @@ void EnemyDisplayInit(void);
 @param[in] health - The health of the entity, set to negative number if should not be rendered
 @param[in] wall_damage - The damage to walls the entity does, set to negative number if should not be rendered
 */
-void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int wall_damage);
+void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int max_health, int wall_damage);
 
 void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement);

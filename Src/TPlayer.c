@@ -138,7 +138,7 @@ void RenderHand(void) {
 	CP_Settings_Fill(TETRIS_COLOR);
 	CP_Settings_TextSize(text_peek_size);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP);
-	CP_Font_DrawText("NEXT", text_peek_pos.x, text_peek_pos.y);
+	CP_Font_DrawText("<NEXT<", text_peek_pos.x, text_peek_pos.y);
 
 	for (int index = 0; index < PEEK_SIZE; ++index) {
 		current = &peek_hand[index];

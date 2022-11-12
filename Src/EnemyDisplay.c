@@ -10,6 +10,7 @@ ________________________________________________________________________________
 
 #include "Grid.h" // For cell size
 #include "WaveSystem.h" // For alive enemy check
+#include "ColorTable.h"
 
 #include "EnemyDisplay.h"
 
@@ -51,19 +52,21 @@ void EnemyDisplayInit(void) {
 /*______________________________________________________________
 @brief Displays the enemy stats in the four corners of the cell
 */
-void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int wall_damage) {
+void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int max_health, int wall_damage) {
 	CP_Settings_Fill(color);
 	CP_Settings_TextSize(text_size);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
 	// Render health
 	if (health > 0) {
-		sprintf_s(text_buffer, _countof(text_buffer), "%d", health);
-		CP_Font_DrawText(text_buffer, pos_x + display[HEALTH].x, pos_y + display[HEALTH].y);
+		CP_Settings_StrokeWeight(0.0f);
+		CP_Settings_Fill(HEALTH_GREEN);
+		CP_Graphics_DrawRect(pos_x - GetCellSize() * 0.4f, pos_y - GetCellSize() * 0.4f, GetCellSize() * 0.8f, GetCellSize() * 0.15f);
 	}
 
 	// Render wall damage if any
 	if (wall_damage > 0) {
+		CP_Settings_Fill(HEALTH_RED);
 		sprintf_s(text_buffer, _countof(text_buffer), "%d", wall_damage);
 		CP_Font_DrawText(text_buffer, pos_x + display[DAMAGE].x, pos_y + display[DAMAGE].y);
 	}
@@ -77,8 +80,10 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 
 	int actual_movement = 1, grid_x = PosXToGridX(pos_x), grid_y = PosYToGridY(pos_y);
 	for (; actual_movement < movement; ++actual_movement) {
-		if (HasLiveEnemyInCell(grid_x - actual_movement, grid_y)) {
-			EnemyInfo* type = GetEnemyFromGrid(grid_x - actual_movement, grid_y);
+
+		// Redo logic, should hard stop on wall even if enemy in front
+		EnemyInfo* type;
+		if (type = GetAliveEnemyFromGrid(grid_x - actual_movement, grid_y)) {
 			actual_movement += type->MovementSpeed;
 			break;
 		}
@@ -86,14 +91,13 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 
 	if (!actual_movement) return;
 
-	color.a = 120;
+	color.a = 180;
 	CP_Settings_Fill(color);
 	CP_Settings_StrokeWeight(0.0f);
 	//CP_Settings_TextSize(text_size);
 	//CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
 	CP_Vector anchor;
-
 
 	int tile = 0;
 	for (; tile < actual_movement; ++tile) {
@@ -109,6 +113,8 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 		if (*(type->CharSprite + 1) == '\0') return;
 	}
 
+	color.a = 120;
+	CP_Settings_Fill(color);
 	// Shade cell,top half
 	anchor.x = pos_x - GetCellSize() * (tile + 0.5f);
 	anchor.y = pos_y - GetCellSize() * 0.5f;
