@@ -197,17 +197,17 @@ void InitializeSliders(){
 
 	SliderKnob knobData = {
 		.img = knobImg,
-		.radius = (float)CP_Image_GetWidth(knobImg) / 2,
-		.transform.width = (float)CP_Image_GetWidth(knobImg),
-		.transform.heigth = (float)CP_Image_GetHeight(knobImg),
+		.radius = (float)CP_Image_GetWidth(knobImg) / 2 * GetWidthScale(),
+		.transform.width = (float)CP_Image_GetWidth(knobImg) * GetWidthScale(),
+		.transform.heigth = (float)CP_Image_GetHeight(knobImg) * GetHeightScale(),
 	};
 
 	/*=================Master Volume Slider=========================*/
 	Rect masterVolumeRect = {
 		.x = masterTxt.transform.x,
 		.y = masterTxt.transform.y + sliderOffset,
-		.width = (float)CP_Image_GetWidth(sliderImg),
-		.heigth = (float)CP_Image_GetHeight(sliderImg),
+		.width = (float)CP_Image_GetWidth(sliderImg) * GetWidthScale(),
+		.heigth = (float)CP_Image_GetHeight(sliderImg) * GetHeightScale(),
 	};
 
 	Line masterVolumeLine = {
@@ -224,8 +224,8 @@ void InitializeSliders(){
 	Rect sfxVolumeRect = {
 		.x = sfxTxt.transform.x,
 		.y = sfxTxt.transform.y + sliderOffset,
-		.width = (float)CP_Image_GetWidth(sliderImg),
-		.heigth = (float)CP_Image_GetHeight(sliderImg),
+		.width = (float)CP_Image_GetWidth(sliderImg) * GetWidthScale(),
+		.heigth = (float)CP_Image_GetHeight(sliderImg) * GetHeightScale(),
 	};
 
 	Line sfxVolumeLine = {
@@ -277,8 +277,8 @@ void InitializeButtons(){
 	Rect windowSizeRect = {
 		.x = GetWindowWidth() - GetWindowWidth() / 4,
 		.y = windowSizeTxt.transform.y + GetWindowHeight() / 10,
-		.heigth = (float)CP_Image_GetHeight(windowSizeUpBtn),
-		.width = (float)CP_Image_GetWidth(windowSizeUpBtn),
+		.heigth = (float)CP_Image_GetHeight(windowSizeUpBtn) * GetHeightScale(),
+		.width = (float)CP_Image_GetWidth(windowSizeUpBtn) * GetWidthScale(),
 	};
 
 	TextData windowSizeBtnTextData = { .text = NULL };

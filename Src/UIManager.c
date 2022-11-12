@@ -124,8 +124,8 @@ void RenderTexts(){
 
 void RenderSliders(Void){
 	for (int i = 0; i < sliderCount; ++i) {
-		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width * GetWidthScale(), sliders[i]->transform.heigth * GetHeightScale(), 255);
-		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.transform.width * GetWidthScale(), sliders[i]->knob.transform.heigth * GetHeightScale(), 255);
+		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);
+		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.transform.width, sliders[i]->knob.transform.heigth, 255);
 	}
 }
 
