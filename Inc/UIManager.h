@@ -12,6 +12,7 @@ typedef struct GraphicData {
 	CP_Color color;
 	CP_Color strokeColor;
 	float strokeWeight;
+	CP_Image img;
 }GraphicData;
 
 typedef struct TextData {
@@ -62,8 +63,6 @@ typedef struct Slider{
 	SliderKnob knob;
 }Slider;
 
-
-
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack);
 void InitializeText(Text* txt, Rect transform, TextData data);
 void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, SliderKnob knobData);
@@ -89,9 +88,9 @@ Button* GetButtonHover(void);
 Button* GetPrevBtnHovered(void);
 Button* GetBtnHovered(void);
 Slider* GetSliderHeld(void);
-Slider* GetSliderHeldd(void);
 void ClearInteractCache(void);
 
 void FreeUI();
 void FreeText(void);
 void FreeButton(void);
+void FreeSlider(void);

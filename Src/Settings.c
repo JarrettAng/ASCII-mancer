@@ -7,16 +7,14 @@
 #include "Utils.h"
 
 Text settingsTxt;
+Button backBtn;
 
+#pragma region VOLUMES
 Text masterTxt;
 Text masterVolumeTxt;
 
 Text sfxTxt;
 Text sfxVolumeTxt;
-
-Text windowSizeTxt;
-
-Button backBtn;
 
 Slider masterVolumeSlider;
 Slider sfxVolumeSlider;
@@ -27,6 +25,24 @@ int sfxVolume = 100;
 // Buffer to store string when converting int to char.
 char* masterVolumeBuffer;
 char* sfxVolumeBuffer;
+#pragma endregion
+
+#pragma region WINDOW_SIZE
+Text windowSizeTxt;
+
+Button upBtn;
+Button downBtn;
+Text sizesTxt;
+char* windowSizes[] = {
+	"FULL SCREEN",	// 0
+	"1920 x 1080",	// 1
+	"1280 x 720",	// 2
+	"960 x 540"		// 3
+};
+static int currentWindowSize = 0;
+#pragma endregion
+
+
 
 #pragma region FORWARD_DECLARATIONS
 
@@ -40,6 +56,10 @@ void InitializeVolume(void);
 void HandleVolumeControl(void);
 void UpdateVolumes(void);
 void UpdateKnobs(void);
+void WindowSizeScrollUp(void);
+void WindowSizeScrollDown(void);
+void HandleWindowSizeScroll(int dir);
+void UpdateWindowSize(void);
 
 void LoadMainMenu(void);
 
@@ -76,9 +96,9 @@ void SettingsExit(void){
 
 void InitializeTexts(){
 	// Offfset between the volume texts.
-	float volumeOffset = GetWindowHeight() / 4 * GetHeightScale();
+	float volumeOffset = GetWindowHeight() / 4;
 	// Offfset between the volume text and volume value text.
-	float volumeValueOffset = GetWindowHeight() / 25 * GetHeightScale();
+	float volumeValueOffset = GetWindowHeight() / 25;
 
 	/*==============================Text Settings========================*/
 	TextData baseTextData = {
@@ -94,6 +114,10 @@ void InitializeTexts(){
 	// Sub header includes master, sfx and window size.
 	TextData subHeaderData = baseTextData;
 	subHeaderData.textSize = 60 * GetHeightScale();
+
+	// Window sizes text.
+	TextData windowSizeData = baseTextData;
+	windowSizeData.textSize = 40 * GetHeightScale();
 
 	// Master and sfx volume amount.
 	TextData volumeValueData = baseTextData;
@@ -152,15 +176,24 @@ void InitializeTexts(){
 	subHeaderData.text = "WINDOW SIZE";
 	InitializeText(&windowSizeTxt, windowSizeTxtRect, subHeaderData);
 	/*==============================================================*/
+
+	/*====================Window Sizes Text==========================*/
+	Rect windowSizesTxtRect = {
+	.x = GetWindowWidth() - GetWindowWidth() / 4,
+	.y = windowSizeTxtRect.y + GetWindowHeight() / 4.5,
+	};
+	windowSizeData.text = windowSizes[currentWindowSize];
+	InitializeText(&sizesTxt, windowSizesTxtRect, windowSizeData);
+	/*==============================================================*/
 }
 
 void InitializeSliders(){
 	// Offset between each slider.
-	float sliderOffset = GetWindowHeight() / 10 * GetHeightScale();
+	float sliderOffset = GetWindowHeight() / 10;
 	CP_Image sliderImg = CP_Image_Load("Assets/Slider.png");
 	CP_Image knobImg = CP_Image_Load("Assets/Knob.png");
 	// Offset of knob from ends of slider.
-	float knobOffset = (float)CP_Image_GetWidth(sliderImg) / 12;
+	float knobOffset = (float)CP_Image_GetWidth(sliderImg) / 12 * GetWidthScale();
 
 	SliderKnob knobData = {
 		.img = knobImg,
@@ -178,8 +211,8 @@ void InitializeSliders(){
 	};
 
 	Line masterVolumeLine = {
-		.start = CP_Vector_Set(masterVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2 + knobOffset, masterVolumeRect.y),
-		.end = CP_Vector_Set(masterVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2 - knobOffset, masterVolumeRect.y),
+		.start = CP_Vector_Set(masterVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() + knobOffset , masterVolumeRect.y),
+		.end = CP_Vector_Set(masterVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() - knobOffset , masterVolumeRect.y),
 	};
 	knobData.transform.x = masterVolumeRect.x;
 	knobData.transform.y = masterVolumeRect.y;
@@ -196,8 +229,8 @@ void InitializeSliders(){
 	};
 
 	Line sfxVolumeLine = {
-		.start = CP_Vector_Set(sfxVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2 + knobOffset, sfxVolumeRect.y),
-		.end = CP_Vector_Set(sfxVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2 - knobOffset, sfxVolumeRect.y),
+		.start = CP_Vector_Set(sfxVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() + knobOffset, sfxVolumeRect.y),
+		.end = CP_Vector_Set(sfxVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() - knobOffset, sfxVolumeRect.y),
 	};
 	knobData.transform.x = sfxVolumeRect.x;
 	knobData.transform.y = sfxVolumeRect.y;
@@ -207,14 +240,14 @@ void InitializeSliders(){
 }
 
 void InitializeButtons(){
-	GraphicData graphicData = {
+	GraphicData backBtnGraphicsData = {
 		.color = TRANSPERANT,
 		.strokeColor = TRANSPERANT,
 		.strokeWeight = 0,
 		.imagePosMode = CP_POSITION_CENTER
 	};
 
-	TextData textData = {
+	TextData backBtnTextData = {
 		.color = MENU_WHITE,
 		.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
 		.textSize = 70 * GetHeightScale(),
@@ -227,10 +260,35 @@ void InitializeButtons(){
 	Rect backBtnRect = {
 		.x = GetWindowWidth() / 2,
 		.y = GetWindowHeight() - GetWindowHeight() / 8,
-		.heigth = textData.textSize,
+		.heigth = backBtnTextData.textSize,
 		.width = 400 * GetWidthScale(),
 	};
-	InitializeButton(&backBtn, backBtnRect, graphicData, textData, LoadMainMenu);
+	InitializeButton(&backBtn, backBtnRect, backBtnGraphicsData, backBtnTextData, LoadMainMenu);
+	/*==============================================================*/
+
+	CP_Image windowSizeUpBtn = CP_Image_Load("Assets/WindowSizeUpBtn.png");
+	CP_Image windowSizeDownBtn = CP_Image_Load("Assets/WindowSizeDownBtn.png");
+	float windowSizeBtnOffet = (float)GetWindowHeight() / 4;
+
+	GraphicData windowSizeBtnGraphicData = {
+		.imagePosMode = CP_POSITION_CENTER,
+		.imageFilterMode = CP_IMAGE_FILTER_NEAREST
+	};
+	Rect windowSizeRect = {
+		.x = GetWindowWidth() - GetWindowWidth() / 4,
+		.y = windowSizeTxt.transform.y + GetWindowHeight() / 10,
+		.heigth = (float)CP_Image_GetHeight(windowSizeUpBtn),
+		.width = (float)CP_Image_GetWidth(windowSizeUpBtn),
+	};
+
+	TextData windowSizeBtnTextData = { .text = NULL };
+	/*=================Window Size Button===========================*/
+	windowSizeBtnGraphicData.img = windowSizeUpBtn;
+	InitializeButton(&upBtn, windowSizeRect, windowSizeBtnGraphicData, windowSizeBtnTextData, WindowSizeScrollUp);
+
+	windowSizeBtnGraphicData.img = windowSizeDownBtn;
+	windowSizeRect.y += windowSizeBtnOffet;
+	InitializeButton(&downBtn, windowSizeRect, windowSizeBtnGraphicData, windowSizeBtnTextData, WindowSizeScrollDown);
 	/*==============================================================*/
 }
 
@@ -254,24 +312,65 @@ void InitializeVolumeBuffers(){
 }
 
 void HandleVolumeControl(){
-	if (GetSliderHeld() != NULL){
-		// Clamp knob between the limits of the slider.
-		float xPos = CP_Math_ClampFloat(CP_Input_GetMouseX(), GetSliderHeld()->line.start.x, GetSliderHeld()->line.end.x);
-		GetSliderHeld()->lerpFactor = (xPos - GetSliderHeld()->line.start.x) / (GetSliderHeld()->line.end.x - GetSliderHeld()->line.start.x);
-
-		// Update position of knob on slider based on lerp factor.
-		UpdateKnobs();
-		// Update actual volumes.
-		UpdateVolumes();
-		UpdateMasterVolumeText();
-		UpdateSFXVolumeText();
+	if (GetSliderHeld() == NULL){
+		return;
 	}
+
+	// Clamp knob between the limits of the slider.
+	float xPos = CP_Math_ClampFloat(CP_Input_GetMouseX(), GetSliderHeld()->line.start.x, GetSliderHeld()->line.end.x);
+	GetSliderHeld()->lerpFactor = (xPos - GetSliderHeld()->line.start.x) / (GetSliderHeld()->line.end.x - GetSliderHeld()->line.start.x);
+
+	// Update position of knob on slider based on lerp factor.
+	UpdateKnobs();
+	// Update actual volumes.
+	UpdateVolumes();
+	UpdateMasterVolumeText();
+	UpdateSFXVolumeText();
 }
 
 void UpdateKnobs(){
 	// Get knob x position based on lerp factor.
 	masterVolumeSlider.knob.transform.x = masterVolumeSlider.lerpFactor * (masterVolumeSlider.line.end.x - masterVolumeSlider.line.start.x) + masterVolumeSlider.line.start.x;
 	sfxVolumeSlider.knob.transform.x = sfxVolumeSlider.lerpFactor * (sfxVolumeSlider.line.end.x - sfxVolumeSlider.line.start.x) + sfxVolumeSlider.line.start.x;
+}
+
+void WindowSizeScrollDown(){
+	HandleWindowSizeScroll(0);
+}
+
+void WindowSizeScrollUp(){
+	HandleWindowSizeScroll(1);
+}
+
+void HandleWindowSizeScroll(int dir){
+	(dir == 0) ? currentWindowSize++ : currentWindowSize--;
+
+	currentWindowSize = (currentWindowSize < 0) ? sizeof(windowSizes) / sizeof(windowSizes[0]) - 1 : currentWindowSize;
+	currentWindowSize = (currentWindowSize > (sizeof(windowSizes) / sizeof(windowSizes[0]) - 1)) ? 0 : currentWindowSize;
+	sizesTxt.textData.text = windowSizes[currentWindowSize];
+	UpdateWindowSize();
+}
+
+void UpdateWindowSize(){
+	switch (currentWindowSize)
+	{
+	case 0:
+		CP_System_Fullscreen();
+		break;
+	case 1:
+		CP_System_SetWindowSize(1920, 1080);
+		break;
+	case 2:
+		CP_System_SetWindowSize(1280, 720);
+		break;
+	case 3:
+		CP_System_SetWindowSize(960, 540);
+		break;
+	default:
+		break;
+	}
+	UpdateUIScale();
+	CP_Engine_SetNextGameStateForced(SettingsInit, SettingsUpdate, SettingsExit);
 }
 
 void UpdateVolumes(){

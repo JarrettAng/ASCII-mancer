@@ -18,7 +18,7 @@ int sliderCount = 0;
 #pragma endregion
 
 #pragma region UI_INTERACT_CACHE
-
+Slider* sliderHeld = NULL;
 Button* btnClicked = NULL;
 Button* btnHovered = NULL;
 Button* prevBtnHovered = NULL;
@@ -75,6 +75,10 @@ void DrawButton(Button* btn){
 	// Draw text
 	SetTextSetting(btn->textData);
 	CP_Font_DrawText(btn->textData.text, btn->transform.x, btn->transform.y);
+
+	if (btn->graphicData.img){
+		CP_Image_Draw(btn->graphicData.img, btn->transform.x, btn->transform.y, btn->transform.width, btn->transform.heigth, 255);
+	}
 }
 
 /// <summary>
@@ -86,9 +90,15 @@ void DrawButtons() {
 		SetGraphicSetting(btns[i]->graphicData);
 		CP_Graphics_DrawRect(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth);
 
-		// Draw text
-		SetTextSetting(btns[i]->textData);
-		CP_Font_DrawText(btns[i]->textData.text, btns[i]->transform.x, btns[i]->transform.y);
+		if (btns[i]->textData.text != NULL){
+			// Draw text
+			SetTextSetting(btns[i]->textData);
+			CP_Font_DrawText(btns[i]->textData.text, btns[i]->transform.x, btns[i]->transform.y);
+		}
+
+		if (btns[i]->graphicData.img){
+			CP_Image_Draw(btns[i]->graphicData.img, btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, 255);
+		}
 	}
 }
 
@@ -114,8 +124,8 @@ void RenderTexts(){
 
 void RenderSliders(Void){
 	for (int i = 0; i < sliderCount; ++i) {
-		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);
-		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.transform.width, sliders[i]->knob.transform.heigth, 255);
+		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width * GetWidthScale(), sliders[i]->transform.heigth * GetHeightScale(), 255);
+		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.transform.width * GetWidthScale(), sliders[i]->knob.transform.heigth * GetHeightScale(), 255);
 	}
 }
 
@@ -181,6 +191,7 @@ void HandleButtonClick() {
 				// In an event where 2 buttons are overlapping, and one button doesnt have a callback, the other button callback will still be triggered.
 				if (btnClicked->callBack != NULL) break;
 			}
+			btnClicked = NULL;
 		}
 		// Trigger onclick event if needed.
 		if (btnClicked != NULL && btnClicked->callBack != NULL) {
@@ -247,12 +258,16 @@ Slider* GetSliderHeld(){
 		// Loop through all buttons initialized in this scene.
 		for (int i = 0; i < sliderCount; ++i) {
 			if (pointWithinCircle(xPos, yPos, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.radius)){
-				return sliders[i];
+				sliderHeld = sliders[i];
+				break;
 			}
 		}
-		return NULL;
 	}
-	return NULL;
+
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_LEFT)){
+		sliderHeld = NULL;
+	}
+	return sliderHeld;
 }
 
 #pragma endregion
@@ -269,6 +284,7 @@ void ClearInteractCache(){
 void FreeUI(){
 	FreeButton();
 	FreeText();
+	FreeSlider();
 }
 
 /// <summary>
@@ -287,4 +303,13 @@ void FreeText(){
 	// Empty array so next scene can use.
 	memset(texts, 0, sizeof(texts));
 	textsCount = 0;
+}
+
+/// <summary>
+/// Empty slider array when exiting a scene, so that next scene can reuse the array.
+/// </summary>
+void FreeSlider(){
+	// Empty array so next scene can use.
+	memset(sliders, 0, sizeof(sliders));
+	sliderCount = 0;
 }
