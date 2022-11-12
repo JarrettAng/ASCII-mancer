@@ -11,6 +11,7 @@
 #include "TManager.h"
 #include "TPlayer.h"
 #include "EnemyDisplay.h"
+#include "Wizard.h"
 
 
 void gameLevelInit(void){
@@ -22,6 +23,7 @@ void gameLevelInit(void){
 
 	InitWaveSystem();
 	InitializeLife();
+	InitWizard();
 
 	TManagerInit(DEFAULT_SPAWN_SEED);
 
@@ -53,7 +55,9 @@ void gameLevelUpdate(void){
 	UpdateEffects();
 	RenderHand();
 	ShowCurrentWave();
-
+	
+	// UPDATE WIZARD
+	UpdateWizard();
 	// UPDATE HEARTS
 	UpdateLife();
 

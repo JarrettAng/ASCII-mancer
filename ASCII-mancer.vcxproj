@@ -34,6 +34,7 @@
     <ClInclude Include="Inc\UIManager.h" />
     <ClInclude Include="Inc\Utils.h" />
     <ClInclude Include="Inc\WaveSystem.h" />
+    <ClInclude Include="Inc\Wizard.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Credits.c" />
@@ -58,6 +59,7 @@
     <ClCompile Include="Src\UIManager.c" />
     <ClCompile Include="Src\Utils.c" />
     <ClCompile Include="Src\WaveSystem.c" />
+    <ClCompile Include="Src\Wizard.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
