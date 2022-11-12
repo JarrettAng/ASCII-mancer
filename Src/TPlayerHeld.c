@@ -211,25 +211,57 @@ void RenderPieceHeld(void) {
 
 			// Color setting, red if piece is outside of grid, or invalid placement
 			if (hand_in_grid && IsInPlayingArea(current_pos.x + piece_held.x_screen_length / 2.0f, current_pos.y + piece_held.y_screen_length / 2.0f)) {
-				if (piece_held.slot_index == 0 && HasLiveEnemyInCell(PosXToGridX(current_pos.x + piece_held.x_screen_length / 2.0f), PosYToGridY(current_pos.y + piece_held.y_screen_length / 2.0f))) {
-					CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+				if (HasLiveEnemyInCell(PosXToGridX(current_pos.x + piece_held.x_screen_length / 2.0f), PosYToGridY(current_pos.y + piece_held.y_screen_length / 2.0f))) {
+					if (piece_held.slot_index == 0) {
+						CP_Settings_Stroke(TETRIS_HOVER_RED_COLOR);
+						CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+						CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+					}
+					else {
+						// TODO REFACTOR WHEN ENEMY TYPES ADDED
+						EnemyInfo* type = GetAliveEnemyFromGrid(PosXToGridX(current_pos.x + piece_held.x_screen_length / 2.0f), PosYToGridY(current_pos.y + piece_held.y_screen_length / 2.0f));
+						if (*(type->CharSprite + 1) == '\0') {
+							CP_Settings_Stroke(piece_held.color_stroke);
+							CP_Settings_Fill(piece_held.color);
+							CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+
+							CP_Image_Draw(attack_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
+						}
+						else {
+							CP_Settings_Stroke(TETRIS_HOVER_RED_COLOR);
+							CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+							CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+						}
+					}
 				}
 				else {
-					CP_Settings_Fill(piece_held.color);
+					if (piece_held.slot_index == 0) {
+						CP_Settings_Stroke(piece_held.color_stroke);
+						CP_Settings_Fill(piece_held.color);
+						CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+						CP_Image_Draw(shield_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
+					}
+					else {
+						CP_Settings_Stroke(TETRIS_HOVER_RED_COLOR);
+						CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+						CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+					}
 				}
 			}
 			else {
+				CP_Settings_Stroke(TETRIS_HOVER_RED_COLOR);
 				CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+				CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
 			}
-			CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+			//CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
 
 			// Draw the piece type icon in the center
-			if (piece_held.slot_index == 0) { // If wall piece
-				CP_Image_Draw(shield_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
-			}
-			else { // If attack piece
-				CP_Image_Draw(attack_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
-			}
+			//if (piece_held.slot_index == 0) { // If wall piece
+			//	CP_Image_Draw(shield_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
+			//}
+			//else { // If attack piece
+			//	CP_Image_Draw(attack_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
+			//}
 		}
 	}
 }

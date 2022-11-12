@@ -86,12 +86,14 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 
 	if (!actual_movement) return;
 
+	color.a = 120;
 	CP_Settings_Fill(color);
 	CP_Settings_StrokeWeight(0.0f);
 	//CP_Settings_TextSize(text_size);
 	//CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
 	CP_Vector anchor;
+
 
 	int tile = 0;
 	for (; tile < actual_movement; ++tile) {
@@ -101,14 +103,12 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 	}
 
 	// If enemy is in cell, don't draw the shade
-	EnemyInfo *type = GetEnemyFromGrid(grid_x - actual_movement, grid_y);
+	EnemyInfo *type = GetAliveEnemyFromGrid(grid_x - actual_movement, grid_y);
 	if (type != NULL) {
 		// TODO REFACTOR WHEN ENEMY TYPES ADDED
 		if (*(type->CharSprite + 1) == '\0') return;
 	}
 
-	color.a = 100;
-	CP_Settings_Fill(color);
 	// Shade cell,top half
 	anchor.x = pos_x - GetCellSize() * (tile + 0.5f);
 	anchor.y = pos_y - GetCellSize() * 0.5f;
