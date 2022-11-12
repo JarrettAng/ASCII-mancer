@@ -6,7 +6,6 @@
 #include "UIManager.h"
 #include "Grid.h"
 #include "gamelevel.h"
-#include "testfile.h"
 #include "Utils.h"
 #include "SoundManager.h"
 
@@ -54,10 +53,6 @@ Timer buttonBlink = {
 
 #pragma endregion
 
-//___________________________________________________________________
-// TODO: For debugging, remove before release
-void Jarrett(void);
-
 #pragma region FORWARD_DECLARATIONS
 
 void InitializeButtons(void);
@@ -80,6 +75,8 @@ void MainMenuInit(void) {
 	// Populate buttons with positional, size and text values.
 	InitializeButtons();
 	IntializeSelectPointer();
+
+	PlayBGM(MAINMENU);
 }
 
 void MainMenuUpdate(void) {
@@ -92,12 +89,6 @@ void MainMenuUpdate(void) {
 
 	HandleCarouselButton();
 	HandleMenuButtonClick();
-
-	//___________________________________________________________________
-	// TODO: For debugging, remove before release
-	if (CP_Input_KeyTriggered(KEY_F10)) {
-		Jarrett();
-	}
 }
 
 void MainMenuExit(void) {

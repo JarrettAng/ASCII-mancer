@@ -46,9 +46,6 @@ void EnemyDisplayInit(void) {
 	// Update shade rendering values
 	shade_length = GetCellSize() * 0.15f; // Shade bar is 15% of cell each
 	shade_spacing = (GetCellSize() - shade_length * SHADE_HALFCELL_LINES) / (SHADE_HALFCELL_LINES - 0.5f); // Spacing is remaining
-
-	#include "SoundManager.h" // TODO REMOVE LATER
-	ToggleMuteALL();
 }
 
 /*______________________________________________________________

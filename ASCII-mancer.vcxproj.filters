@@ -63,9 +63,6 @@
     <ClInclude Include="Inc\WaveSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\testfile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\Credits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,9 +129,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\WaveSystem.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\testfile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Credits.c">

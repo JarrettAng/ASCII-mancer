@@ -67,9 +67,9 @@ TetrisPiece DrawFromBag(void) {
 @param int - The index of the bag to fill, the bags are placed in an array.
 */
 void FillBag(int bag) {
-    int *current_bag = &pieces_bag[bag];
+    PieceType *current_bag = &pieces_bag[bag][0];
     for (int index = 0; index < TOTAL_PIECES; ++index) {
-        current_bag[index] = index;
+        *(current_bag + index) = (PieceType)index;
     }
 }
 
@@ -79,7 +79,7 @@ void FillBag(int bag) {
 @param int - The index of the bag to shuffle, the bags are placed in an array.
 */
 void ShuffleBag(int bag) {
-    int *current_bag = &pieces_bag[bag];
+    PieceType (*current_bag) = &pieces_bag[bag][0];
     for (int index = TOTAL_PIECES - 1; index > 0; --index) {
         int rand_index = RandInt(0, index);
 

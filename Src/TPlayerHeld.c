@@ -49,7 +49,7 @@ int IndexToShapeX(int index);
 int IndexToShapeY(int index);
 #pragma endregion Forward Declarations
 
-CP_Image *attack_icon, *shield_icon;
+CP_Image attack_icon, shield_icon;
 
 //______________________________________________________________
 // All "public" functions (Basically those in the TPlayer.h)
@@ -94,7 +94,7 @@ void TPlayerHeldInit(void) {
 	piece_stroke = GetCellSize() * 0.05f;
 }
 
-void LoadIconImages(CP_Image *attack, CP_Image *shield) {
+void LoadIconImages(CP_Image attack, CP_Image shield) {
 	attack_icon = attack;
 	shield_icon = shield;
 }
@@ -242,7 +242,7 @@ void RenderPieceHeld(void) {
 */
 void PieceHeldPlayed(int mouse_x, int mouse_y) {
 	// Do damage to zombies covered by the piece
-	PieceHeldCell* current = &piece_held_shapeCurrent->grid;
+	PieceHeldCell* current = &piece_held_shapeCurrent->grid[0];
 	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
 		if (current[index].cell) {
 

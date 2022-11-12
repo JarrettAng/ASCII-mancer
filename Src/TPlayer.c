@@ -263,13 +263,13 @@ void RemovePieceHeldFromHand() {
 	}
 
 	// Remove the piece from the player's hand, and shift the pieces behind fowards
-	ArrayShiftFowardFrom(&hand, played_index, HAND_SIZE - 1);
+	ArrayShiftFowardFrom(hand, played_index, HAND_SIZE - 1);
 
 	// Move the next piece from the peek queue into the hand
 	hand[HAND_SIZE - 1].piece = peek_hand[0].piece;
 
 	// Shift the peek queue piece foward
-	ArrayShiftFowardFrom(&peek_hand, 0, PEEK_SIZE - 1);
+	ArrayShiftFowardFrom(peek_hand, 0, PEEK_SIZE - 1);
 
 	// Draw another piece from the queue
 	peek_hand[PEEK_SIZE - 1].piece = DrawFromBag();
