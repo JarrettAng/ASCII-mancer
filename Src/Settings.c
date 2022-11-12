@@ -71,8 +71,6 @@ void SettingsInit(void){
 	InitializeSliders();
 	InitializeButtons();
 	InitializeVolume();
-	InitializeVolumeBuffers();
-
 }
 
 void SettingsUpdate(void){
