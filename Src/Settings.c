@@ -23,8 +23,10 @@ int masterVolume = 100;
 int sfxVolume = 100;
 
 // Buffer to store string when converting int to char.
-char* masterVolumeBuffer;
-char* sfxVolumeBuffer;
+// -100- : 5 characters
+// +1 for null character.
+char* masterVolumeBuffer[6];
+char* sfxVolumeBuffer[6];
 #pragma endregion
 
 #pragma region WINDOW_SIZE
@@ -51,7 +53,6 @@ void InitializeSliders(void);
 static void InitializeButtons(void);
 void UpdateMasterVolumeText(void);
 void UpdateSFXVolumeText(void);
-void InitializeVolumeBuffers(void);
 void InitializeVolume(void);
 void HandleVolumeControl(void);
 void UpdateVolumes(void);
@@ -88,8 +89,6 @@ void SettingsUpdate(void){
 void SettingsExit(void){
 	ClearInteractCache();
 	FreeUI();
-	free(masterVolumeBuffer);
-	free(sfxVolumeBuffer);
 }
 
 void InitializeTexts(){
@@ -178,7 +177,7 @@ void InitializeTexts(){
 	/*====================Window Sizes Text==========================*/
 	Rect windowSizesTxtRect = {
 	.x = GetWindowWidth() - GetWindowWidth() / 4,
-	.y = windowSizeTxtRect.y + GetWindowHeight() / 4.5,
+	.y = (float)(windowSizeTxtRect.y + GetWindowHeight() / 4.5),
 	};
 	windowSizeData.text = windowSizes[currentWindowSize];
 	InitializeText(&sizesTxt, windowSizesTxtRect, windowSizeData);
@@ -295,18 +294,9 @@ void InitializeVolume(){
 	UpdateKnobs();
 	// Update actual volume based on initial volume group lerp factor.
 	UpdateVolumes();
-	// Volume buffer to store volume texts.
-	InitializeVolumeBuffers();
 	// Update volume text based on integer values.
 	UpdateMasterVolumeText();
 	UpdateSFXVolumeText();
-}
-
-void InitializeVolumeBuffers(){
-	// -100- : 5 characters
-	// +1 for null character.
-	masterVolumeBuffer = malloc(sizeof(char) * 5 + 1);
-	sfxVolumeBuffer = malloc(sizeof(char) * 5 + 1);
 }
 
 void HandleVolumeControl(){
@@ -381,14 +371,14 @@ void UpdateVolumes(){
 
 void UpdateMasterVolumeText(){
 	// Convert int to string and store it in buffer.
-	sprintf_s(masterVolumeBuffer, sizeof(masterVolumeBuffer), "-%d-", masterVolume);
-	masterVolumeTxt.textData.text = masterVolumeBuffer;
+	sprintf_s((char* const)masterVolumeBuffer, sizeof(masterVolumeBuffer), "-%d-", masterVolume);
+	masterVolumeTxt.textData.text = (char*)masterVolumeBuffer;
 }
 
 void UpdateSFXVolumeText(){
 	// Convert int to string and store it in buffer.
-	sprintf_s(sfxVolumeBuffer, sizeof(sfxVolumeBuffer), "-%d-", sfxVolume);
-	sfxVolumeTxt.textData.text = sfxVolumeBuffer;
+	sprintf_s((char* const)sfxVolumeBuffer, sizeof(sfxVolumeBuffer), "-%d-", sfxVolume);
+	sfxVolumeTxt.textData.text = (char*)sfxVolumeBuffer;
 }
 
 void LoadMainMenu(){
