@@ -20,7 +20,7 @@ void InitializeLife(void) {
 		heart_stats[i].heartAlive = 1; // Boolean True
 		heart_stats[i].xpos = CP_System_GetWindowWidth() / 4.f + (CP_System_GetWindowWidth() / 7.5f) * HEART_SPACING * i; // Spaces out the hearts by the size of the heart and adding the additional spacing
 		heart_stats[i].ypos = (CP_System_GetWindowHeight() / 10.f - GetCellSize());
-		heart_stats[i].size = CP_System_GetWindowWidth() / (CP_System_GetWindowWidth() * HEART_SIZE);
+		heart_stats[i].size = CP_System_GetWindowWidth() / (CP_System_GetWindowWidth() * HEART_SIZE) * GetWidthScale();
 		heart_stats[i].alpha = HEART_ALPHA;
 		heart_stats[i].rotation = HEART_ROTATION;
 	}
@@ -171,7 +171,7 @@ void AnimationLife() {
 		up_tick_marker = 1;
 		down_tick_marker = 0;
 	}
-	
+
 }
 
 //void EndTitleRender()

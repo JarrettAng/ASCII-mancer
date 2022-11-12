@@ -112,7 +112,7 @@ void RenderHand(void) {
 			CP_Image_Draw(shield_icon, current->icon_pos.x, current->icon_pos.y, text_icon_size.x, text_icon_size.y, 255);
 		}
 		else { // If attack piece
-			CP_Image_Draw(attack_icon, current->icon_pos.x, current->icon_pos.y, 70, 70, 255);
+			CP_Image_Draw(attack_icon, current->icon_pos.x, current->icon_pos.y, text_icon_size.x, text_icon_size.y, 255);
 		}
 
 		if (IsThisPieceHeld(&current->piece)) continue; // Don't render the piece if it's held
