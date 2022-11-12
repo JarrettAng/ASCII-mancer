@@ -163,7 +163,7 @@ void DrawParticle(Particle* particlePointer){
         //memcpy is better than array=array.
         memcpy(&singleCharFrame,&particlePointer->animString[frameCount],1);
         singleCharFrame[1]='\0';    //set the null char or drawtext will have undefined behaviour reading indefinitely
-        CP_Font_DrawText(&singleCharFrame, particlePointer->x, particlePointer->y);
+        CP_Font_DrawText(*&singleCharFrame, particlePointer->x, particlePointer->y);
     }
 }
 

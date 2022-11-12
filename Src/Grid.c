@@ -3,7 +3,7 @@
 #include "ColorTable.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "WaveSystem.h"
 
 float cube_Length = 0;
 
@@ -93,20 +93,14 @@ float GridXToPosX(int index){
 }
 
 int PosXToGridX(float pos){
-	int x = (pos-gridXOffset)/(WINDOWLENGTH-gridXOffset*2)*TOTAL_XGRID;
+	int x = (int)((pos-gridXOffset)/(WINDOWLENGTH-gridXOffset*2)*TOTAL_XGRID);
 	return x;
 }
 int PosYToGridY(float pos){
-	int y = ((pos-grid_Top)/grid_PlayArea)*TOTAL_YGRID;
+	int y = (int)(((pos-grid_Top)/grid_PlayArea)*TOTAL_YGRID);
 	return y;
 }
 
-int GetGridCenterX(float pos){
-	return GridXToPosX(PosXToGridX(pos));
-}
-int GetGridCenterY(float pos){
-	return GridYToPosY(PosYToGridY(pos));
-}
 //Check if poiont is in playing area
 _Bool IsInPlayingArea(float x,float y)
 {	//GridX playing area starts from gridxOffset to the window width - (gridxoffset + 1 cube length)

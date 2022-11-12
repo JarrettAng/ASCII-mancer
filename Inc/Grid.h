@@ -24,6 +24,7 @@ typedef struct CurrentGridPos
 float GetCellSize(void);
 float GetGridTopBuffer(void);
 float GetGridPlayingArea(void);
+
 float GridYToPosY(int index);
 float GridXToPosX(int index);
 
