@@ -36,11 +36,11 @@ Button upBtn;
 Button downBtn;
 Text sizesTxt;
 char* windowSizes[] = {
-	"FULL SCREEN",	// 0
-	"BORDERLESS WINdOW", // 1
-	"1920 x 1080",	// 2
-	"1280 x 720",	// 3
-	"960 x 540"		// 4
+	"FULL SCREEN",		// 0
+	"BORDERLESS WINDOW",// 1
+	"1920 x 1080",		// 2
+	"1280 x 720",		// 3
+	"960 x 540"			// 4
 };
 static int currentWindowSize = 0;
 #pragma endregion
