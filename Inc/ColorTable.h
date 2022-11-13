@@ -35,6 +35,7 @@
 #define TETRIS_HOVER_COLOR CP_Color_Create(197, 197, 197, 130)
 #define TETRIS_HOVER_RED_COLOR CP_Color_Create(227, 23, 23, 130)
 
-#define HEALTH_GREEN CP_Color_Create(66, 219, 127, 255)
-#define HEALTH_YELLOW CP_Color_Create(222, 206, 62, 255)
-#define HEALTH_RED CP_Color_Create(222, 73, 73, 255)
+#define HEALTH_GREEN CP_Color_Create(66, 219, 127, 150)
+#define HEALTH_YELLOW CP_Color_Create(222, 206, 62, 150)
+#define HEALTH_RED CP_Color_Create(227, 23, 23, 150)
+#define ENEMY_MOVEMENT CP_Color_Create(227, 23, 23, 120)

@@ -24,10 +24,6 @@ typedef enum {
 	DAMAGE = BOTTOM_RIGHT
 } E_DisplayType;
 
-#define TEXT_MOVEMENT "<<"
-#define TEXT_MOVEMENT_END_TOP "\\/"
-#define TEXT_MOVEMENT_END_BOTTOM "/\\"
-
 /*______________________________________________________________
 @brief Calculates the offset for the corner displays based on the grid cell size
 */
