@@ -37,9 +37,10 @@ Button downBtn;
 Text sizesTxt;
 char* windowSizes[] = {
 	"FULL SCREEN",	// 0
-	"1920 x 1080",	// 1
-	"1280 x 720",	// 2
-	"960 x 540"		// 3
+	"BORDERLESS WINdOW", // 1
+	"1920 x 1080",	// 2
+	"1280 x 720",	// 3
+	"960 x 540"		// 4
 };
 static int currentWindowSize = 0;
 #pragma endregion
@@ -346,12 +347,15 @@ void UpdateWindowSize(){
 		CP_System_Fullscreen();
 		break;
 	case 1:
-		CP_System_SetWindowSize(1920, 1080);
+		CP_System_SetWindowSize(CP_System_GetDisplayWidth(), CP_System_GetDisplayHeight());
 		break;
 	case 2:
-		CP_System_SetWindowSize(1280, 720);
+		CP_System_SetWindowSize(1920, 1080);
 		break;
 	case 3:
+		CP_System_SetWindowSize(1280, 720);
+		break;
+	case 4:
 		CP_System_SetWindowSize(960, 540);
 		break;
 	default:
