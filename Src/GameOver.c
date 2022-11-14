@@ -56,8 +56,8 @@ void InitializeButtonsGameOverScreen(void) {
 
 	/*========================Main Menu button============================*/
 	Rect BackMainMenuBtnRect = {
-	.x = xPos - 120,
-	.y = yPos + 340,
+	.x = xPos - CP_System_GetWindowWidth() / 10,
+	.y = yPos + CP_System_GetWindowHeight() / 3,
 	.heigth = GameOverTextData.textSize,
 	.width = 400 * GetWidthScale(),
 	};
