@@ -95,6 +95,9 @@ void TPlayerProcessInput(void) {
 */
 void RenderHand(void) {
 	PlayerHandSlot* current;
+
+	CP_Settings_RectMode(CP_POSITION_CORNER);
+
 	//______________________________________________________________
 	// Render each piece in the player's hand
 	for (int index = 0; index < HAND_SIZE; ++index) {

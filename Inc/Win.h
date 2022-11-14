@@ -1,6 +1,8 @@
 #pragma once
 #include "cprocessing.h"
 
+#define WAVES_TO_WIN 5
+
 void InitializeButtonsWinScreen(void);
 void WinTextInit(void);
 void CheckWinCondition(void);

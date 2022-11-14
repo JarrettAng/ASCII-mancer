@@ -70,6 +70,8 @@ void EnemyDisplayInit(void) {
 @brief Displays the enemy stats in the four corners of the cell
 */
 void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int max_health, int wall_damage) {
+	CP_Settings_RectMode(CP_POSITION_CORNER);
+
 	// Render health
 	if (health > 0) {
 		CP_Settings_StrokeWeight(0.0f);

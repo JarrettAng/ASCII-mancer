@@ -39,3 +39,5 @@
 #define HEALTH_YELLOW CP_Color_Create(222, 206, 62, 150)
 #define HEALTH_RED CP_Color_Create(227, 23, 23, 150)
 #define ENEMY_MOVEMENT CP_Color_Create(227, 23, 23, 120)
+
+#define TUTORIAL_COLOR CP_Color_Create(222, 206, 62, 255)

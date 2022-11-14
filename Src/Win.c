@@ -124,7 +124,7 @@ void WinTextInit(void) {
 }
 
 void CheckWinCondition(void) {
-	if (GetCurrentWave() == 20) WinAnimation();
+	if (GetCurrentWave() == WAVES_TO_WIN) WinAnimation();
 }
 
 static float time_elapsed = 0.f;

@@ -123,7 +123,6 @@ struct CurrentGridPos CurrentPos(int x,int y)
 void DrawLineGrid()
 {
 	//Line =/ Grid position
-	CP_Graphics_ClearBackground(BLACK);
 	CP_Settings_Stroke(BLACK);
 	float grid_CurrentIndex = 0;
 

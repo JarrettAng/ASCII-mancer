@@ -1,19 +1,24 @@
 //Header files here
+#include <stdio.h>
+
 #include "Grid.h"
 #include "Particles.h"
 #include "WaveSystem.h"
 #include "Screenshake.h"
 #include "Hearts.h"
 #include "SoundManager.h"
-#include <stdio.h>
 #include "gamelevel.h"
-#include "GameLoop.h"
-#include "TManager.h"
-#include "TPlayer.h"
-#include "EnemyDisplay.h"
 #include "Wizard.h"
 #include "Win.h"
 
+#include "GameLoop.h" // For event system, calls event subscribed to player turn start, end, etc
+
+#include "Tutorial.h" // For initializing how to play system that shows on first turn of player
+
+#include "TManager.h" // For initializing everything about Tetris Pieces
+#include "TPlayer.h" // For handling player's input with Tetris Pieces
+
+#include "EnemyDisplay.h" // For drawing the enemy stats on the grid
 
 void gameLevelInit(void){
 	// Zero out all the events in the event system first!
@@ -32,15 +37,14 @@ void gameLevelInit(void){
 	TPlayerInit();
 	EnemyDisplayInit();
 
+	TutorialInit();
+
 	// Initialize game loop last, after all the events have been subscribed
 	GameLoopInit();
 
 }
 void gameLevelUpdate(void){
 	UpdateCameraShaker();
-
-	// Call the functions subscribed to the update events
-	GameLoopUpdate();
 
 	// DRAWING AND UPDATING OF GRID
 	grid_update();
@@ -51,13 +55,17 @@ void gameLevelUpdate(void){
 	if (CP_Input_KeyTriggered(KEY_V)){
 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()),GetEnemyPrefab(1));
 	}
+
+	// Call the functions subscribed to the update events
+	GameLoopUpdate();
+
 	//]UpdateWave();
 	RenderEnemy();
 	// UPDATE VFX
 	UpdateEffects();
 	RenderHand();
 	ShowCurrentWave();
-	ShowTestEnemiesKilled();
+	//ShowTestEnemiesKilled();
 	
 	// UPDATE WIZARD
 	UpdateWizard();
@@ -75,7 +83,7 @@ void ShowCurrentWave(void){
 	CP_Settings_TextSize(CP_System_GetWindowHeight() / 20.0f);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT, CP_TEXT_ALIGN_V_MIDDLE);
 	char buffer[25] = { 0 };
-	sprintf_s(buffer, 25, "WAVE %02d", GetCurrentWave());
+	sprintf_s(buffer, 25, "WAVE %02d/%02d", GetCurrentWave(), WAVES_TO_WIN);
 	float xPosition = WINDOWLENGTH - GetCellSize();
 	float yPosition = GetCellSize();
 	CP_Font_DrawText(buffer, xPosition, yPosition);

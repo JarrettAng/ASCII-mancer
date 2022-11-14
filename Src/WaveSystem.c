@@ -30,7 +30,6 @@ void InitWaveSystem(){
 	//InitEnemyPool();				//Starts up the enemy prefabs array
 	GenerateWave();	
 	// UpdateWave();
-	SpawnEnemy(&EnemiesToSpawn[waveIndex%MAXENEMYCOUNT]);
 	SubscribeEvent(PLAYER_END,SpawnTombEnemies,1);
 	SubscribeEvent(ZOMBIE_START,UpdateWave,0);
 }

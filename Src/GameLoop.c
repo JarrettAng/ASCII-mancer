@@ -67,8 +67,7 @@ void GameLoopSwitch(TurnType new_turn) {
 @brief Every update, calls all functions subscribed to the current turn's update.
 */
 void GameLoopUpdate(void) {
-	int total_events_subscribed = current_turn->update.count;
-	for (int index = 0; index < total_events_subscribed; ++index) {
+	for (int index = 0; index < current_turn->update.count; ++index) {
 		current_turn->update.events[index].event();
 	}
 }
