@@ -98,8 +98,16 @@ void InitializeAllTextWin(void) {
 
 void RenderAllTextWin(void) {
 	RenderGOText(Win_Title);
-	RenderGOText(Enemies_Killed);
+
+	char wave[25] = { 0 };
+	sprintf_s(wave, 25, "WAVES SURVIVED : %02d/%02d", GetCurrentWave(), WAVES_TO_WIN);
+	Turns_Made.words = wave;
 	RenderGOText(Turns_Made);
+
+	char killed[25] = { 0 };
+	sprintf_s(killed, 25, "ZOMBOIYOS KILLED : %02d", GetEnemiesKilled());
+	Enemies_Killed.words = killed;
+	RenderGOText(Enemies_Killed);
 }
 
 //=========================================================
@@ -124,7 +132,7 @@ void WinTextInit(void) {
 }
 
 void CheckWinCondition(void) {
-	if (GetCurrentWave() == WAVES_TO_WIN) WinAnimation();
+	if (GetCurrentWave() >= WAVES_TO_WIN) WinAnimation();
 }
 
 static float time_elapsed = 0.f;
@@ -187,6 +195,7 @@ void WinUpdate(void) {
 }
 
 void WinExit(void) {
+	ResetGame();
 	ClearInteractCache();
 	FreeUI();
 }

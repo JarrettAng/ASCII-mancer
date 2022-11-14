@@ -5,6 +5,8 @@
 #include "MainMenu.h"
 #include "UIManager.h"
 #include "Hearts.h"
+#include "Win.h"
+#include "WaveSystem.h"
 
 #define ENEMIES_KILLED 12
 #define TURNS_PASSED 7
@@ -110,8 +112,16 @@ void InitializeAllText(void) {
 
 void RenderAllText(void) {
 	RenderGOText(Game_Over_Title);
-	RenderGOText(Enemies_Killed);
+
+	char wave[25] = { 0 };
+	sprintf_s(wave, 25, "WAVES SURVIVED : %02d/%02d", GetCurrentWave(), WAVES_TO_WIN);
+	Turns_Made.words = wave;
 	RenderGOText(Turns_Made);
+
+	char killed[25] = { 0 };
+	sprintf_s(killed, 25, "ZOMBOIYOS KILLED : %02d", GetEnemiesKilled());
+	Enemies_Killed.words = killed;
+	RenderGOText(Enemies_Killed);
 }
 
 //=========================================================
@@ -152,6 +162,7 @@ void GameOverUpdate(void) {
 }
 
 void GameOverExit(void) {
+	ResetGame();
 	ClearInteractCache();
 	FreeUI();
 }

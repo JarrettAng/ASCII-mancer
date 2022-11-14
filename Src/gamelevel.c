@@ -101,7 +101,6 @@ void ShowTestEnemiesKilled(void){
 }
 
 void gameLevelExit(void){
-	ResetGame();
 	UnsubscribeAllEvents();
 	ClearHearts();
 	FreeIconImages();
