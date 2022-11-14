@@ -12,6 +12,7 @@
 #include "TPlayer.h"
 #include "EnemyDisplay.h"
 #include "Wizard.h"
+#include "Win.h"
 
 
 void gameLevelInit(void){
@@ -24,6 +25,7 @@ void gameLevelInit(void){
 	InitWaveSystem();
 	InitializeLife();
 	InitWizard();
+	WinTextInit();
 
 	TManagerInit(DEFAULT_SPAWN_SEED);
 
@@ -61,7 +63,8 @@ void gameLevelUpdate(void){
 	UpdateWizard();
 	// UPDATE HEARTS
 	UpdateLife();
-
+	// CHECK IF WON
+	CheckWinCondition();
 	// CLEAR SCREEN
 	CP_Graphics_ClearBackground(BLACK);
 
