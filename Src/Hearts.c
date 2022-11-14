@@ -147,10 +147,10 @@ float BezierCurve(float t) {
 }
 
 // AnimationLife variables
-float time_elapsed = 0;
-int up_tick_marker = 1;
-int down_tick_marker = 0;
-float duration = 0.75f; // 0.75 Seconds to loop
+static float time_elapsed = 0;
+static int up_tick_marker = 1;
+static int down_tick_marker = 0;
+static float duration = 0.75f; // 0.75 Seconds to loop
 
 void AnimationLife() {
 	float tick = time_elapsed / duration;
