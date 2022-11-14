@@ -80,7 +80,7 @@ void MoveEnemy(EnemyInfo* enemy){
 
 				if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->x == (enemy->x-i)){	//get first live enemy infront
 
-					if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->type == WALL){	//if it's a wall
+					if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->Cost == 0){	//if it's a wall
 						ZombieDealDamage(enemy->x-i,enemy->y,enemy->damage);	//Zombie deals damage to zombie
 						if(!GetAliveEnemyFromGrid(enemy->x-i,enemy->y)){		//Check if the wall is still there
 							enemy->x = enemy->x-i;								//Moves into the wall's space if not there

@@ -35,7 +35,7 @@ void InitWaveSystem(){
 }
 //Generates the wave by deducting credits and adding enemies to the wave
 void GenerateWave(){
-	waveCredits = currentWave*4;								//magic number, will tweak
+	waveCredits = currentWave*2;								//magic number, will tweak
 	while(waveCredits > 0 && enemyThreshold <=10){				//Spawn as long as we have credits or lesser than 10 enemies to spawn
 		//Gets random enemy index for prefab from enemystats.c
 		//1 is Wall so do not spawn it
@@ -64,15 +64,29 @@ void GenerateWave(){
 //Update function for the wave system, subscribed to gameloop enemy wave
 void UpdateWave(){
 		//MOVE ENEMIES
-		for (short i = 0; i < WAVEOBJECTCOUNT; ++i)
-		{
-			if(WaveObjects[i].moveCooldown){			//check for enemies just spawned in by tomb enemies
-				WaveObjects[i].moveCooldown = FALSE;
-				continue;
-			}
-			if (WaveObjects[i].is_Alive && WaveObjects[i].MovementSpeed >0)
-			{
-				MoveEnemy(&WaveObjects[i]);
+		// for (short i = 0; i < WAVEOBJECTCOUNT; ++i)
+		// {
+		// 	if(WaveObjects[i].moveCooldown){			//check for enemies just spawned in by tomb enemies
+		// 		WaveObjects[i].moveCooldown = FALSE;
+		// 		continue;
+		// 	}
+		// 	if (WaveObjects[i].is_Alive && WaveObjects[i].MovementSpeed >0)
+		// 	{
+		// 		MoveEnemy(&WaveObjects[i]);
+		// 	}
+		// }
+		for(short y = 0; y < TOTAL_YGRID; ++y){
+			for(short x = 0; x < TOTAL_XGRID; ++x){
+				if(HasLiveEnemyInCell(x,y)){
+					if(GetAliveEnemyFromGrid(x,y)->moveCooldown){
+						GetAliveEnemyFromGrid(x,y)->moveCooldown = FALSE;
+						continue;
+					}
+					if(GetAliveEnemyFromGrid(x,y)->MovementSpeed >0){
+						// GetAliveEnemyFromGrid(x, y)->moveCooldown = TRUE;
+						MoveEnemy(GetAliveEnemyFromGrid(x,y));
+					}
+				}
 			}
 		}
 		//Gets the number of enemies left to spawn
@@ -116,32 +130,26 @@ void RenderEnemy(void){
 }
 
 void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy){
+	if(HasLiveEnemyInCell(x,y)) return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
 		if(!WaveObjects[i].is_Alive){
 		WaveObjects[i] = *enemy;
 		WaveObjects[i].is_Alive = TRUE;
 		WaveObjects[i].x = x;
 		WaveObjects[i].y = y;
-		waveIndex++;
 		break;
 		}
 	}
-	// if(!HasLiveEnemyInCell(x,y)){
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT] = *enemy;
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT].is_Alive = TRUE;
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT].x = x;
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT].y = y;
-	// 	enemyCount++;
-	// }
 }
 
 void SpawnEnemy(EnemyInfo* enemy){
 	if(enemy->type == GRAVE) enemy->x = CP_Random_RangeInt(TOTAL_XGRID-2, TOTAL_XGRID-4);
 	else enemy->x = TOTAL_XGRID-1;
 	//int enemyYPos =(CP_Random_RangeInt(0, TOTAL_YGRID - 1));
+	enemy->y = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));
+	if(HasLiveEnemyInCell(enemy->x,enemy->y))return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
 		if(!WaveObjects[i].is_Alive){
-			enemy->y = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));
 			enemy->is_Alive = TRUE;
 			ZombieSpawnParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y));
 			PlaySoundEx(ZOMBIESPAWN,CP_SOUND_GROUP_SFX);
@@ -188,6 +196,7 @@ void CreateWall(int x, int y){
 	// 	enemyCount++;
 	// 	PlaySound(WALLBUILD,CP_SOUND_GROUP_SFX);
 	// }
+	if(HasLiveEnemyInCell(x,y))return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
 		if(!WaveObjects[i].is_Alive){
 			PlaySoundEx(ZOMBIESPAWN,CP_SOUND_GROUP_SFX);
@@ -196,7 +205,7 @@ void CreateWall(int x, int y){
 			WaveObjects[i].x = x;
 			WaveObjects[i].y = y;
 			PlaySound(WALLBUILD,CP_SOUND_GROUP_SFX);
-			waveIndex++;
+			// waveIndex++;
 			break;
 		}
 	}
@@ -222,6 +231,7 @@ void SpawnTombEnemies(void){
 
 //Returns address of live enemy in the grid
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
+	if(!HasLiveEnemyInCell(x,y))return NULL;
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
 			if(WaveObjects[i].is_Alive) return &WaveObjects[i];
@@ -229,14 +239,14 @@ EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	}
 	return NULL;
 }
-// EnemyInfo* GetCell(int x, int y){
-// 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
-// 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
-// 			return &WaveObjects[i];
-// 		}
-// 	}
-// 	return NULL;
-// }
+EnemyInfo* GetCell(int x, int y){
+    for(short i=0; i< WAVEOBJECTCOUNT;++i){
+        if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
+            return &WaveObjects[i];
+        }
+    }
+    return NULL;
+}
 
 BOOL HasLiveEnemyInCell(int x, int y){
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
@@ -260,7 +270,7 @@ void SendDamage(int x, int y,int damage){
 	if(!IsInPlayingArea(GridXToPosX(x),GridYToPosY(y)))return;
 	//Make sure it's not null/dead lol
 	if (GetAliveEnemyFromGrid(x, y) == NULL) return;
-	if(GetAliveEnemyFromGrid(x, y)->type == WALL) return;
+	if (GetAliveEnemyFromGrid(x, y)->type == WALL) return;
 	EnemyInfo* enemy = GetAliveEnemyFromGrid(x,y);
 	enemy->Health-=damage;
 	if(enemy->Health <=0){
@@ -279,7 +289,6 @@ void ZombieDealDamage(int x, int y,int damage){
 	enemy->Health-=damage;
 	if(enemy->Health <=0){
 		enemy->is_Alive = FALSE;
-
 	}
 }
 
@@ -297,9 +306,11 @@ void NextWave()
 //Resets the game state
 void ResetGame(){
 	//Reset wave index, enemyCount and the waveArray
+	enemySpawnIndex = 0;
 	waveIndex = 0;
 	enemyCount = 0;
 	currentWave = 0;
+	enemiesKilled =0;
 	memset(WaveObjects,0,sizeof(EnemyInfo)*(WAVEOBJECTCOUNT));
 	memset(EnemiesToSpawn,0,sizeof(EnemyInfo)*MAXENEMYCOUNT);
 }

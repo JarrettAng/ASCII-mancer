@@ -24,6 +24,6 @@ void SpawnEnemy(EnemyInfo* enemy);
 void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy);
 // EnemyInfo* GetCell(int x, int y);
 void RenderEnemy(void);
-// EnemyInfo* GetEnemyFromGrid(int x, int y);
+EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now
 void ResetGame(void);
