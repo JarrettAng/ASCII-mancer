@@ -47,7 +47,7 @@ void gameLevelUpdate(void){
 		// SpawnTombEnemies();
 	}
 	if (CP_Input_KeyTriggered(KEY_V)){
-		SpawnTombEnemies();
+		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()),GetEnemyPrefab(1));
 	}
 	//]UpdateWave();
 	RenderEnemy();

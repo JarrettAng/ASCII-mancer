@@ -3,7 +3,7 @@
 #include "EnemyStats.h"
 #include "Grid.h"
 
-#define WAVEOBJECTCOUNT (TOTAL_XGRID*TOTAL_YGRID)
+#define WAVEOBJECTCOUNT (TOTAL_XGRID*TOTAL_YGRID*3)
 //Initialises the wave system. MUST BE CALLED AT LEAST ONCE.
 void InitWaveSystem(void);
 //Generates the wave using wave credits and populates wave array
@@ -21,7 +21,8 @@ void SpawnTombEnemies(void);
 int GetEnemiesKilled(void);
 int GetCurrentWave(void);
 void SpawnEnemy(EnemyInfo* enemy);
-
+void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy);
+// EnemyInfo* GetCell(int x, int y);
 void RenderEnemy(void);
 // EnemyInfo* GetEnemyFromGrid(int x, int y);
 //Unused for now

@@ -29,6 +29,7 @@ void InitEnemyPool(){
 	CreateEnemy(WALL,MENU_GRAY);
 	CreateEnemy(ZOMBIE,MENU_RED);
 	CreateEnemy(LEAPER,MENU_RED);
+	CreateEnemy(TANK,MENU_RED);
 	CreateEnemy(WALLBREAKER,MENU_RED);
 	CreateEnemy(GRAVE,GREEN);
 }
