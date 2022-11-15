@@ -104,4 +104,5 @@ void gameLevelExit(void){
 	UnsubscribeAllEvents();
 	ClearHearts();
 	FreeIconImages();
+	FreeEnemyDisplayIcon();
 }

@@ -251,9 +251,14 @@ void RenderPieceHeld(void) {
 					CP_Image_Draw(attack_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
 				}
 			}
-			else {
+			else if (!hand_in_grid) {
 				CP_Settings_Stroke(TETRIS_HOVER_RED_COLOR);
 				CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
+				CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
+			}
+			else {
+				CP_Settings_Stroke(TETRIS_HOVER_GREY_COLOR);
+				CP_Settings_Fill(TETRIS_HOVER_GREY_COLOR);
 				CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
 			}
 		}

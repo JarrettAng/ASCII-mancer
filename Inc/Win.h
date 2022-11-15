@@ -1,7 +1,7 @@
 #pragma once
 #include "cprocessing.h"
 
-#define WAVES_TO_WIN 5
+#define WAVES_TO_WIN 30
 
 void InitializeButtonsWinScreen(void);
 void WinTextInit(void);
