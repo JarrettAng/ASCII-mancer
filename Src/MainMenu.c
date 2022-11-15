@@ -84,7 +84,7 @@ void MainMenuUpdate(void) {
 	// Drawn 25% from top.
 	CP_Image_Draw(title, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
 
-	DrawButtons();
+	RenderButtons();
 	DrawSelectPointer();
 
 	HandleCarouselButton();

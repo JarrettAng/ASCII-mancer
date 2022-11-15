@@ -67,7 +67,7 @@ void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, S
 /// <summary>
 /// Require button to be intialized before drawing.
 /// </summary>
-void DrawButton(Button* btn){
+void RenderButton(Button* btn){
 	// Draw rect
 	SetGraphicSetting(btn->graphicData);
 	CP_Graphics_DrawRect(btn->transform.x, btn->transform.y, btn->transform.width, btn->transform.heigth);
@@ -84,7 +84,7 @@ void DrawButton(Button* btn){
 /// <summary>
 /// Draw all buttons cached in btns array.
 /// </summary>
-void DrawButtons() {
+void RenderButtons() {
 	for (int i = 0; i < btnsCount; ++i) {
 		// Draw rect
 		SetGraphicSetting(btns[i]->graphicData);
@@ -105,11 +105,11 @@ void DrawButtons() {
 /// <summary>
 /// Require text to be intialized before drawing.
 /// </summary>
-//void RenderText(Text* txt){
-//	// Draw text
-//	SetTextSetting(txt->textData);
-//	CP_Font_DrawText(txt->textData.text, txt->transform.x, txt->transform.y);
-//}
+void RenderText(Text* txt){
+	// Draw text
+	SetTextSetting(txt->textData);
+	CP_Font_DrawText(txt->textData.text, txt->transform.x, txt->transform.y);
+}
 
 /// <summary>
 /// Draw all texts cached in texts array.

@@ -183,7 +183,7 @@ void WinUpdate(void) {
 	RenderAllTextWin();
 
 	// Draw buttons
-	DrawButtons();
+	RenderButtons();
 	HandleButtonClick();
 
 	// FOR DEBUGGING PURPOSES DELETE LATER

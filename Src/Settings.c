@@ -81,7 +81,7 @@ void SettingsUpdate(void){
 	// Settings header
 	RenderTexts();
 	RenderSliders();
-	DrawButtons();
+	RenderButtons();
 	HandleButtonClick();
 
 	HandleVolumeControl();

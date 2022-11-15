@@ -152,7 +152,7 @@ void GameOverUpdate(void) {
 	RenderAllText();
 
 	// Draw buttons
-	DrawButtons();
+	RenderButtons();
 	HandleButtonClick();
 
 	// FOR DEBUGGING PURPOSES DELETE LATER
