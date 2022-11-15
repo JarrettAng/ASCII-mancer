@@ -8,6 +8,7 @@
 #include "Hearts.h"
 #include "Win.h"
 #include "WaveSystem.h"
+#include <stdio.h>
 
 CP_Font main_font;
 Button backtomainmenuBtn;
