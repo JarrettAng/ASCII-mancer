@@ -28,7 +28,7 @@ Button* prevBtnHovered = NULL;
 #pragma region INITIALIZE
 
 /// <summary>
-/// Intialize button with the given data. Also store btn address in array so it manager can draw them all at once.
+/// Intialize button with the given data.
 /// </summary>
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack) {
 	btn->transform = transform;
@@ -42,7 +42,7 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 }
 
 /// <summary>
-/// Intialize text with the given data.Also store text address in array so it manager can draw them all at once.
+/// Intialize text with the given data.
 /// </summary>
 void InitializeText(Text* txt, Rect transform, TextData data){
 	txt->transform = transform;
@@ -52,6 +52,9 @@ void InitializeText(Text* txt, Rect transform, TextData data){
 	texts[textsCount++] = txt;
 }
 
+/// <summary>
+/// Intialize slider with the given data.
+/// </summary>
 void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, SliderKnob knobData){
 	slider->transform = transform;
 	slider->line = line;
@@ -65,7 +68,7 @@ void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, S
 #pragma region RENDERING
 
 /// <summary>
-/// Require button to be intialized before drawing.
+/// Require button to be intialized before rendering.
 /// </summary>
 void RenderButton(Button* btn){
 	// Draw rect
@@ -82,7 +85,7 @@ void RenderButton(Button* btn){
 }
 
 /// <summary>
-/// Draw all buttons cached in btns array.
+/// Render all buttons cached in btns array.
 /// </summary>
 void RenderButtons() {
 	for (int i = 0; i < btnsCount; ++i) {
@@ -103,7 +106,7 @@ void RenderButtons() {
 }
 
 /// <summary>
-/// Require text to be intialized before drawing.
+/// Require text to be intialized before rendering.
 /// </summary>
 void RenderText(Text* txt){
 	// Draw text
@@ -112,7 +115,7 @@ void RenderText(Text* txt){
 }
 
 /// <summary>
-/// Draw all texts cached in texts array.
+/// Render all texts cached in texts array.
 /// </summary>
 void RenderTexts(){
 	for (int i = 0; i < textsCount; ++i) {
@@ -122,6 +125,18 @@ void RenderTexts(){
 	}
 }
 
+/// <summary>
+/// Require slider to be intialized before rendering.
+/// </summary>
+void RenderSlider(Slider* slider){
+	CP_Image_Draw(slider->img, slider->transform.x, slider->transform.y, slider->transform.width, slider->transform.heigth, 255);
+	CP_Image_Draw(slider->knob.img, slider->knob.transform.x, slider->knob.transform.y, slider->knob.transform.width, slider->knob.transform.heigth, 255);
+}
+
+
+/// <summary>
+/// Render all sliders cached in slider array.
+/// </summary>
 void RenderSliders(Void){
 	for (int i = 0; i < sliderCount; ++i) {
 		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);

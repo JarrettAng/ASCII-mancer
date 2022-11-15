@@ -55,8 +55,8 @@ Timer buttonBlink = {
 
 #pragma region FORWARD_DECLARATIONS
 
-void InitializeButtons(void);
-void IntializeSelectPointer(void);
+void InitMenuButtons(void);
+void InitSelectPointer(void);
 void DrawSelectPointer(void);
 void HandleCarouselButton(void);
 void HandleMenuButtonClick(void);
@@ -73,8 +73,8 @@ void MainMenuInit(void) {
 	title = CP_Image_Load("Assets/MenuTitle.png");
 
 	// Populate buttons with positional, size and text values.
-	InitializeButtons();
-	IntializeSelectPointer();
+	InitMenuButtons();
+	InitSelectPointer();
 
 	PlayBGM(MAINMENU);
 }
@@ -95,11 +95,10 @@ void MainMenuExit(void) {
 	CP_Image_Free(&title);
 	CP_Image_Free(&selectPointer);
 	ClearInteractCache();
-	//KillSoundManager();
 	FreeUI();
 }
 
-void InitializeButtons(void) {
+void InitMenuButtons(void) {
 	// Starting position to draw the menu buttons.
 	// Drawn 11% from left.
 	// Drawn 50% from top.
@@ -182,7 +181,7 @@ void InitializeButtons(void) {
 	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData, ExitGame);
 }
 
-void IntializeSelectPointer(){
+void InitSelectPointer(){
 	unsigned char menuPointerData[] = {
 		MENU_RED_CODE,TRANSPERANT_CODE,
 		MENU_RED_CODE,MENU_RED_CODE,
