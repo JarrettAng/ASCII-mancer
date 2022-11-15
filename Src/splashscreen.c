@@ -17,9 +17,8 @@ void SplashScreenInit() {
 	// Intialize logo
 	logo = CP_Image_Load("Assets/DigiPen_RED.png");
 
-	//CP_System_Fullscreen();
-	CP_System_SetWindowSize(1920, 1080);
-	ToggleMuteALL();
+	CP_System_Fullscreen();
+	//CP_System_SetWindowSize(1920, 1080);
 
 	// Update the scale for the UI elements based on window size.
 	UpdateUIScale();

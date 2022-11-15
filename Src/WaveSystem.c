@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "WaveSystem.h"
 #include "Particles.h"
 #include "SoundManager.h"
@@ -35,7 +37,9 @@ void InitWaveSystem(){
 }
 //Generates the wave by deducting credits and adding enemies to the wave
 void GenerateWave(){
-	waveCredits = currentWave*2;								//magic number, will tweak
+	// Formula made in desmos
+	waveCredits = (int)(12.0f / (0.5f + powf(expf((float)-currentWave+10), 0.2f))); //magic number, will tweak
+
 	while(waveCredits > 0 && enemyThreshold <=10){				//Spawn as long as we have credits or lesser than 10 enemies to spawn
 		//Gets random enemy index for prefab from enemystats.c
 		//1 is Wall so do not spawn it
