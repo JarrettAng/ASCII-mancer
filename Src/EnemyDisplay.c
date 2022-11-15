@@ -33,6 +33,8 @@ float health_height;
 float health_width;
 float health_spacing; // The gap between each health bar
 
+CP_Image attack_icon;
+
 char text_buffer[4];
 
 /*______________________________________________________________
@@ -64,6 +66,9 @@ void EnemyDisplayInit(void) {
 	health_spacing = cell_size * 0.05f; // The gap between each health bar cell is 5% of cell width
 	health_offset.x = cell_size * 0.4f; // Offset places bar at top of cell
 	health_offset.y = cell_size * 0.4f;
+
+	// Load attack icon
+	attack_icon = CP_Image_Load("Assets/AttackIcon.png");
 }
 
 /*______________________________________________________________
@@ -103,12 +108,16 @@ void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, in
 
 	// Render wall damage if any
 	if (wall_damage > 0) {
-		CP_Settings_TextSize(text_size);
-		CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+		for (int index = 0; index < wall_damage; ++index) {
+			CP_Image_Draw(attack_icon, pos_x + display[DAMAGE].x - (health_spacing + text_size) * index, pos_y + display[DAMAGE].y, text_size, text_size, 255);
+		}
 
-		CP_Settings_Fill(HEALTH_RED);
-		sprintf_s(text_buffer, _countof(text_buffer), "%d", wall_damage);
-		CP_Font_DrawText(text_buffer, pos_x + display[DAMAGE].x, pos_y + display[DAMAGE].y);
+		//CP_Settings_TextSize(text_size);
+		//CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+
+		//CP_Settings_Fill(HEALTH_RED);
+		//sprintf_s(text_buffer, _countof(text_buffer), "%d", wall_damage);
+		//CP_Font_DrawText(text_buffer, pos_x + display[DAMAGE].x, pos_y + display[DAMAGE].y);
 	}
 }
 
@@ -181,4 +190,8 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 			anchor.x, anchor.y - (shade_length + shade_spacing) * index
 		);
 	}
+}
+
+void FreeEnemyDisplayIcon(void) {
+	CP_Image_Free(&attack_icon);
 }

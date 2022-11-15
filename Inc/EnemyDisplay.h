@@ -40,3 +40,5 @@ void EnemyDisplayInit(void);
 void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int max_health, int wall_damage);
 
 void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement);
+
+void FreeEnemyDisplayIcon(void);

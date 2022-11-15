@@ -34,6 +34,7 @@
 #define TETRIS_ICON_ATTACK_COLOR CP_Color_Create(227, 23, 23, 255)
 #define TETRIS_HOVER_COLOR CP_Color_Create(197, 197, 197, 130)
 #define TETRIS_HOVER_RED_COLOR CP_Color_Create(227, 23, 23, 130)
+#define TETRIS_HOVER_GREY_COLOR CP_Color_Create(157, 157, 157, 130)
 
 #define HEALTH_GREEN CP_Color_Create(66, 219, 127, 150)
 #define HEALTH_YELLOW CP_Color_Create(222, 206, 62, 150)
