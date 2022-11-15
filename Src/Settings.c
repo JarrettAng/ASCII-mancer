@@ -45,8 +45,6 @@ char* windowSizes[] = {
 static int currentWindowSize = 0;
 #pragma endregion
 
-
-
 #pragma region FORWARD_DECLARATIONS
 
 void InitSettingsTexts(void);

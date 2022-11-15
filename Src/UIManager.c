@@ -22,8 +22,9 @@ Slider* sliderHeld = NULL;
 Button* btnClicked = NULL;
 Button* btnHovered = NULL;
 Button* prevBtnHovered = NULL;
-
 #pragma endregion
+
+
 
 #pragma region INITIALIZE
 
@@ -182,15 +183,12 @@ Button* GetBtnClicked(){
 	return btnClicked;
 }
 
-
 /// <summary>
 /// Triggers button's callback when player click on it.
 /// </summary>
 void HandleButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
-		//Button* btnClicked = NULL;
-
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
 

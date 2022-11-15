@@ -6,6 +6,19 @@
 #define MAX_UI_SLIDERS 5
 #define MAX_UI_TEXT 20
 
+typedef struct Rect {
+	float x;
+	float y;
+	CP_Vector cachedPos;
+	float width;
+	float heigth;
+}Rect;
+
+typedef struct Line {
+	CP_Vector start;
+	CP_Vector end;
+}Line;
+
 typedef struct GraphicData {
 	CP_POSITION_MODE imagePosMode;
 	CP_IMAGE_FILTER_MODE imageFilterMode;
@@ -24,14 +37,6 @@ typedef struct TextData {
 	char* text;
 }TextData;
 
-typedef struct Rect {
-	float x;
-	float y;
-	CP_Vector cachedPos;
-	float width;
-	float heigth;
-}Rect;
-
 typedef struct Button {
 	Rect transform;
 	GraphicData graphicData;
@@ -43,11 +48,6 @@ typedef struct Text {
 	Rect transform;
 	TextData textData;
 }Text;
-
-typedef struct Line {
-	CP_Vector start;
-	CP_Vector end;
-}Line;
 
 typedef struct SliderKnob{
 	Rect transform;
