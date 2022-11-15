@@ -49,30 +49,33 @@ static int currentWindowSize = 0;
 
 #pragma region FORWARD_DECLARATIONS
 
-void InitializeTexts(void);
-void InitializeSliders(void);
-static void InitializeButtons(void);
-void UpdateMasterVolumeText(void);
-void UpdateSFXVolumeText(void);
-void InitializeVolume(void);
+void InitSettingsTexts(void);
+void InitSettingsSliders(void);
+void InitSettingsButtons(void);
+void InitVolume(void);
+
 void HandleVolumeControl(void);
+
 void UpdateVolumes(void);
 void UpdateKnobs(void);
+void UpdateMasterVolumeText(void);
+void UpdateSFXVolumeText(void);
+
+void HandleWindowSizeScroll(int dir);
+
+void UpdateWindowSize(void);
 void WindowSizeScrollUp(void);
 void WindowSizeScrollDown(void);
-void HandleWindowSizeScroll(int dir);
-void UpdateWindowSize(void);
 
 void LoadMainMenu(void);
-
 
 #pragma endregion
 
 void SettingsInit(void){
-	InitializeTexts();
-	InitializeSliders();
-	InitializeButtons();
-	InitializeVolume();
+	InitSettingsTexts();
+	InitSettingsSliders();
+	InitSettingsButtons();
+	InitVolume();
 }
 
 void SettingsUpdate(void){
@@ -92,7 +95,7 @@ void SettingsExit(void){
 	FreeUI();
 }
 
-void InitializeTexts(){
+void InitSettingsTexts(){
 	// Offfset between the volume texts.
 	float volumeOffset = GetWindowHeight() / 4;
 	// Offfset between the volume text and volume value text.
@@ -185,7 +188,7 @@ void InitializeTexts(){
 	/*==============================================================*/
 }
 
-void InitializeSliders(){
+void InitSettingsSliders(){
 	// Offset between each slider.
 	float sliderOffset = GetWindowHeight() / 10;
 	CP_Image sliderImg = CP_Image_Load("Assets/Slider.png");
@@ -237,7 +240,7 @@ void InitializeSliders(){
 	/*==============================================================*/
 }
 
-void InitializeButtons(){
+void InitSettingsButtons(){
 	GraphicData backBtnGraphicsData = {
 		.color = TRANSPERANT,
 		.strokeColor = TRANSPERANT,
@@ -290,7 +293,7 @@ void InitializeButtons(){
 	/*==============================================================*/
 }
 
-void InitializeVolume(){
+void InitVolume(){
 	// Update knob position based on initial volume group lerp factor.
 	UpdateKnobs();
 	// Update actual volume based on initial volume group lerp factor.

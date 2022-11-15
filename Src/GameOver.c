@@ -7,6 +7,7 @@
 #include "Hearts.h"
 #include "Win.h"
 #include "WaveSystem.h"
+#include <stdio.h>
 
 #define ENEMIES_KILLED 12
 #define TURNS_PASSED 7

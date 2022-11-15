@@ -73,6 +73,7 @@ void RenderButtons(void);
 void RenderText(Text* txt);
 void RenderTexts(void);
 
+void RenderSlider(Slider* slider);
 void RenderSliders(Void);
 
 void SetGraphicSetting(GraphicData data);
@@ -82,8 +83,10 @@ void HandleButtonClick(void);
 Button* GetButtonClick(void);
 
 Button* GetBtnClicked(void);
+
 Button* GetButtonHover(void);
 Button* GetPrevBtnHovered(void);
+
 Button* GetBtnHovered(void);
 Slider* GetSliderHeld(void);
 void ClearInteractCache(void);
