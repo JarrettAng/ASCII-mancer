@@ -28,6 +28,10 @@ int ypos = TOTAL_YGRID;
 int x_Index = 0;
 int y_Index = 0;
 
+// Exclamation mark settings
+float exclaim_elapsed_time;
+float exclaim_blink_speed = 0.35f;
+
 /// <TEST VARIABLE(RMB TO REMOVE WHEN DONE)>
 SpaceInfo space[TOTAL_XGRID][TOTAL_YGRID];
 CurrentGridPos grid_Info;
@@ -57,6 +61,8 @@ void grid_init(void) {
 	grid_PlayArea = grid_Bottom - grid_Top;
 	cube_Length = size;
 
+	// Initialize exclaimation mark time setting
+	exclaim_elapsed_time = 0.0f;
 
 	CP_Settings_StrokeWeight(1);
 	CreatePlayingSpace();
@@ -143,11 +149,34 @@ void DrawLineGrid()
 }
 
 void RenderGridCells(void) {
-	for (short x = 0; x < TOTAL_XGRID - 1; ++x) {
-		for (short y = 0; y < TOTAL_YGRID; ++y) {
+	// Zombie near warning timer
+	exclaim_elapsed_time += CP_System_GetDt();
+
+	for (short y = 0; y < TOTAL_YGRID; ++y) {
+		// Draw a exclamation mark on rows with enemies about to kill the player
+		if ((GetAliveEnemyFromGrid(0, y) && GetAliveEnemyFromGrid(0, y)->type != WALL) || // Check the 3 columns closest to the player for enemies
+			(GetAliveEnemyFromGrid(1, y) && GetAliveEnemyFromGrid(1, y)->type != WALL) ||
+			(GetAliveEnemyFromGrid(2, y) && GetAliveEnemyFromGrid(2, y)->type != WALL)) {
+
+			// If there any, draw a exclamation mark ! on the left end of the row
+			CP_Settings_Fill(MENU_RED);
+			CP_Settings_TextSize(cube_Length * 0.85f);
+			CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+
+			if (exclaim_elapsed_time > exclaim_blink_speed) {
+				CP_Font_DrawText("!", GridXToPosX(-1), GridYToPosY(y));
+
+				if (exclaim_elapsed_time > exclaim_blink_speed * 2) {
+					exclaim_elapsed_time = 0.0f;
+				}
+			}
+		}
+
+		for (short x = 0; x < TOTAL_XGRID - 1; ++x) {
+			CP_Settings_Fill(GRID_COLOR);
+
 			CP_Settings_Stroke(BLACK);
 			CP_Settings_StrokeWeight(cube_Length * 0.1f);
-			CP_Settings_Fill(GRID_COLOR);
 			CP_Settings_RectMode(CP_POSITION_CENTER);
 			CP_Graphics_DrawRect(GridXToPosX(x), GridYToPosY(y), cube_Length, cube_Length);
 			CP_Settings_RectMode(CP_POSITION_CORNER);

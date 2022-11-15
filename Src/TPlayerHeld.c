@@ -86,9 +86,9 @@ void TPlayerHeldInit(void) {
 	icon_pos.x = -GetCellSize() / 2.0f;
 	icon_pos.y = -GetCellSize() / 2.0f;
 
-	// The size of the icon is 35% of cell length
-	icon_size.x = GetCellSize() * 0.35f;
-	icon_size.y = GetCellSize() * 0.35f;
+	// The size of the icon is 60% of cell length
+	icon_size.x = GetCellSize() * 0.6f;
+	icon_size.y = GetCellSize() * 0.6f;
 
 	// Update the stroke to be 5% of the cell size
 	piece_stroke = GetCellSize() * 0.05f;
