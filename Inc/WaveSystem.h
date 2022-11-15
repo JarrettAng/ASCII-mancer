@@ -22,6 +22,7 @@ int GetEnemiesKilled(void);
 int GetCurrentWave(void);
 void SpawnEnemy(EnemyInfo* enemy);
 void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy);
+BOOL IsAllEnemiesDead(void);
 // EnemyInfo* GetCell(int x, int y);
 void RenderEnemy(void);
 EnemyInfo* GetEnemyFromGrid(int x, int y);
