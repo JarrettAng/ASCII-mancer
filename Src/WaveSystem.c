@@ -4,6 +4,7 @@
 #include "Particles.h"
 #include "SoundManager.h"
 #include "GameLoop.h"
+#include "Win.h"
 int currentWave=1;			
 int enemyThreshold = 10;			//Set to a ratio of the current wave credits (used later)
 
@@ -231,6 +232,15 @@ void SpawnTombEnemies(void){
 	}
 }
 
+BOOL IsAllEnemiesDead(){
+	int count = 0;
+	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
+		if(WaveObjects[i].is_Alive && WaveObjects[i].Cost >0){
+			count++;
+		}
+	}
+	return (count ==0) ? TRUE:FALSE;
+}
 
 
 //Returns address of live enemy in the grid
@@ -298,6 +308,7 @@ void ZombieDealDamage(int x, int y,int damage){
 
 void NextWave()
 {
+	if(currentWave >= WAVES_TO_WIN) return;
 	//reset array for enemies to spawn
 	memset(EnemiesToSpawn,0,sizeof(EnemyInfo)*MAXENEMYCOUNT);
 	waveIndex = 0;
