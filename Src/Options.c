@@ -79,12 +79,11 @@ void OptionsInit(void){
 void OptionsUpdate(void){
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
-	// Settings header
 	RenderTexts();
 	RenderSliders();
 	RenderButtons();
-	HandleButtonClick();
 
+	HandleButtonClick();
 	HandleVolumeControl();
 }
 
@@ -239,6 +238,7 @@ void InitSettingsSliders(){
 }
 
 void InitSettingsButtons(){
+	/*========================Back Button===========================*/
 	GraphicData backBtnGraphicsData = {
 		.color = TRANSPERANT,
 		.strokeColor = TRANSPERANT,
@@ -255,7 +255,6 @@ void InitSettingsButtons(){
 		.text = "BACK"
 	};
 
-	/*========================Back Button===========================*/
 	Rect backBtnRect = {
 		.x = GetWindowWidth() / 2,
 		.y = GetWindowHeight() - GetWindowHeight() / 8,
@@ -265,6 +264,7 @@ void InitSettingsButtons(){
 	InitializeButton(&backBtn, backBtnRect, backBtnGraphicsData, backBtnTextData, LoadMainMenu);
 	/*==============================================================*/
 
+	/*=================Window Size Button===========================*/
 	CP_Image windowSizeUpBtn = CP_Image_Load("Assets/WindowSizeUpBtn.png");
 	CP_Image windowSizeDownBtn = CP_Image_Load("Assets/WindowSizeDownBtn.png");
 	float windowSizeBtnOffet = (float)GetWindowHeight() / 4;
@@ -281,7 +281,6 @@ void InitSettingsButtons(){
 	};
 
 	TextData windowSizeBtnTextData = { .text = NULL };
-	/*=================Window Size Button===========================*/
 	windowSizeBtnGraphicData.img = windowSizeUpBtn;
 	InitializeButton(&upBtn, windowSizeRect, windowSizeBtnGraphicData, windowSizeBtnTextData, WindowSizeScrollUp);
 
