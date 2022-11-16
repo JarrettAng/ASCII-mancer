@@ -43,8 +43,18 @@ CP_Image attack_icon;
 
 char text_buffer[4];
 
+// Zombie types description array
+E_DisplayInfo zombie_info[ZOMBIE_TYPE_LENGTH];
+
+float hover_info_display_time = 1.0f;
+float hover_elapsed_time;
+EnemyInfo *hovered_zombie;
+int last_hover_x, last_hover_y;
+E_DisplayText info_text;
+
 #pragma region
-void EnemyBlinkTimeIncrement(void);
+void EnemyDisplayTimeIncrement(void);
+void ResetDisplayEnemyInfoTime(void);
 #pragma endregion Forward Declarations
 
 /*______________________________________________________________
@@ -84,10 +94,47 @@ void EnemyDisplayInit(void) {
 	move_draw = FALSE;
 
 	// Subscribe the enemy movement flicker time incrementation to player update
-	SubscribeEvent(PLAYER_UPDATE, EnemyBlinkTimeIncrement, 0);
+	SubscribeEvent(PLAYER_UPDATE, EnemyDisplayTimeIncrement, 0);
+
+	//______________________________________________________________
+	// Initialize zombie info descriptions
+	hover_elapsed_time = 0.0f;
+	last_hover_x = last_hover_y = 0;
+	hovered_zombie = NULL;
+	SubscribeEvent(PLAYER_END, ResetDisplayEnemyInfoTime, 0);
+
+	zombie_info[WALL].type = GetEnemyPrefab(0); // 0 is wall
+	zombie_info[WALL].description = "Blocks zombie movement... until it gets destroyed.";
+	zombie_info[WALL].char_count = 50;
+
+	zombie_info[ZOMBIE].type = GetEnemyPrefab(1); // 1 is zombie
+	zombie_info[ZOMBIE].description = "Average zombie, strength in numbers.";
+	zombie_info[ZOMBIE].char_count = 36;
+
+	zombie_info[LEAPER].type = GetEnemyPrefab(2); // 2 is leaper
+	zombie_info[LEAPER].description = "Leaper zombie, but has weak attack against walls.";
+	zombie_info[LEAPER].char_count = 49;
+
+	zombie_info[TANK].type = GetEnemyPrefab(3); // 3 is tank
+	zombie_info[TANK].description = "Tank zombie. Can take a lot of hits before dying.";
+	zombie_info[TANK].char_count = 49;
+
+	zombie_info[BREAKER].type = GetEnemyPrefab(4); // 4 is breaker
+	zombie_info[BREAKER].description = "Breacher zombie, Destroys walls like paper mache.";
+	zombie_info[BREAKER].char_count = 49;
+
+	zombie_info[GRAVE].type = GetEnemyPrefab(5); // 5 is grave
+	zombie_info[GRAVE].description = "Grave. A wildcard. Can spawn any zombie next turn.";
+	zombie_info[GRAVE].char_count = 50;
+
+	// Display zombie info text box
+	info_text.offset = CP_Vector_Set(cell_size / 2.0f, cell_size / 1.5f);
+	info_text.size = CP_System_GetWindowHeight() / 60.0f;
+	info_text.stroke = CP_System_GetWindowHeight() / 240.0f;
 }
 
-void EnemyBlinkTimeIncrement(void) {
+void EnemyDisplayTimeIncrement(void) {
+	// Update zombie move indicator flicker
 	move_elapsed_time += CP_System_GetDt();
 
 	if (move_elapsed_time > move_blink_speed) {
@@ -97,6 +144,30 @@ void EnemyBlinkTimeIncrement(void) {
 			move_draw = FALSE;
 			move_elapsed_time = 0.0f;
 		}
+	}
+
+	// Update zombie information hover
+	if (!IsIndexInPlayingArea(0, PosYToGridY(CP_Input_GetMouseY()))) {
+		hovered_zombie = NULL;
+		return;
+	}
+
+	if (last_hover_x == PosXToGridX(CP_Input_GetMouseX()) && last_hover_y == PosYToGridY(CP_Input_GetMouseY())) {
+		hover_elapsed_time += CP_System_GetDt();
+
+		if (hover_elapsed_time > hover_info_display_time) {
+			if (!hovered_zombie) {
+				if (hovered_zombie = GetAliveEnemyFromGrid(last_hover_x, last_hover_y)) {
+					info_text.zombie_index = hovered_zombie->type;
+				}
+			}
+		}
+	}
+	else {
+		ResetDisplayEnemyInfoTime();
+		last_hover_x = PosXToGridX(CP_Input_GetMouseX());
+		last_hover_y = PosYToGridY(CP_Input_GetMouseY());
+		hovered_zombie = NULL;
 	}
 }
 
@@ -223,4 +294,32 @@ void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement)
 
 void FreeEnemyDisplayIcon(void) {
 	CP_Image_Free(&attack_icon);
+}
+
+void DisplayEnemyInfo(void) {
+	if (!hovered_zombie) return;
+
+	// Text box
+	CP_Settings_RectMode(CP_POSITION_CENTER);
+	CP_Settings_Fill(BLACK);
+	CP_Settings_Stroke(TUTORIAL_COLOR);
+	CP_Settings_StrokeWeight(info_text.stroke);
+	CP_Graphics_DrawRect(CP_Input_GetMouseX() + info_text.offset.x, CP_Input_GetMouseY() + info_text.offset.y, info_text.size * (zombie_info[info_text.zombie_index].char_count + 2), info_text.size * 4);
+
+	// Text
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+	CP_Settings_TextSize(info_text.size);
+	CP_Settings_Fill(TUTORIAL_COLOR);
+
+	// Enemy stats
+	char text_buffer[28];
+	sprintf_s(text_buffer, _countof(text_buffer), "HP:%d/%d WALL_ATK:%d SPD:%d", hovered_zombie->Health, hovered_zombie->MaxHealth, hovered_zombie->damage, hovered_zombie->MovementSpeed);
+	CP_Font_DrawText(text_buffer, CP_Input_GetMouseX() + info_text.offset.x, CP_Input_GetMouseY() + info_text.offset.y - info_text.size / 1.2f);
+
+	// Enemy description
+	CP_Font_DrawText(zombie_info[info_text.zombie_index].description, CP_Input_GetMouseX() + info_text.offset.x, CP_Input_GetMouseY() + info_text.offset.y + info_text.size / 1.2f);
+}
+
+void ResetDisplayEnemyInfoTime(void) {
+	hover_elapsed_time = 0.0f;
 }

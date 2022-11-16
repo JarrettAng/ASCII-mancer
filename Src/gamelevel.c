@@ -56,17 +56,21 @@ void gameLevelUpdate(void){
 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()),GetEnemyPrefab(1));
 	}
 
+	RenderEnemy();
+
 	// Call the functions subscribed to the update events
 	GameLoopUpdate();
 
-	//]UpdateWave();
-	RenderEnemy();
+	//UpdateWave();
 	// UPDATE VFX
 	UpdateEffects();
 	RenderHand();
 	ShowCurrentWave();
 	//ShowTestEnemiesKilled();
 	
+	// Show enemy info on hover
+	DisplayEnemyInfo();
+
 	// UPDATE WIZARD
 	UpdateWizard();
 	// UPDATE HEARTS

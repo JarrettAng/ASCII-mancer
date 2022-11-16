@@ -9,7 +9,8 @@ typedef enum ZombieType{
     TANK,
     BREAKER,
     GRAVE,
-	WALL
+	WALL,
+	ZOMBIE_TYPE_LENGTH
 }ZombieType;
 typedef struct EnemyInfo
 {

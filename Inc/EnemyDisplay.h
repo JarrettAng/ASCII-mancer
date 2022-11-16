@@ -9,6 +9,8 @@ ________________________________________________________________________________
 
 #include "CProcessing.h"
 
+#include "EnemyStats.h" // For enemy type enum
+
 typedef enum {
 	TOP_RIGHT,
 	BOTTOM_RIGHT,
@@ -23,6 +25,19 @@ typedef enum {
 	HEALTH = TOP_RIGHT,
 	DAMAGE = BOTTOM_RIGHT
 } E_DisplayType;
+
+typedef struct {
+	EnemyInfo *type;
+	char *description;
+	int char_count;
+} E_DisplayInfo;
+
+typedef struct {
+	CP_Vector offset;
+	float size;
+	float stroke;
+	ZombieType zombie_index;
+} E_DisplayText;
 
 /*______________________________________________________________
 @brief Calculates the offset for the corner displays based on the grid cell size
@@ -42,3 +57,5 @@ void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, in
 void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement);
 
 void FreeEnemyDisplayIcon(void);
+
+void DisplayEnemyInfo(void);

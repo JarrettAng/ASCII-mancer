@@ -14,6 +14,9 @@ ________________________________________________________________________________
 #include "GameLoop.h"
 
 static float tut_time_elapsed;
+_Bool timer_paused;
+static float pause_time_elapsed;
+float pause_blink_speed = 0.5f;
 float box_stroke, arrow_head;
 
 /*______________________________________________________________
@@ -22,22 +25,26 @@ float box_stroke, arrow_head;
 float time_skip_tut_start = 0.0f;
 float time_p_intro_start = 1.75f;
 float time_z_intro_start = 4.0f;
-float time_section_1_end = 7.5f;
+float time_hover_intro_start = 7.25f;
+float time_section_1_wait = 12.0f;
+float time_section_1_end = 12.5f;
 
-float time_piece_start = 8.0f;
-float time_attack_start = 11.5f;
-float time_defend_start = 15.0f;
-float time_section_2_end = 17.5f;
+float time_piece_start = 13.0f;
+float time_attack_start = 15.5f;
+float time_defend_start = 18.0f;
+float time_section_2_wait = 20.0f;
+float time_section_2_end = 20.5f;
 
-float time_queue_start = 18.0f;
-float time_drag_start = 21.5f;
-float time_rotate_start = 24.0f;
-float time_tut_end_start = 27.0f;
+float time_queue_start = 21.0f;
+float time_drag_start = 24.5f;
+float time_rotate_start = 27.0f;
+float time_tut_end_start = 30.0f;
 
 // Tutorial Texts
 TutText text_skip_tut;
 TutText text_p_intro;
 TutText text_z_intro;
+TutText text_hover_intro;
 TutText text_piece_intro;
 TutText text_defend_intro;
 TutText text_attack_intro;
@@ -45,6 +52,7 @@ TutText text_queue_intro;
 TutText text_drag_intro;
 TutText text_rotate_intro;
 TutText text_end_intro;
+TutText text_continue;
 
 // Tutorial Arrows
 TutArrow arrow_p_intro;
@@ -77,6 +85,17 @@ void TutorialInit(void) {
 	float arrow_size = height / 80.0f;
 	box_stroke = arrow_size / 3.0f;
 	arrow_head = arrow_size * 1.5f;
+
+	//______________________________________________________________
+	// Click to continue text
+	// Above center of screen
+	spawn_pos.x = width / 2.0f;
+	spawn_pos.y = height / 3.0f;
+	box_bounds.x = spawn_pos.x;
+	box_bounds.y = spawn_pos.y;
+	box_size.x = text_size * 35.0f;
+	box_size.y = text_size * 2.8f;
+	text_continue = TutTextCreate("Click anywhere to continue...", spawn_pos, MENU_RED, text_size, box_bounds, box_size);
 
 	//______________________________________________________________
 	// Skip tutorial text
@@ -112,9 +131,8 @@ void TutorialInit(void) {
 	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 0.9f), PosYToGridY(spawn_pos.y), GetEnemyPrefab(1));
 	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 0.9f), PosYToGridY(spawn_pos.y * 0.8f), GetEnemyPrefab(1));
 
-	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 1.4f), PosYToGridY(spawn_pos.y * 0.8f), GetEnemyPrefab(1));
-	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 1.3f), PosYToGridY(spawn_pos.y * 0.8f), GetEnemyPrefab(1));
-	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 1.2f), PosYToGridY(spawn_pos.y * 0.8f), GetEnemyPrefab(1));
+	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 1.4f), PosYToGridY(spawn_pos.y * 0.8f), GetEnemyPrefab(2));
+	SpawnEnemyInCell(PosXToGridX(spawn_pos.x * 1.3f), PosYToGridY(spawn_pos.y * 0.8f), GetEnemyPrefab(2));
 
 	//______________________________________________________________
 	// Zombie introduction text
@@ -131,6 +149,17 @@ void TutorialInit(void) {
 	end_pos.x = width / 2.15f;
 	end_pos.y = height / 1.85f;
 	arrow_z_intro = TutArrowCreate(spawn_pos, end_pos, TUTORIAL_COLOR, arrow_size);
+
+	//______________________________________________________________
+	// Hover introduction text
+	// Slightly below the zombie introduction text
+	spawn_pos.x = width / 2.0f;
+	spawn_pos.y = height / 1.4f;
+	box_bounds.x = spawn_pos.x;
+	box_bounds.y = spawn_pos.y;
+	box_size.x = text_size * 52.0f;
+	box_size.y = text_size * 2.8f;
+	text_hover_intro = TutTextCreate("You can hover over zombies for more info anytime.", spawn_pos, TUTORIAL_COLOR, text_size, box_bounds, box_size);
 
 	//______________________________________________________________
 	// Tetris piece introduction text
@@ -221,6 +250,8 @@ void TutorialInit(void) {
 	text_end_intro = TutTextCreate("Tutorial ends here, drag a piece!", spawn_pos, TUTORIAL_COLOR, text_size, box_bounds, box_size);
 
 	tut_time_elapsed = 0.0f;
+	timer_paused = FALSE;
+	pause_time_elapsed = 0.0f;
 }
 
 /*______________________________________________________________
@@ -228,62 +259,102 @@ void TutorialInit(void) {
 */
 void TutorialUpdate(void) {
 	if (time_section_1_end > tut_time_elapsed) {
-		if (time_skip_tut_start < tut_time_elapsed) {
-			DrawTextBox(text_skip_tut.box_bounds.x, text_skip_tut.box_bounds.y, text_skip_tut.box_size.x, text_skip_tut.box_size.y);
+		if (time_skip_tut_start < tut_time_elapsed && tut_time_elapsed < time_section_1_wait) {
+			DrawTextBox(text_skip_tut.box_bounds.x, text_skip_tut.box_bounds.y, text_skip_tut.box_size.x, text_skip_tut.box_size.y, text_skip_tut.color);
 			DrawTextCentre(text_skip_tut.text, text_skip_tut.pos.x, text_skip_tut.pos.y, text_skip_tut.color, text_skip_tut.size);
 		}
 
 		if (time_p_intro_start < tut_time_elapsed) {
-			DrawTextBox(text_p_intro.box_bounds.x, text_p_intro.box_bounds.y, text_p_intro.box_size.x, text_p_intro.box_size.y);
+			DrawTextBox(text_p_intro.box_bounds.x, text_p_intro.box_bounds.y, text_p_intro.box_size.x, text_p_intro.box_size.y, text_p_intro.color);
 			DrawTextCentre(text_p_intro.text, text_p_intro.pos.x, text_p_intro.pos.y, text_p_intro.color, text_p_intro.size);
 			DrawArrow(arrow_p_intro.pos_start.x, arrow_p_intro.pos_start.y, arrow_p_intro.pos_end.x, arrow_p_intro.pos_end.y, arrow_p_intro.color, arrow_p_intro.thickness);
 		}
 
 		if (time_z_intro_start < tut_time_elapsed) {
-			DrawTextBox(text_z_intro.box_bounds.x, text_z_intro.box_bounds.y, text_z_intro.box_size.x, text_z_intro.box_size.y);
+			DrawTextBox(text_z_intro.box_bounds.x, text_z_intro.box_bounds.y, text_z_intro.box_size.x, text_z_intro.box_size.y, text_z_intro.color);
 			DrawTextCentre(text_z_intro.text, text_z_intro.pos.x, text_z_intro.pos.y, text_z_intro.color, text_z_intro.size);
 			DrawArrow(arrow_z_intro.pos_start.x, arrow_z_intro.pos_start.y, arrow_z_intro.pos_end.x, arrow_z_intro.pos_end.y, arrow_z_intro.color, arrow_z_intro.thickness);
+		}
+
+		if (time_hover_intro_start < tut_time_elapsed) {
+			DrawTextBox(text_hover_intro.box_bounds.x, text_hover_intro.box_bounds.y, text_hover_intro.box_size.x, text_hover_intro.box_size.y, text_hover_intro.color);
+			DrawTextCentre(text_hover_intro.text, text_hover_intro.pos.x, text_hover_intro.pos.y, text_hover_intro.color, text_hover_intro.size);
+		}
+
+		if (time_section_1_wait < tut_time_elapsed) {
+			timer_paused = TRUE;
 		}
 	}
 	else if (time_section_2_end > tut_time_elapsed) {
 		if (time_piece_start < tut_time_elapsed) {
-			DrawTextBox(text_piece_intro.box_bounds.x, text_piece_intro.box_bounds.y, text_piece_intro.box_size.x, text_piece_intro.box_size.y);
+			DrawTextBox(text_piece_intro.box_bounds.x, text_piece_intro.box_bounds.y, text_piece_intro.box_size.x, text_piece_intro.box_size.y, text_piece_intro.color);
 			DrawTextCentre(text_piece_intro.text, text_piece_intro.pos.x, text_piece_intro.pos.y, text_piece_intro.color, text_piece_intro.size);
 		}
 
 		if (time_attack_start < tut_time_elapsed) {
-			DrawTextBox(text_attack_intro.box_bounds.x, text_attack_intro.box_bounds.y, text_attack_intro.box_size.x, text_attack_intro.box_size.y);
+			DrawTextBox(text_attack_intro.box_bounds.x, text_attack_intro.box_bounds.y, text_attack_intro.box_size.x, text_attack_intro.box_size.y, text_attack_intro.color);
 			DrawTextCentre(text_attack_intro.text, text_attack_intro.pos.x, text_attack_intro.pos.y, text_attack_intro.color, text_attack_intro.size);
 			DrawArrow(arrow_attack_intro.pos_start.x, arrow_attack_intro.pos_start.y, arrow_attack_intro.pos_end.x, arrow_attack_intro.pos_end.y, arrow_attack_intro.color, arrow_attack_intro.thickness);
 		}
 
 		if (time_defend_start < tut_time_elapsed) {
-			DrawTextBox(text_defend_intro.box_bounds.x, text_defend_intro.box_bounds.y, text_defend_intro.box_size.x, text_defend_intro.box_size.y);
+			DrawTextBox(text_defend_intro.box_bounds.x, text_defend_intro.box_bounds.y, text_defend_intro.box_size.x, text_defend_intro.box_size.y, text_defend_intro.color);
 			DrawTextCentre(text_defend_intro.text, text_defend_intro.pos.x, text_defend_intro.pos.y, text_defend_intro.color, text_defend_intro.size);
 			DrawArrow(arrow_defend_intro.pos_start.x, arrow_defend_intro.pos_start.y, arrow_defend_intro.pos_end.x, arrow_defend_intro.pos_end.y, arrow_defend_intro.color, arrow_defend_intro.thickness);
+		}
+
+		if (time_section_2_wait < tut_time_elapsed) {
+			timer_paused = TRUE;
 		}
 	}
 	else {
 		if (time_queue_start < tut_time_elapsed) {
-			DrawTextBox(text_queue_intro.box_bounds.x, text_queue_intro.box_bounds.y, text_queue_intro.box_size.x, text_queue_intro.box_size.y);
+			DrawTextBox(text_queue_intro.box_bounds.x, text_queue_intro.box_bounds.y, text_queue_intro.box_size.x, text_queue_intro.box_size.y, text_queue_intro.color);
 			DrawTextCentre(text_queue_intro.text, text_queue_intro.pos.x, text_queue_intro.pos.y, text_queue_intro.color, text_queue_intro.size);
 		}
 		if (time_drag_start < tut_time_elapsed) {
-			DrawTextBox(text_drag_intro.box_bounds.x, text_drag_intro.box_bounds.y, text_drag_intro.box_size.x, text_drag_intro.box_size.y);
+			DrawTextBox(text_drag_intro.box_bounds.x, text_drag_intro.box_bounds.y, text_drag_intro.box_size.x, text_drag_intro.box_size.y, text_drag_intro.color);
 			DrawTextCentre(text_drag_intro.text, text_drag_intro.pos.x, text_drag_intro.pos.y, text_drag_intro.color, text_drag_intro.size);
 			DrawArrow(arrow_drag_intro.pos_start.x, arrow_drag_intro.pos_start.y, arrow_drag_intro.pos_end.x, arrow_drag_intro.pos_end.y, arrow_drag_intro.color, arrow_drag_intro.thickness);
 		}
 		if (time_rotate_start < tut_time_elapsed) {
-			DrawTextBox(text_rotate_intro.box_bounds.x, text_rotate_intro.box_bounds.y, text_rotate_intro.box_size.x, text_rotate_intro.box_size.y);
+			DrawTextBox(text_rotate_intro.box_bounds.x, text_rotate_intro.box_bounds.y, text_rotate_intro.box_size.x, text_rotate_intro.box_size.y, text_rotate_intro.color);
 			DrawTextCentre(text_rotate_intro.text, text_rotate_intro.pos.x, text_rotate_intro.pos.y, text_rotate_intro.color, text_rotate_intro.size);
 		}
 		if (time_tut_end_start <  tut_time_elapsed) {
-			DrawTextBox(text_end_intro.box_bounds.x, text_end_intro.box_bounds.y, text_end_intro.box_size.x, text_end_intro.box_size.y);
+			DrawTextBox(text_end_intro.box_bounds.x, text_end_intro.box_bounds.y, text_end_intro.box_size.x, text_end_intro.box_size.y, text_end_intro.color);
 			DrawTextCentre(text_end_intro.text, text_end_intro.pos.x, text_end_intro.pos.y, text_end_intro.color, text_end_intro.size);
 		}
 	}
 
-	tut_time_elapsed += CP_System_GetDt();
+	if (timer_paused) {
+		DrawTextBox(text_continue.box_bounds.x, text_continue.box_bounds.y, text_continue.box_size.x, text_continue.box_size.y, text_continue.color);
+
+		// Blink the click to continue text
+		pause_time_elapsed += CP_System_GetDt();
+		if (pause_time_elapsed > pause_blink_speed) {
+			DrawTextCentre(text_continue.text, text_continue.pos.x, text_continue.pos.y, text_continue.color, text_continue.size);
+
+			if (pause_time_elapsed > pause_blink_speed * 2) {
+				pause_time_elapsed = 0.0f;
+			}
+		}
+
+		// If click, continue
+		if (CP_Input_MouseTriggered(MOUSE_BUTTON_1)) {
+			timer_paused = FALSE;
+
+			if (tut_time_elapsed < time_section_1_end) {
+				tut_time_elapsed = time_section_1_end;
+			}
+			else {
+				tut_time_elapsed = time_section_2_end;
+			}
+		}
+	}
+	else {
+		tut_time_elapsed += CP_System_GetDt();
+	}
 }
 
 void TutorialExit(void) {
@@ -341,10 +412,10 @@ void DrawTextCentre(char* text, float pos_x, float pos_y, CP_Color color, float 
 	DrawTextFull(text, pos_x, pos_y, color, CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE, size);
 }
 
-void DrawTextBox(float pos_x, float pos_y, float size_x, float size_y) {
+void DrawTextBox(float pos_x, float pos_y, float size_x, float size_y, CP_Color color) {
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Fill(BLACK);
-	CP_Settings_Stroke(TUTORIAL_COLOR);
+	CP_Settings_Stroke(color);
 	CP_Settings_StrokeWeight(box_stroke);
 	CP_Graphics_DrawRect(pos_x, pos_y, size_x, size_y);
 }

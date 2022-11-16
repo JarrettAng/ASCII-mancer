@@ -11,7 +11,7 @@
 
 
 #define ZOMBIE 1,1,1,2,"Z",ZOMBIE
-#define LEAPER 5,2,1,1,"L",LEAPER
+#define LEAPER 5,3,1,1,"L",LEAPER
 #define TANK 10,1,3,2,"T",TANK
 #define WALLBREAKER 15,1,2,3,"B",BREAKER
 #define GRAVE 18,0,1,0,"G",GRAVE
