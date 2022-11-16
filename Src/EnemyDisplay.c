@@ -12,6 +12,7 @@ ________________________________________________________________________________
 #include "WaveSystem.h" // For alive enemy check
 #include "ColorTable.h"
 
+#include "GameLoop.h" // For player update
 #include "EnemyDisplay.h"
 
 // Numbers to display in the four corners of the cell
@@ -33,9 +34,18 @@ float health_height;
 float health_width;
 float health_spacing; // The gap between each health bar
 
+// Movement settings
+float move_elapsed_time;
+float move_blink_speed = 0.5f;
+_Bool move_draw;
+
 CP_Image attack_icon;
 
 char text_buffer[4];
+
+#pragma region
+void EnemyBlinkTimeIncrement(void);
+#pragma endregion Forward Declarations
 
 /*______________________________________________________________
 @brief Called by Gamelevel during its initialization, this function will load
@@ -69,6 +79,25 @@ void EnemyDisplayInit(void) {
 
 	// Load attack icon
 	attack_icon = CP_Image_Load("Assets/AttackIcon.png");
+
+	move_elapsed_time = 0.0f;
+	move_draw = FALSE;
+
+	// Subscribe the enemy movement flicker time incrementation to player update
+	SubscribeEvent(PLAYER_UPDATE, EnemyBlinkTimeIncrement, 0);
+}
+
+void EnemyBlinkTimeIncrement(void) {
+	move_elapsed_time += CP_System_GetDt();
+
+	if (move_elapsed_time > move_blink_speed) {
+		move_draw = TRUE;
+
+		if (move_elapsed_time > move_blink_speed * 2) {
+			move_draw = FALSE;
+			move_elapsed_time = 0.0f;
+		}
+	}
 }
 
 /*______________________________________________________________
@@ -125,7 +154,7 @@ void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, in
 @brief 
 */
 void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement) {
-	if (!movement) return;
+	if (!movement || !move_draw) return;
 
 	CP_Settings_Fill(ENEMY_MOVEMENT);
 

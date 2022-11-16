@@ -10,12 +10,12 @@
 #include "SoundManager.h"
 
 
-#define ZOMBIE 1,1,1,1,"Z",ZOMBIE
+#define ZOMBIE 1,1,1,2,"Z",ZOMBIE
 #define LEAPER 5,2,1,1,"L",LEAPER
-#define TANK 10,1,3,1,"T",TANK
-#define WALLBREAKER 15,1,2,2,"B",BREAKER
+#define TANK 10,1,3,2,"T",TANK
+#define WALLBREAKER 15,1,2,3,"B",BREAKER
 #define GRAVE 18,0,1,0,"G",GRAVE
-#define WALL 0,0,2,0,"|x|",WALL
+#define WALL 0,0,3,0,"|x|",WALL
 //Gonna use their char sprite value to indicate type of enemy
 //Not gonna use externs for this case because it gets messy
 EnemyInfo Enemy[ENEMYPOOL];
