@@ -50,7 +50,7 @@
     <ClCompile Include="Src\MainMenu.c" />
     <ClCompile Include="Src\Particles.c" />
     <ClCompile Include="Src\Screenshake.c" />
-    <ClCompile Include="Src\Settings.c" />
+    <ClCompile Include="Src\Options.c" />
     <ClCompile Include="Src\SoundManager.c" />
     <ClCompile Include="Src\Splashscreen.c" />
     <ClCompile Include="Src\TManager.c" />

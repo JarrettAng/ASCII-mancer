@@ -69,14 +69,14 @@ void LoadMainMenu(void);
 
 #pragma endregion
 
-void SettingsInit(void){
+void OptionsInit(void){
 	InitSettingsTexts();
 	InitSettingsSliders();
 	InitSettingsButtons();
 	InitVolume();
 }
 
-void SettingsUpdate(void){
+void OptionsUpdate(void){
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
 	// Settings header
@@ -88,7 +88,7 @@ void SettingsUpdate(void){
 	HandleVolumeControl();
 }
 
-void SettingsExit(void){
+void OptionsExit(void){
 	ClearInteractCache();
 	FreeUI();
 }
@@ -363,7 +363,7 @@ void UpdateWindowSize(){
 		break;
 	}
 	UpdateUIScale();
-	CP_Engine_SetNextGameStateForced(SettingsInit, SettingsUpdate, SettingsExit);
+	CP_Engine_SetNextGameStateForced(OptionsInit, OptionsUpdate, OptionsExit);
 }
 
 void UpdateVolumes(){

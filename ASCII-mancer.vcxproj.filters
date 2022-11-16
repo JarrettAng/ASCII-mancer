@@ -140,7 +140,7 @@
     <ClCompile Include="Src\Credits.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Settings.c">
+    <ClCompile Include="Src\Options.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Utils.c">

@@ -63,7 +63,7 @@ void HandleMenuButtonClick(void);
 void HandleTransition(Button* btn);
 
 void LoadGameScene(void);
-void LoadSettingsScene(void);
+void LoadOptionsScene(void);
 void LoadCreditsScene(void);
 void ExitGame(void);
 
@@ -149,10 +149,10 @@ void InitMenuButtons(void) {
 	.width = 700 * GetWidthScale(),
 	};
 
-	textData.text = "SETTINGS";
+	textData.text = "OPTIONS";
 	// Intialize button in UI manager.
 	// OnClick: Settings screen.
-	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, LoadSettingsScene);
+	InitializeButton(&settingBtn, settingsBtnRect, graphicData, textData, LoadOptionsScene);
 
 	/*========================Credits Button============================*/
 	Rect creditsBtnRect = {
@@ -175,7 +175,7 @@ void InitMenuButtons(void) {
 	.width = 300 * GetWidthScale(),
 	};
 
-	textData.text = "EXIT";
+	textData.text = "QUIT";
 	// Intialize button in UI manager.
 	// OnClick: Exit game.
 	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData, ExitGame);
@@ -283,8 +283,8 @@ void LoadGameScene(void){
 	CP_Engine_SetNextGameState(gameLevelInit, gameLevelUpdate, gameLevelExit);
 }
 
-void LoadSettingsScene(void){
-	CP_Engine_SetNextGameState(SettingsInit, SettingsUpdate, SettingsExit);
+void LoadOptionsScene(void){
+	CP_Engine_SetNextGameState(OptionsInit, OptionsUpdate, OptionsExit);
 }
 
 void LoadCreditsScene(void){

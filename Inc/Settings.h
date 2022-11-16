@@ -1,3 +1,3 @@
-void SettingsInit(void);
-void SettingsUpdate(void);
-void SettingsExit(void);
+void OptionsInit(void);
+void OptionsUpdate(void);
+void OptionsExit(void);
