@@ -6,10 +6,12 @@
 		  structs to hold information to render different stats and 5 functions,
 
 		  EnemyDisplayInit - Calculates the offset for the corner displays based on the grid cell size
+
 		  RenderEnemyDisplay - Renders the enemy stats in the cell it is in (health & wall damage)
 		  RenderEnemyMovement - Renders the enemy movement arrows and shades destination cell
-		  FreeEnemyDisplayIcon - Frees the attack icons used for enemy attack stat displaying
 		  DisplayEnemyInfo - Renders the floating information box on enemy hover
+
+		  FreeEnemyDisplayIcon - Frees the attack icons used for enemy attack stat displaying
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -71,11 +73,11 @@ void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, in
 void RenderEnemyMovement(float pos_x, float pos_y, int movement);
 
 /*______________________________________________________________
-@brief Frees the attack icons used for enemy attack stat displaying
-*/
-void FreeEnemyDisplayIcon(void);
-
-/*______________________________________________________________
 @brief Renders the floating information box on enemy hover
 */
 void DisplayEnemyInfo(void);
+
+/*______________________________________________________________
+@brief Frees the attack icons used for enemy attack stat displaying
+*/
+void FreeEnemyDisplayIcon(void);

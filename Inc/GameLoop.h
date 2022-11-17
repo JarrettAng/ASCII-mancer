@@ -1,8 +1,18 @@
 /*!
 @file	  GameLoop.h
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
-@date     27/10/2022
-@brief    This header file 
+@date     17/11/2022
+@brief    This header file contains enums for turn types (player, zombies) and event types (start, update, end) for those turns,
+		  structs to hold information (pointers, priority) for the events and an array of events for each turn, and 7 functions.
+
+		  SubscribeEvent - Add a function to be called everytime an event happens (e.g. player start, zombie update).
+		  UnsubscribeEvent - Pass the event you want to unsubscribe your function from, and pass the function pointer too.
+		  UnsubscribeAllEvents - It is important this function is called when the game level exits!!
+		  ZeroOutAllEvents - Similar to UnsubscribeAllEvents but this forces ALL events to be zeroed out, even the NULL ones
+
+		  GameLoopInit - Needs to be called at the start of the game level to handle the turns between the player and the zombies.
+		  GameLoopSwitch - Call this to swap between turns. The functions subscribed to the end of current turn and start of next turn will be called.
+		  GameLoopUpdate - Every update, calls all functions subscribed to the turn's update array.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -14,6 +24,9 @@ ________________________________________________________________________________
  / /___ | |/ /  __/ / / / /_	 (__  ) /_/ / /_/ (__  ) /__/ /  / / /_/ / /_/ / /_/ / / / (__  )
 /_____/ |___/\___/_/ /_/\__/	/____/\__,_/_.___/____/\___/_/  /_/ .___/\__/_/\____/_/ /_/____/
 																 /_/						Read below \/
+*/
+/*______________________________________________________________
+@brief The different types of events you can subscribe to
 */
 typedef enum {
 	PLAYER_START,
@@ -42,6 +55,9 @@ void SubscribeEvent(TurnEventType event_type, void(*function_pointer)(void), int
 
 /*______________________________________________________________
 @brief Pass the event you want to unsubscribe your function from, and pass the function pointer too so it knows which one to remove.
+
+@param[in] event_type - The type of event to subscribe to
+@param[in] function_pointer - The pointer to the function to subscribe
 */
 void UnsubscribeEvent(TurnEventType event_type, void(*function_pointer)(void));
 
@@ -58,23 +74,35 @@ void ZeroOutAllEvents(void);
 //______________________________________________________________
 // Turn & Events structs
 
+/*______________________________________________________________
+@brief Each event stores a pointer and the priority in event list array
+*/
 typedef struct {
 	void (*event)(void);
 	int priority;
 } Event;
 
+/*______________________________________________________________
+@brief Each event array can store up to MAX_EVENTS_BUFFER events, stores the total subscribed count as well
+*/
 #define MAX_EVENTS_BUFFER 10
 typedef struct {
 	Event events[MAX_EVENTS_BUFFER];
 	int count;
 } TurnEvent;
 
+/*______________________________________________________________
+@brief Each turn has 3 event arrays that can be subscribed to, the start, update, and end of a turn
+*/
 typedef struct {
 	TurnEvent start;
 	TurnEvent update;
 	TurnEvent end;
 } Turn;
 
+/*______________________________________________________________
+@brief The identifiers for the all possible turn types
+*/
 typedef enum {
 	TURN_PLAYER,
 	TURN_ZOMBIE
@@ -88,7 +116,9 @@ typedef enum {
 void GameLoopInit(void);
 
 /*______________________________________________________________
-@brief Call this every time the turn swaps to call all the functions subscribed to the turn start and end arrays.
+@brief Call this to swap between turns. The functions subscribed to the end of current turn and start of next turn will be called.
+
+@param[in] new_turn - The turn type to swap to next
 */
 void GameLoopSwitch(TurnType new_turn);
 
