@@ -46,7 +46,7 @@ char text_buffer[4];
 // Zombie types description array
 E_DisplayInfo zombie_info[ZOMBIE_TYPE_LENGTH];
 
-float hover_info_display_time = 1.0f;
+float hover_info_display_time = 0.75f;
 float hover_elapsed_time;
 EnemyInfo *hovered_zombie;
 int last_hover_x, last_hover_y;
@@ -112,8 +112,8 @@ void EnemyDisplayInit(void) {
 	zombie_info[ZOMBIE].char_count = 36;
 
 	zombie_info[LEAPER].type = GetEnemyPrefab(2); // 2 is leaper
-	zombie_info[LEAPER].description = "Leaper zombie, but has weak attack against walls.";
-	zombie_info[LEAPER].char_count = 49;
+	zombie_info[LEAPER].description = "Leaper zombie, fast but attacks weak against walls.";
+	zombie_info[LEAPER].char_count = 51;
 
 	zombie_info[TANK].type = GetEnemyPrefab(3); // 3 is tank
 	zombie_info[TANK].description = "Tank zombie. Can take a lot of hits before dying.";
@@ -128,7 +128,7 @@ void EnemyDisplayInit(void) {
 	zombie_info[GRAVE].char_count = 50;
 
 	// Display zombie info text box
-	info_text.offset = CP_Vector_Set(cell_size / 2.0f, cell_size / 1.5f);
+	info_text.offset = CP_Vector_Set(cell_size / 2.0f, cell_size / 1.25f);
 	info_text.size = CP_System_GetWindowHeight() / 60.0f;
 	info_text.stroke = CP_System_GetWindowHeight() / 240.0f;
 }
@@ -156,10 +156,8 @@ void EnemyDisplayTimeIncrement(void) {
 		hover_elapsed_time += CP_System_GetDt();
 
 		if (hover_elapsed_time > hover_info_display_time) {
-			if (!hovered_zombie) {
-				if (hovered_zombie = GetAliveEnemyFromGrid(last_hover_x, last_hover_y)) {
-					info_text.zombie_index = hovered_zombie->type;
-				}
+			if (hovered_zombie = GetAliveEnemyFromGrid(last_hover_x, last_hover_y)) {
+				info_text.zombie_index = hovered_zombie->type;
 			}
 		}
 	}
@@ -174,7 +172,7 @@ void EnemyDisplayTimeIncrement(void) {
 /*______________________________________________________________
 @brief Displays the enemy stats in the four corners of the cell
 */
-void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, int max_health, int wall_damage) {
+void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, int wall_damage) {
 	CP_Settings_RectMode(CP_POSITION_CORNER);
 
 	// Render health
@@ -209,7 +207,7 @@ void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, in
 	// Render wall damage if any
 	if (wall_damage > 0) {
 		for (int index = 0; index < wall_damage; ++index) {
-			CP_Image_Draw(attack_icon, pos_x + display[DAMAGE].x - (health_spacing + text_size) * index, pos_y + display[DAMAGE].y, text_size, text_size, 255);
+			CP_Image_Draw(attack_icon, pos_x + display[BOTTOM_RIGHT].x - (health_spacing + text_size) * index, pos_y + display[BOTTOM_RIGHT].y, text_size, text_size, 255);
 		}
 
 		//CP_Settings_TextSize(text_size);
@@ -224,7 +222,7 @@ void RenderEnemyDisplay(float pos_x, float pos_y, CP_Color color, int health, in
 /*______________________________________________________________
 @brief 
 */
-void RenderEnemyMovement(float pos_x, float pos_y, CP_Color color, int movement) {
+void RenderEnemyMovement(float pos_x, float pos_y, int movement) {
 	if (!movement || !move_draw) return;
 
 	CP_Settings_Fill(ENEMY_MOVEMENT);
@@ -313,7 +311,7 @@ void DisplayEnemyInfo(void) {
 
 	// Enemy stats
 	char text_buffer[28];
-	sprintf_s(text_buffer, _countof(text_buffer), "HP:%d/%d WALL_ATK:%d SPD:%d", hovered_zombie->Health, hovered_zombie->MaxHealth, hovered_zombie->damage, hovered_zombie->MovementSpeed);
+	sprintf_s(text_buffer, _countof(text_buffer), "HP:%d/%d WALL-ATK:%d SPD:%d", hovered_zombie->Health, hovered_zombie->MaxHealth, hovered_zombie->damage, hovered_zombie->MovementSpeed);
 	CP_Font_DrawText(text_buffer, CP_Input_GetMouseX() + info_text.offset.x, CP_Input_GetMouseY() + info_text.offset.y - info_text.size / 1.2f);
 
 	// Enemy description
