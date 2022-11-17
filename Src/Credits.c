@@ -17,8 +17,9 @@ Copyright:
 Text creditHeaders[NUM_OF_CREDITS];
 Text creditNames[NUM_OF_CREDITS];
 
-Button backBtn;
 int scrollSpeed = 200;
+
+Button backBtn;
 
 #pragma region FORWARD_DECLARATIONS
 void InitCreditsTexts(void);
@@ -75,13 +76,15 @@ void InitCreditsTexts(){
 	};
 
 	Rect headerRect = {
-	.x = GetWindowWidth() / 2,
-	.y = GetWindowHeight(),
+		.x = GetWindowWidth() / 2,
+		.y = GetWindowHeight(),
+		.width = GetWindowWidth()
 	};
 
 	Rect namesRect = {
 		.x = 0,
 		.y = GetWindowHeight(),
+		.width = GetWindowWidth()
 	};
 
 	TextData memberHeader = headerTextData;

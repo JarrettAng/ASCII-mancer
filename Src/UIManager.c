@@ -147,7 +147,7 @@ void RenderTextBoxes(){
 	for (int i = 0; i < textBoxesCount; ++i) {
 		// Draw text
 		SetTextSetting(textBoxes[i]->textData);
-		CP_Font_DrawTextBox(textBoxes[i]->textData.text, textBoxes[i]->transform.x, textBoxes[i]->transform.y, GetWindowWidth());
+		CP_Font_DrawTextBox(textBoxes[i]->textData.text, textBoxes[i]->transform.x, textBoxes[i]->transform.y, textBoxes[i]->transform.width);
 	}
 }
 

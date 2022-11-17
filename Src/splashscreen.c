@@ -5,17 +5,22 @@
 #include "Utils.h"
 #include "EnemyStats.h"
 #include "SoundManager.h"
+#include "UIManager.h"
 // TODO: For change back to 3f before release
-const float FADE_IN_DURATION = .1f;
+const float FADE_IN_DURATION = 3.0f;
 
 float fade = 0;	// Current fade timer
 CP_Image logo;	// Digipen splash screen logo
+Text copyRight;
 
-#pragma region SPLASH_SCREEN_STATE
+#pragma region FORWARD_DECLARATION
+void InitTexts(void);
+#pragma endregion
+
 
 void SplashScreenInit() {
 	// Intialize logo
-	logo = CP_Image_Load("Assets/DigiPen_RED.png");
+	logo = CP_Image_Load("Assets/DigiPen_WHITE.png");
 
 	//CP_System_Fullscreen();
 	CP_System_SetWindowSize(1920, 1080);
@@ -28,23 +33,50 @@ void SplashScreenInit() {
 	CP_System_SetWindowTitle("ASCII-mancer");
 
 	//Initialise static duration prefabs
-	InitEnemyPool();			//Initialise enemies 
+	InitEnemyPool();		//Initialise enemies 
 	InitSoundManager();		//Initialise sounds
+	InitTexts();
 }
 
 void SplashScreenUpdate() {
+	CP_Graphics_ClearBackground(MENU_BLACK);
+
 	// Fade in the digipen logo
 	FadeInLogo();
-	CP_Graphics_ClearBackground(WHITE);
+	RenderTextBoxes();
 }
 
 void SplashScreenExit() {
 	CP_Image_Free(&logo);
+	FreeUI();
+}
+
+void InitTexts(){
+	Rect copyrightRectData = {
+		.x = 0,
+		.y = GetWindowHeight() - GetWindowHeight() / 5,
+		.width = GetWindowWidth()
+	};
+
+	TextData copyRightTextData = {
+		.color = MENU_WHITE,
+		.textSize = 20,
+		.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
+		.hAlign = CP_TEXT_ALIGN_H_CENTER,
+		.vAlign = CP_TEXT_ALIGN_V_MIDDLE,
+		.text =
+		"All content copyright 2022 Digipen Institute of Technology Singapore."
+		"\n\n"
+		"All Rights Reserved"
+	};
+	InitializeTextBox(&copyRight, copyrightRectData, copyRightTextData);
 }
 
 void FadeInLogo() {
 	// Draw logo to be fade in.
 	CP_Image_Draw(logo, (float)(CP_System_GetWindowWidth() / 2), (float)(CP_System_GetWindowHeight() / 2), (float)CP_Image_GetWidth(logo), (float)CP_Image_GetHeight(logo), (int)(fade * 255));
+	// Fade in copyright text.
+	copyRight.textData.color.a = fade * 255;
 
 	// Increment timer.
 	fade += CP_System_GetDt() / FADE_IN_DURATION;
@@ -55,5 +87,4 @@ void FadeInLogo() {
 	}
 }
 
-#pragma endregion
 
