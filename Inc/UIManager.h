@@ -5,6 +5,7 @@
 #define MAX_UI_BUTTONS 20
 #define MAX_UI_SLIDERS 5
 #define MAX_UI_TEXT 20
+#define MAX_UI_TEXTBOX 20
 
 typedef struct Rect {
 	float x;
@@ -65,6 +66,7 @@ typedef struct Slider{
 
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack);
 void InitializeText(Text* txt, Rect transform, TextData data);
+void InitializeTextBox(Text* txt, Rect transform, TextData data);
 void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, SliderKnob knobData);
 
 void RenderButton(Button* btn);
@@ -72,6 +74,7 @@ void RenderButtons(void);
 
 void RenderText(Text* txt);
 void RenderTexts(void);
+void RenderTextBoxes(void);
 
 void RenderSlider(Slider* slider);
 void RenderSliders(Void);

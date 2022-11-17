@@ -12,6 +12,9 @@ int btnsCount = 0;
 Text* texts[MAX_UI_TEXT];
 int textsCount = 0;
 
+Text* textBoxes[MAX_UI_TEXTBOX];
+int textBoxesCount = 0;
+
 Slider* sliders[MAX_UI_SLIDERS];
 int sliderCount = 0;
 
@@ -51,6 +54,17 @@ void InitializeText(Text* txt, Rect transform, TextData data){
 	txt->textData = data;
 
 	texts[textsCount++] = txt;
+}
+
+/// <summary>
+/// Intialize text with the given data.
+/// </summary>
+void InitializeTextBox(Text* txt, Rect transform, TextData data){
+	txt->transform = transform;
+	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
+	txt->textData = data;
+
+	textBoxes[textBoxesCount++] = txt;
 }
 
 /// <summary>
@@ -123,6 +137,17 @@ void RenderTexts(){
 		// Draw text
 		SetTextSetting(texts[i]->textData);
 		CP_Font_DrawText(texts[i]->textData.text, texts[i]->transform.x, texts[i]->transform.y);
+	}
+}
+
+/// <summary>
+/// Render all texts cached in texts array.
+/// </summary>
+void RenderTextBoxes(){
+	for (int i = 0; i < textBoxesCount; ++i) {
+		// Draw text
+		SetTextSetting(textBoxes[i]->textData);
+		CP_Font_DrawTextBox(textBoxes[i]->textData.text, textBoxes[i]->transform.x, textBoxes[i]->transform.y, GetWindowWidth());
 	}
 }
 
@@ -316,6 +341,8 @@ void FreeText(){
 	// Empty array so next scene can use.
 	memset(texts, 0, sizeof(texts));
 	textsCount = 0;
+	memset(textBoxes, 0, sizeof(textBoxes));
+	textBoxesCount = 0;
 }
 
 /// <summary>
