@@ -1,14 +1,24 @@
 /*!
 @file	  TManager.c
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
-@date     26/10/2022
+@date     18/11/2022
 @brief    TManager's header file handles the interfacing of Tetris pieces and any other files in the project; 
-          This source file contains the implementation of those functions.
+          This source file contains the implementation of those functions, and stores the array of all the 
+          data of the current tetris pieces in play. There are
+
+          TManagerInit - Initialized at the start of the game level so there'll actually be Tetris Pieces to use.
+
+          DrawFromBag - Draws the next Tetris Piece from the queue, note: the queue will never run out of pieces.
+          FillBag - Fills the chosen bag with a copy of every Tetris Piece possible.
+          ShuffleBag - Shuffles the piece order in the chosen bag, the Fisher–Yates shuffle is used for the shuffling.
+          RandInt - Returns a random int. Used by ShuffleBag to shuffle the pieces Fisher–Yates shuffle.
+
+          CreatePiece - Creates a Tetris Piece based on the chosen type.
 ________________________________________________________________________________________________________*/
 
-#include <stdlib.h> // For srand & rand
+#include <stdlib.h>     // For srand & rand
 #include "TManager.h"
-#include "ColorTable.h"
+#include "ColorTable.h" // For tetris colors
 
 // Markers for which piece is the next piece in queue
 int current_bag;
@@ -28,6 +38,8 @@ TetrisPiece CreatePiece(PieceType type);
 
 /*______________________________________________________________
 @brief Please initialize this at the start of the game level so there'll actually be Tetris Pieces to use.
+
+@param[in] rand_seed - Which seed to use to randomly spawn the Tetris pieces. (Use DEFAULT_SPAWN_SEED for debugging)
 */
 void TManagerInit(int rand_seed) {
     current_bag = current_index = 0;
@@ -64,7 +76,7 @@ TetrisPiece DrawFromBag(void) {
 /*______________________________________________________________
 @brief Fills the chosen bag with a copy of every Tetris Piece possible.
 
-@param int - The index of the bag to fill, the bags are placed in an array.
+@param[in] bag - The index of the bag to fill, the bags are placed in an array.
 */
 void FillBag(int bag) {
     PieceType *current_bag = &pieces_bag[bag][0];
@@ -76,7 +88,7 @@ void FillBag(int bag) {
 /*______________________________________________________________
 @brief Shuffles the chosen bag, the Fisher–Yates shuffle is used for the shuffling process.
 
-@param int - The index of the bag to shuffle, the bags are placed in an array.
+@param[in] bag - The index of the bag to shuffle, the bags are placed in an array.
 */
 void ShuffleBag(int bag) {
     PieceType (*current_bag) = &pieces_bag[bag][0];
@@ -92,8 +104,9 @@ void ShuffleBag(int bag) {
 /*______________________________________________________________
 @brief Returns a random int. Used by ShuffleBag to shuffle the pieces Fisher–Yates shuffle.
 
-@param int - The smallest number (inclusive)
-       int - The largest number (inclusive)
+@param[in] min - The smallest number (inclusive)
+@param[in] max - The largest number (inclusive)
+
 @return int - A random int between min and max
 */
 int RandInt(int min, int max) {
@@ -103,7 +116,8 @@ int RandInt(int min, int max) {
 /*______________________________________________________________
 @brief Creates a Tetris Piece based on the chosen type.
 
-@param PieceType - What kind of piece should be spawned.
+@param[in] type - What kind of piece should be spawned.
+
 @return TetrisPiece - The new tetris piece, warranty not included.
 */
 TetrisPiece CreatePiece(PieceType type) {

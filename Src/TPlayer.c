@@ -1,22 +1,33 @@
 /*!
 @file	  TPlayer.c
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
-@date     26/10/2022
-@brief    This source file
+@date     18/11/2022
+@brief    This source file handles the rendering and storing of piece information of the Tetris pieces in the player's
+		  hand and the peek queue. There are 7 functions in this file,
+
+		  TPlayerInit - Needs to be called at the start of the game level so that the player has pieces to play with.
+
+          TPlayerProcessInput - Needs to be called in update, checks for player clicks, updates TPlayerHeld to render the held piece accordingly.
+          RenderHand - Needs to be called in update, renders everything in the player's hand, all the slots, pieces, text, etc.
+          RemovePieceHeldFromHand - When a Tetris Piece is dropped onto the grid, remove it from the player's hand.
+
+		  RemovePieceHeldFromHand - When a Tetris Piece is dropped onto the grid, remove the piece and update the player's hand.
+		  ArrayShiftFowardFrom - Used by RemovePieceHeldFromHand to shift the pieces to the right of the piece used leftwards.
+		  FreeIconImages - Needs to be called on the exit of game level, frees the icons for the attack and defend pieces.
 ________________________________________________________________________________________________________*/
 
-#include "ColorTable.h"
+#include "ColorTable.h"		// For Tetris colors
 
-#include "Utils.h"	// For click detection
-#include "SoundManager.h"
+#include "Utils.h"			// For click detection
+#include "SoundManager.h"	// For sound on Tetris interaction
 
-#include "TManager.h" 
-#include "TPlayer.h" 
-#include "TPlayerHeld.h" // For handling the piece held
-#include "GameLoop.h"
+#include "TManager.h"		// For drawing new Tetris pieces
+#include "TPlayer.h"	
+#include "TPlayerHeld.h"	// For handling the piece held
+#include "GameLoop.h"		// For player's turn event
 
-PlayerHandSlot hand[HAND_SIZE];
-PlayerHandSlot peek_hand[PEEK_SIZE];
+PlayerHandSlot hand[HAND_SIZE];			// Array containing information of all pieces on hand
+PlayerHandSlot peek_hand[PEEK_SIZE];	// Array containing information of next few pieces in queue
 
 CP_Vector text_peek_pos;
 CP_Image attack_icon, shield_icon;
@@ -91,7 +102,7 @@ void TPlayerProcessInput(void) {
 
 /*______________________________________________________________
 @brief Renders the panel at the bottom of the panel, consisting of the player's hand, peek queue, and
-	   supporting text like "NEXT"
+	   supporting text like "< NEXT <"
 */
 void RenderHand(void) {
 	PlayerHandSlot* current;
@@ -168,25 +179,25 @@ void RenderHand(void) {
 		}
 	}
 
-	RenderPieceHeld();
+	RenderPieceHeld(); // Render the piece held last, so it is over the pieces in the player's hand
 }
 
 //______________________________________________________________
 // More initialization functions
 
 /*______________________________________________________________
-@brief Recalculate the position scaling factors and stores them
+@brief Recalculate the positions for rendering based on screen size and stores the new values
 */
 void RecalculateHandRenderPositions(void) {
 	//______________________________________________________________
 	// Initialize player hand factors
 	hand_total_height = (float)CP_System_GetWindowHeight() * .175f; // The hand queue takes up 17.5% of the height
-	hand_bottom_buffer = hand_total_height * .175f; // The bottom buffer takes up 17.5% of the hand height
+	hand_bottom_buffer = hand_total_height * .175f;					// The bottom buffer takes up 17.5% of the hand height
 
 	float total_width = (float)CP_System_GetWindowWidth();
-	hand_total_length = total_width * .55f; // The hand queue takes up 55% of the width
-	hand_left_buffer = hand_total_length * .1f; // The hand edge buffers takes up 10% of the hand queue
-	hand_slot_length = min(hand_total_height, (hand_total_length - hand_left_buffer) * .9f / HAND_SIZE); // The length of each slot depends on whether height or 90% of the hand queue width is shorter
+	hand_total_length = total_width * .55f;							// The hand queue takes up 55% of the width
+	hand_left_buffer = hand_total_length * .1f;						// The hand edge buffers takes up 10% of the hand queue
+	hand_slot_length = min(hand_total_height, (hand_total_length - hand_left_buffer) * .9f / HAND_SIZE);	 // The length of each slot depends on whether height or 90% of the hand queue width is shorter
 	hand_slot_spacing = (hand_total_length - hand_left_buffer - (hand_slot_length * HAND_SIZE)) / HAND_SIZE; // The spacing of each slot is the remaining space
 
 	// If the spacing between slots are too wide (more than 20% the length of a slot), add more padding to the left
@@ -195,23 +206,23 @@ void RecalculateHandRenderPositions(void) {
 		hand_slot_spacing = hand_slot_length * 0.2f;
 	}
 
-	hand_tile_length = hand_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
-	hand_tile_stroke = hand_tile_length * 0.15f; // The stroke of each tile is 15% of the width of the tile
+	hand_tile_length = hand_slot_length / SHAPE_BOUNDS;				// How big each tile piece of a Tetris Piece is
+	hand_tile_stroke = hand_tile_length * 0.15f;					// The stroke of each tile is 15% of the width of the tile
 
 	//______________________________________________________________
 	// Initialize peek hand factors
-	peek_total_length = total_width - hand_total_length; // The peek queue takes up the remaining width
-	peek_right_buffer = peek_total_length * .25f; // The peek edge buffer takes up 25% of the peek queue
+	peek_total_length = total_width - hand_total_length;			// The peek queue takes up the remaining width
+	peek_right_buffer = peek_total_length * .25f;					// The peek edge buffer takes up 25% of the peek queue
 	peek_slot_length = min(hand_total_height * .6f, (peek_total_length - peek_right_buffer) * .9f / PEEK_SIZE); // The length of each slot depends on whether height or 90% of the peek queue width is shorter;
-	peek_slot_spacing = (peek_total_length - peek_right_buffer - (peek_slot_length * PEEK_SIZE)) / PEEK_SIZE; // The spacing of each slot is the remaining space
+	peek_slot_spacing = (peek_total_length - peek_right_buffer - (peek_slot_length * PEEK_SIZE)) / PEEK_SIZE;	// The spacing of each slot is the remaining space
 
 	// If the spacing between slots are too wide (more than 33% the length of a slot), reduce the spacing
 	if ((peek_slot_spacing - peek_slot_length / 3.0f) > 0) {
 		peek_slot_spacing = peek_slot_length / 3.0f;
 	}
 
-	peek_tile_length = peek_slot_length / SHAPE_BOUNDS; // How big each tile piece of a Tetris Piece is
-	peek_tile_stroke = peek_tile_length * 0.15f; // The stroke of each tile is 15% of the width of the tile
+	peek_tile_length = peek_slot_length / SHAPE_BOUNDS;				// How big each tile piece of a Tetris Piece is
+	peek_tile_stroke = peek_tile_length * 0.15f;					// The stroke of each tile is 15% of the width of the tile
 
 	text_peek_pos = CP_Vector_Set(hand_total_length, (float)CP_System_GetWindowHeight() - hand_total_height - hand_bottom_buffer);
 	text_peek_size = hand_total_height * 0.25f;
@@ -255,7 +266,7 @@ void RecalculateHandRenderPositions(void) {
 /*______________________________________________________________
 @brief When a Tetris Piece is dropped onto the grid, remove the piece and update the player's hand
 */
-void RemovePieceHeldFromHand() {
+void RemovePieceHeldFromHand(void) {
 	PlayerHandSlot* current;
 	int played_index = 0;
 	for (; played_index < HAND_SIZE; ++played_index) {
@@ -296,12 +307,18 @@ void RemovePieceHeldFromHand() {
 	}
 }
 
+/*______________________________________________________________
+@brief Used by RemovePieceHeldFromHand to shift the pieces to the right of the piece used leftwards
+*/
 void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end) {
 	for (int index = start; index < end; ++index) {
 		array[index].piece = array[index + 1].piece;
 	}
 }
 
+/*______________________________________________________________
+@brief Frees the images used for icon rendering, should be called on game level exit
+*/
 void FreeIconImages(void) {
 	CP_Image_Free(&attack_icon);
 	CP_Image_Free(&shield_icon);
