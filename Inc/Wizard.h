@@ -10,3 +10,7 @@ typedef struct Wizard {
 void InitWizard(void);
 void UpdateWizard(void);
 void DrawWizard(Wizard wiz_body_part);
+
+void InitMouseIcon(void);
+void RenderMouseIcon(void);
+void FreeMouseIcons(void);

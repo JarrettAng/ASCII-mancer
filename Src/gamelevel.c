@@ -31,6 +31,7 @@ void gameLevelInit(void){
 	InitializeLife();
 	InitWizard();
 	WinTextInit();
+	InitMouseIcon();
 
 	TManagerInit(DEFAULT_SPAWN_SEED);
 
@@ -75,6 +76,8 @@ void gameLevelUpdate(void){
 	UpdateWizard();
 	// UPDATE HEARTS
 	UpdateLife();
+	// UPDATE ROTATION ICON
+	RenderMouseIcon();
 	// CHECK IF WON
 	CheckWinCondition();
 	// CLEAR SCREEN
@@ -108,5 +111,6 @@ void gameLevelExit(void){
 	UnsubscribeAllEvents();
 	ClearHearts();
 	FreeIconImages();
+	FreeMouseIcons();
 	FreeEnemyDisplayIcon();
 }

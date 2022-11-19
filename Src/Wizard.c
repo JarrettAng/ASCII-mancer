@@ -4,6 +4,7 @@
 #include "Hearts.h"
 #include "GameOver.h"
 #include "Wizard.h"
+#include "TPlayerHeld.h"
 
 Wizard wiz_body;
 Wizard wiz_hat;
@@ -58,22 +59,23 @@ void InitMouseIcon(void) {
 	rotation_icon = CP_Image_Load("Assets/RotationIcon.png");
 	right_click_icon = CP_Image_Load("Assets/MouseRightClickIcon.png");
 }
-/*
+
 float static time_elapsed = 0.f;
 void RenderMouseIcon(void) {
-	time_elapsed = CP_System_GetDt();
-	float tick = time_elapsed / 
-	CP_Image_DrawAdvanced(rotation_icon, CP_Input_GetMouseX(), CP_Input_GetMouseY(), 100.f, 100.f, 255, )
+
+	float tick = time_elapsed / 3.f;
+	if (tick >= 1.f) {
+		time_elapsed = 0;
+	}
+	time_elapsed += CP_System_GetDt();
+	float rotation = CP_Math_LerpFloat(0.f, 360.f, tick);
+	if (IsPieceHeld() == TRUE) {
+		CP_Image_DrawAdvanced(rotation_icon, CP_Input_GetMouseX() + GetCellSize() / 3, CP_Input_GetMouseY() + GetCellSize() / 3, GetCellSize() / 2, GetCellSize() / 2, 200, rotation);
+		CP_Image_DrawAdvanced(right_click_icon, CP_Input_GetMouseX() + GetCellSize() / 1.5, CP_Input_GetMouseY() + GetCellSize() / 1.5, GetCellSize() / 3, GetCellSize() / 3, 200, 0.f);
+	}
 }
-*/
-void AnimationWizard() {
 
-}
-
-void HurtWizard() {
-	
-}
-
-void DefeatWizard() {
-
+void FreeMouseIcons(void) {
+	CP_Image_Free(&rotation_icon);
+	CP_Image_Free(&right_click_icon);
 }
