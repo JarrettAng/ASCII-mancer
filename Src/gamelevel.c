@@ -68,7 +68,8 @@ void gameLevelUpdate(void){
 	RenderHand();
 	ShowCurrentWave();
 	//ShowTestEnemiesKilled();
-	
+	// UPDATE ROTATION ICON
+	RenderMouseIcon();
 	// Show enemy info on hover
 	DisplayEnemyInfo();
 
@@ -76,8 +77,6 @@ void gameLevelUpdate(void){
 	UpdateWizard();
 	// UPDATE HEARTS
 	UpdateLife();
-	// UPDATE ROTATION ICON
-	RenderMouseIcon();
 	// CHECK IF WON
 	CheckWinCondition();
 	// CLEAR SCREEN
