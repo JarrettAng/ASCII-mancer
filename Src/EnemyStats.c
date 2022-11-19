@@ -9,23 +9,25 @@
 #include "Hearts.h"
 #include "SoundManager.h"
 
-
+//-----ENEMYTYPE-----//
 #define ZOMBIE 1,1,1,2,"Z",ZOMBIE
 #define LEAPER 5,3,1,1,"L",LEAPER
 #define TANK 10,1,3,2,"T",TANK
 #define WALLBREAKER 15,1,2,3,"B",BREAKER
 #define GRAVE 18,0,1,0,"G",GRAVE
-#define WALL 0,0,3,0,"|x|",WALL
+//-----WALL-----//
+#define WALL 0,0,3,0,"|x|",WALL//Not enemy, special type for player to use
 //Gonna use their char sprite value to indicate type of enemy
-//Not gonna use externs for this case because it gets messy
+ 
 EnemyInfo Enemy[ENEMYPOOL];
 int enemyPoolIndex = 0;
-///TEST
-///TEST
-//Initialises the enemy pool. Edit this to add more enemy types
+
+/*______________________________________________________________
+@brief Initialises the enemy pool. Edit this to add more enemy types
+______________________________________________________________*/
 void InitEnemyPool(){
 	enemyPoolIndex = 0;
-	//Manual way of adding enemies
+	//Create zombie type to spawn
 	CreateEnemy(WALL,MENU_GRAY);
 	CreateEnemy(ZOMBIE,MENU_RED);
 	CreateEnemy(LEAPER,MENU_RED);
@@ -34,7 +36,9 @@ void InitEnemyPool(){
 	CreateEnemy(GRAVE,GREEN);
 }
 
-//Function that creates enemies and adds them to the enemy pool
+/*______________________________________________________________
+@brief Function that creates enemies and adds them to the enemy pool
+______________________________________________________________*/
 void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,ZombieType type,CP_Color color){
 	EnemyInfo newEnemy = {
 		.Cost = cost,
@@ -51,21 +55,31 @@ void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,
 	enemyPoolIndex++;
 }
 
-//Returns the total count of enemies in the enemy array
+/*______________________________________________________________
+@brief Returns the total count of enemies in the enemy array
+______________________________________________________________*/
 int GetEnemyCount(){
 	return enemyPoolIndex;
 }
 
-//Returns the the EnemyInfo in the stored index
+/*______________________________________________________________
+@brief Returns the the EnemyInfo in the stored index
+______________________________________________________________*/
 EnemyInfo* GetEnemyPrefab(int index){
 	return &Enemy[index];
 }
-//Returns the the EnemyInfo in the stored index
+
+/*______________________________________________________________
+@brief Returns the the EnemyInfo in the stored index
+______________________________________________________________*/
 EnemyInfo* GetRandomEnemyPrefab(void){
 	//Need to use GetEnemyCount()-2 so you don't get graves that spawn graves
 	return &Enemy[CP_Random_RangeInt(1,GetEnemyCount()-2)];
 }
 
+/*______________________________________________________________
+@brief Enemy movement in the play area
+______________________________________________________________*/
 void MoveEnemy(EnemyInfo* enemy){
 	if(enemy->MovementSpeed<=0)return;
 	//If the enemy has reach last x element, it'll die and damage player
@@ -99,18 +113,22 @@ void MoveEnemy(EnemyInfo* enemy){
 		} 
 	}
 
-	enemy->x -= enemy->MovementSpeed;
+	enemy->x -= enemy->MovementSpeed;//enemy position in next turn
+
 	if (enemy->x < 0 && enemy->is_Alive)
 	{
 		//Special despawn animation over here
 		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y));
-		enemy->is_Alive = FALSE;//Should put this in OnDeath()
+		enemy->is_Alive = FALSE;//enemy is ded(LOLXD)
 		LoseLife(1); // LOSE ONE LIFE FOR EACH ENEMY ENTERING THE WALL
 	}
-	// if((enemy->x-enemy->MovementSpeed)<0) enemy->x = 0;
-	// else enemy->x-= enemy->MovementSpeed;
+
 	PlaySound(ZOMBIEMOVE, CP_SOUND_GROUP_SFX);
 }
+
+/*______________________________________________________________
+@brief Render enemy
+______________________________________________________________*/
 void DrawEnemy(EnemyInfo* enemy) {
 
 	CP_Settings_Fill(enemy->Color);
@@ -124,14 +142,4 @@ void DrawEnemy(EnemyInfo* enemy) {
 	RenderEnemyDisplay(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->Health,enemy->MaxHealth, enemy->damage);
 	RenderEnemyMovement(GridXToPosX(enemy->x), GridYToPosY(enemy->y), enemy->MovementSpeed);
 
-}
-void OnDeath()
-{
-	//Check every time an enemy is kill. If theres a low enough enemy count, the next wave will start
-	//UpdateWaveStatus();
-}
-
-void ClearEnemyPool(void){
-	enemyPoolIndex =0;
-	memset(Enemy,0,sizeof(EnemyInfo)*ENEMYPOOL);
 }

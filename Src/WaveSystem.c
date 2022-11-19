@@ -36,7 +36,9 @@ void InitWaveSystem(){
 	SubscribeEvent(PLAYER_END,SpawnTombEnemies,1);
 	SubscribeEvent(ZOMBIE_START,UpdateWave,0);
 }
-//Generates the wave by deducting credits and adding enemies to the wave
+/*______________________________________________________________
+@brief Generates the wave by deducting credits and adding enemies to the wave
+______________________________________________________________*/
 void GenerateWave(){
 	// Formula made in desmos
 	waveCredits = (int)(12.0f / (0.5f + powf(expf((float)-currentWave+10), 0.2f))); //magic number, will tweak
@@ -51,10 +53,6 @@ void GenerateWave(){
 		if((waveCredits-GetEnemyPrefab(randomEnemyIndex)->Cost)>=0){
 			//enemy%WAVEOBJECTCOUNT is so that the enemyCount index loops back around once it = WAVEOBJECTCOUNT
 			//Ensure only the desire number of tombstone is generated and place in Waveobject array
-				// WaveObjects[enemyCount % WAVEOBJECTCOUNT] = *GetEnemyPrefab(randomEnemyIndex);
-				// WaveObjects[enemyCount % WAVEOBJECTCOUNT].is_Alive = FALSE;
-				// waveCredits -= GetEnemyPrefab(randomEnemyIndex)->Cost;
-				// enemyCount++;
 
 				EnemiesToSpawn[enemySpawnIndex % MAXENEMYCOUNT] = *GetEnemyPrefab(randomEnemyIndex);
 				EnemiesToSpawn[enemySpawnIndex % MAXENEMYCOUNT].is_Alive = FALSE;
@@ -66,7 +64,9 @@ void GenerateWave(){
 
 }
 
-//Update function for the wave system, subscribed to gameloop enemy wave
+/*______________________________________________________________
+@brief Update function for the wave system, subscribed to gameloop enemy wave
+______________________________________________________________*/
 void UpdateWave(){
 		//MOVE ENEMIES
 		for(short y = 0; y < TOTAL_YGRID; ++y){
@@ -77,7 +77,6 @@ void UpdateWave(){
 						continue;
 					}
 					if(GetAliveEnemyFromGrid(x,y)->MovementSpeed >0){
-						// GetAliveEnemyFromGrid(x, y)->moveCooldown = TRUE;
 						MoveEnemy(GetAliveEnemyFromGrid(x,y));
 					}
 				}
@@ -92,7 +91,7 @@ void UpdateWave(){
 			//We loop through all the enemies we wanna spawn
 			while(currCount < randEnemyCount){
 				SpawnEnemy(&EnemiesToSpawn[waveIndex]);
-				currCount++;	//gotta increment
+				currCount++;//gotta increment
 				//If we hit the maxenemycount, it means this wave has ended
 				if(waveIndex >= enemySpawnIndex){
 					NextWave();
@@ -117,6 +116,10 @@ void RenderEnemy(void){
 	}
 }
 
+/*______________________________________________________________
+@brief void spawn... spawn that enemy/special type being call and add them in the array containing all enemy in the that's currently
+alive
+______________________________________________________________*/
 void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy){
 	if(HasLiveEnemyInCell(x,y)) return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -133,7 +136,7 @@ void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy){
 void SpawnEnemy(EnemyInfo* enemy){
 	if(enemy->type == GRAVE) enemy->x = CP_Random_RangeInt(TOTAL_XGRID-2, TOTAL_XGRID-4);
 	else enemy->x = TOTAL_XGRID-1;
-	//int enemyYPos =(CP_Random_RangeInt(0, TOTAL_YGRID - 1));
+
 	enemy->y = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));
 	if(HasLiveEnemyInCell(enemy->x,enemy->y))return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -179,7 +182,9 @@ void SpawnTombEnemies(void){
 		}
 	}
 }
-
+/*______________________________________________________________
+@brief Check if all enemy in the grid are dead or not
+______________________________________________________________*/
 BOOL IsAllEnemiesDead(){
 	int count = 0;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -191,7 +196,9 @@ BOOL IsAllEnemiesDead(){
 }
 
 
-//Returns address of live enemy in the grid
+/*______________________________________________________________
+@brief Return address of enemy in grid if its alive. Return null is current cell contains nothing
+______________________________________________________________*/
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	if(!HasLiveEnemyInCell(x,y))return NULL;
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
@@ -209,7 +216,9 @@ EnemyInfo* GetCell(int x, int y){
     }
     return NULL;
 }
-
+/*______________________________________________________________
+@brief Check if the cell contains an enemy whos alive
+______________________________________________________________*/
 BOOL HasLiveEnemyInCell(int x, int y){
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
