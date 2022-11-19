@@ -9,6 +9,7 @@
 #include "Win.h"
 #include "WaveSystem.h"
 #include <stdio.h>
+#include "SoundManager.h"
 
 CP_Font main_font;
 Button backtomainmenuBtn;
@@ -139,6 +140,8 @@ void CheckWinCondition(void) {
 static float time_elapsed = 0.f;
 
 void WinAnimation(void) {
+	//Makes it such that the win sound only plays once
+	if(time_elapsed <=0) PlaySound(GAMEWIN,CP_SOUND_GROUP_SFX);
 	float bg_transistion_time_max = 2.f;
 	float stay_time_max = 5.8f;
 

@@ -103,7 +103,7 @@ void MoveEnemy(EnemyInfo* enemy){
 	if (enemy->x < 0 && enemy->is_Alive)
 	{
 		//Special despawn animation over here
-		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y),enemy->Health);
+		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y));
 		enemy->is_Alive = FALSE;//Should put this in OnDeath()
 		LoseLife(1); // LOSE ONE LIFE FOR EACH ENEMY ENTERING THE WALL
 	}

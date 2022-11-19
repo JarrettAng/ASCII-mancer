@@ -87,28 +87,34 @@ void UpdateParticle(Particle* particlePointer){
 //Spawns a radial particle with variance in angle, force and particle count
 void RadialParticleVaried(float x, float y){
     //Values are hardcoded and tuned for the game.
-    int randomParticleCount = CP_Random_RangeInt(8,30);
+    int randomParticleCount = CP_Random_RangeInt(20,30);
     //CP_Vector gravity = CP_Vector_Scale(VECTOR_DOWN,9.81f);
     for(short i = 0;i<(short)randomParticleCount;++i)
     {
-        // float randomForceVariance = CP_Random_RangeFloat(8.f,15.f);
-        float randomForceVariance = CP_Random_RangeFloat(2.f,8.f);
+        float randomForceVariance = CP_Random_RangeFloat(1.f,4.f);
         float angle = (float)(360/randomParticleCount)*i+(CP_Random_Gaussian()*2.f);
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),randomForceVariance);
-        //forceDirection = CP_Vector_Add(forceDirection,gravity);
-        CreateParticle(x,y,1.0f, GetCellSize()/3,0.f, MENU_RED, forceDirection,SparkleAnimString,TRUE,0);
+        CreateParticle(x,y,.5f, GetCellSize()/3,0.f, MENU_GRAY, forceDirection,SparkleAnimString,FALSE,0);
     }
 }
 
-//Spawns a radial particle with no variance. 
-void RadialParticle(float x, float y,int particleCount,float force){
+//Spawns a radial particle with user defined color
+void RadialParticleColor(float x, float y,int particleCount,float force,CP_Color color){
+    for(short i =0; i<particleCount;++i){
+        float angle = (float)360/particleCount*i;
+        CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),force);
+        CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,color,forceDirection,SparkleAnimString,FALSE,0);
+    }
+}
+
+//Spawns a radial particle with RGB colors
+void RadialParticleRGB(float x, float y,int particleCount,float force){
     for(short i =0; i<particleCount;++i){
         float angle = (float)360/particleCount*i;
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),force);
         CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,MENU_RED,forceDirection,SparkleAnimString,TRUE,0);
     }
 }
-
 //Spawns the death particle of a zombie.
 void ZombieDeathParticle(float x, float y,ZombieType type){
     switch (type){
@@ -140,7 +146,7 @@ void ZombieDeathParticle(float x, float y,ZombieType type){
 
 //Spawns the spawn particle of zombies.
 void ZombieSpawnParticle(float x, float y){
-    CreateParticle(x,y,0.5f,GetCellSize()/3,0.1f,MENU_RED,CP_Vector_Zero(),ZombieSpawnAnimString,TRUE,0);
+    CreateParticle(x,y,0.5f,GetCellSize(),0.1f,MENU_RED,CP_Vector_Zero(),ZombieSpawnAnimString,TRUE,0);
 }
 
 //Spawns the particle of the zombie moving to the player 
@@ -193,6 +199,9 @@ void DrawParticle(Particle* particlePointer){
 
 //Function that is required to be called to update all particles. If particles don't work, check that this is in update loop.
 void UpdateEffects(void){
+    // if(CP_Input_MouseTriggered(1)){
+    //     RadialParticleVaried(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+    // }
     //Main loop for handling particle movement and rendering.
     //Important to loop through the whole array because the index wraps around.
     for(short i =0; i< PARTICLECOUNT; ++i){

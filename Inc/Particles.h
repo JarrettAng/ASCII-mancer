@@ -33,62 +33,101 @@ typedef struct Particle{
     CP_Color color;
     float gravityScale;    
 } Particle;
+/*____________________________________________________________________*/
 
 /*
 @brief Create Particle will add the particle to the particle array for use.
-
 @param[in] Params : Refer to particle struct for full list of params.
 */
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB,float timeBeforeActive);
+/*____________________________________________________________________*/
 
 /*
 @brief Updates a single particle's position and physics and deducts lifetime.
 @param[in] particlePointer pointer to a particle in the particleArray.
 */
 void UpdateParticle(Particle* particlePointer);
+/*____________________________________________________________________*/
+
 /*
 @brief Draws the particle if it still has lifetime.
 @param[in] particlePointer pointer to a particle in the particleArray.
 */
 void DrawParticle(Particle* particlePointer);
+/*____________________________________________________________________*
+
 /*
 @brief Needs to be called every frame in update in order for all particles to be updated!
 */
 void UpdateEffects(void);
+/*____________________________________________________________________*/
+
+
 /*
 @brief Helper function for RGB values
 @param[in] Color,timeStep Returns a HSL color based on the time step given. 
 */
 CP_Color LerpedHSLColor(CP_Color color,float timeStep);
+/*____________________________________________________________________*/
+
+
 /*
-@brief Spawns a radial particle with no variance. 
+@brief Spawns a radial particle with RGB color. (Used as tetromino damage)
 @param[in] Position is the particles x and y positions respectively.
-@param[in] Count is the number of particles that will be spawned. The angle of the particles is the 360/count. @param[in] Force controls how far and fast the particle moves.
+@param[in] Count is the number of particles that will be spawned. The angle of the particles is the 360/count. 
+@param[in] Force controls how far and fast the particle moves.
 */
-void RadialParticle(float x, float y,int particleCount,float force);
+void RadialParticleRGB(float x, float y,int particleCount,float force);
+/*____________________________________________________________________*/
+
+
+/*
+@brief Spawns a radial particle with user defined color (used as tetromino wall build)
+@param[in] Position is the particles x and y positions respectively.
+@param[in] Count is the number of particles that will be spawned. The angle of the particles is the 360/count. 
+@param[in] Force controls how far and fast the particle moves.
+@param[in] Color is the color of the particle.
+*/
+void RadialParticleColor(float x, float y,int particleCount,float force,CP_Color color);
+/*____________________________________________________________________*/
+
+
 /*
 @brief Spawns a radial particle with varied force and count. (set in source)
 @param[in] Position is the particles x and y positions respectively.
 */
 void RadialParticleVaried(float x, float y);
+/*____________________________________________________________________*/
+
+
 /*
 @brief Spawns the enemy's respective death particle. (Animation set in source)
 @param[in] Position is the particles x and y positions respectively.
 @param[in] Type refers to the zombies type in enemystats.c
 */
 void ZombieDeathParticle(float x, float y,ZombieType type);
+/*____________________________________________________________________*/
+
+
 /*
 @brief Spawns the enemy's spawn particle. (Animation set in source)
 @param[in] Position is the particles x and y positions respectively.
 */
 void ZombieSpawnParticle(float x, float y);
+/*____________________________________________________________________*/
+
+
 /*
 @brief Spawns the particle of the enemy moving towards the player.
 @param[in] Position is the particles x and y positions respectively.
 */
 void ZombieToPlayerParticle(float x,float y);
+/*____________________________________________________________________*/
+
+
 /*
 @brief Helper function for spawning particles in a circle. Returns the vector from the angle.
 @param[in] Angle is in degrees.
 */
 CP_Vector AngleToVector(float degreeAngle);
+/*____________________________________________________________________*/

@@ -22,6 +22,9 @@ typedef enum Clip{
     ZOMBIEMOVE,
     WALLBUILD,
     WALLBREAK,
+    GRAVESPAWN,
+    GAMEWIN,
+    THUD,
     NONE
 } Clip;
 

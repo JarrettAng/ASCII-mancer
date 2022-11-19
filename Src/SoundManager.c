@@ -24,10 +24,13 @@ void InitSoundManager(void){
     AddSoundToArray(CP_Sound_Load("Assets/MouseClick.wav"),MOUSECLICK,1.f);
     AddSoundToArray(CP_Sound_Load("Assets/GameOver.wav"),GAMEOVER,.1f);
     AddSoundToArray(CP_Sound_Load("Assets/GainHealth.wav"), GAINHEART,1.f);
-    AddSoundToArray(CP_Sound_Load("Assets/ZombieSpawn.wav"), ZOMBIESPAWN,.5f);
+    AddSoundToArray(CP_Sound_Load("Assets/ZombieSpawn.wav"), ZOMBIESPAWN,.6f);
     AddSoundToArray(CP_Sound_Load("Assets/ZombieMove.wav"), ZOMBIEMOVE, 1.f);
-    AddSoundToArray(CP_Sound_Load("Assets/WallBuild.wav"), WALLBUILD, 1.f);
-    AddSoundToArray(CP_Sound_Load("Assets/WallBreak.wav"), WALLBREAK, 1.f);
+    AddSoundToArray(CP_Sound_Load("Assets/WallBuild.wav"), WALLBUILD, .8f);
+    AddSoundToArray(CP_Sound_Load("Assets/GraveSpawn.wav"), GRAVESPAWN, .7f);
+    AddSoundToArray(CP_Sound_Load("Assets/GameWin.wav"), GAMEWIN, .7f);
+    AddSoundToArray(CP_Sound_Load("Assets/Thud.wav"), THUD, .9f);
+    AddSoundToArray(CP_Sound_Load("Assets/WallBreak.wav"), WALLBREAK, .8f);
 
 }
 //Adds sound to array of soundclips

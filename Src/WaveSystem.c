@@ -69,17 +69,6 @@ void GenerateWave(){
 //Update function for the wave system, subscribed to gameloop enemy wave
 void UpdateWave(){
 		//MOVE ENEMIES
-		// for (short i = 0; i < WAVEOBJECTCOUNT; ++i)
-		// {
-		// 	if(WaveObjects[i].moveCooldown){			//check for enemies just spawned in by tomb enemies
-		// 		WaveObjects[i].moveCooldown = FALSE;
-		// 		continue;
-		// 	}
-		// 	if (WaveObjects[i].is_Alive && WaveObjects[i].MovementSpeed >0)
-		// 	{
-		// 		MoveEnemy(&WaveObjects[i]);
-		// 	}
-		// }
 		for(short y = 0; y < TOTAL_YGRID; ++y){
 			for(short x = 0; x < TOTAL_XGRID; ++x){
 				if(HasLiveEnemyInCell(x,y)){
@@ -102,13 +91,7 @@ void UpdateWave(){
 		if(waveIndex < enemySpawnIndex){
 			//We loop through all the enemies we wanna spawn
 			while(currCount < randEnemyCount){
-				//we skip the walls
 				SpawnEnemy(&EnemiesToSpawn[waveIndex]);
-				// if (WaveObjects[waveIndex % WAVEOBJECTCOUNT].type == WALL) {
-				// 	waveIndex++;
-				// }
-				// //Spawn the enemies
-				// SpawnEnemy(&WaveObjects[waveIndex%WAVEOBJECTCOUNT]);
 				currCount++;	//gotta increment
 				//If we hit the maxenemycount, it means this wave has ended
 				if(waveIndex >= enemySpawnIndex){
@@ -165,52 +148,16 @@ void SpawnEnemy(EnemyInfo* enemy){
 	}
 }
 
-// //Tries to spawn enemy in random grid square. If it fails, whileloop tries again.
-// void SpawnEnemy(EnemyInfo* enemy){
-// 	//SET ENEMY X VALUES
-// 	//if the enemy is a wall, skip it don't spawn
-// 	if(enemy->type == WALL){
-// 		waveIndex++;
-// 		return;
-// 	}
-// 	//If the enemy is a tombstone, spawn it between index 9 to 11
-// 	if(enemy->type == GRAVE){
-// 		enemy->x = CP_Random_RangeInt(TOTAL_XGRID-2, TOTAL_XGRID-4);
-// 	}
-// 	//else it's a normal zombie
-// 	else{
-// 		enemy->x = TOTAL_XGRID-1;		//this puts it outside of the grid
-// 	}
-// 	//SET ENEMY Y VALUES
-// 	int randomYPos = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));			//Spawn at random y pos
-// 	if(!HasLiveEnemyInCell(enemy->x,randomYPos)){
-// 		enemy->y = randomYPos;
-// 		enemy->is_Alive = TRUE;				//This controls if the enemy is "spawned" or not.
-// 		ZombieSpawnParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y));
-// 		PlaySoundEx(ZOMBIESPAWN,CP_SOUND_GROUP_SFX);
-// 		waveIndex++;
-// 	}
-// }
 
 void CreateWall(int x, int y){
-	// if(!HasLiveEnemyInCell(x,y)){
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT] = *GetEnemyPrefab(0);
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT].is_Alive = TRUE;
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT].x = x;
-	// 	WaveObjects[enemyCount % WAVEOBJECTCOUNT].y = y;
-	// 	enemyCount++;
-	// 	PlaySound(WALLBUILD,CP_SOUND_GROUP_SFX);
-	// }
 	if(HasLiveEnemyInCell(x,y))return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
 		if(!WaveObjects[i].is_Alive){
-			PlaySoundEx(ZOMBIESPAWN,CP_SOUND_GROUP_SFX);
 			WaveObjects[i] = *GetEnemyPrefab(0);
 			WaveObjects[i].is_Alive = TRUE;
 			WaveObjects[i].x = x;
 			WaveObjects[i].y = y;
 			PlaySound(WALLBUILD,CP_SOUND_GROUP_SFX);
-			// waveIndex++;
 			break;
 		}
 	}
@@ -224,6 +171,7 @@ void SpawnTombEnemies(void){
 				newEnemy.x = WaveObjects[i].x;	//we still need the xy pos of the tombstone
 				newEnemy.y = WaveObjects[i].y;
 				ZombieSpawnParticle(GridXToPosX(newEnemy.x),GridYToPosY(newEnemy.y));
+				PlaySound(GRAVESPAWN,CP_SOUND_GROUP_SFX);
 				WaveObjects[i] = newEnemy;		//replace tombstone with random enemy
 				WaveObjects[i].is_Alive = TRUE;
 				WaveObjects[i].moveCooldown = TRUE;
@@ -303,6 +251,7 @@ void ZombieDealDamage(int x, int y,int damage){
 	enemy->Health-=damage;
 	if(enemy->Health <=0){
 		enemy->is_Alive = FALSE;
+		RadialParticleVaried(GridXToPosX(enemy->x),GridYToPosY(enemy->y));
 	}
 }
 

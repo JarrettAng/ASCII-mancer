@@ -290,10 +290,12 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 			// If it is outside the grid, continue instead
 			if (IsIndexInPlayingArea(grid_x, grid_y)) {
 				// Add a explosion effect particles on hit
-				RadialParticle(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
-
+				piece_held.slot_index == 0 ? 
+				RadialParticleColor(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f,TETRIS_ICON_WALL_COLOR2):
+				RadialParticleRGB(GridXToPosX(grid_x), GridYToPosY(grid_y), 5, 1.5f);
 				// Depending on type, build a wall or send damage
 				piece_held.slot_index == 0 ? CreateWall(grid_x, grid_y) : SendDamage(grid_x, grid_y, 1);
+				
 			}
 		}
 	}
@@ -302,7 +304,7 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 	trauma += 0.35f;
 
 	// Play tetris piece sound
-	PlaySoundEx(TETROMINOEXPLODE, CP_SOUND_GROUP_SFX);
+	piece_held.slot_index == 0 ? PlaySound(THUD, CP_SOUND_GROUP_SFX) : PlaySoundEx(TETROMINOEXPLODE, CP_SOUND_GROUP_SFX);
 
 	// Swap to the zombie's turn
 	GameLoopSwitch(TURN_ZOMBIE);
