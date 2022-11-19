@@ -134,7 +134,7 @@ void WinTextInit(void) {
 }
 
 void CheckWinCondition(void) {
-	if (GetCurrentWave() >= WAVES_TO_WIN && IsAllEnemiesDead()) WinAnimation();
+	if (GetCurrentWave() >= WAVES_TO_WIN && IsAllEnemiesDead() && CheckLoseCondition() != 1) WinAnimation();
 }
 
 static float time_elapsed = 0.f;

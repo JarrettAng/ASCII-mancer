@@ -2,18 +2,14 @@
 #include "ColorTable.h"
 #include "Grid.h"
 #include "Hearts.h"
-
-typedef struct Wizard {
-	CP_Color color;
-	float xpos;
-	float ypos;
-	float size;
-	char* words;
-}Wizard;
+#include "GameOver.h"
+#include "Wizard.h"
 
 Wizard wiz_body;
 Wizard wiz_hat;
 Wizard wiz_staff;
+CP_Image rotation_icon;
+CP_Image right_click_icon;
 
 void InitWizard(void) {
 	// Body stats
@@ -38,28 +34,38 @@ void InitWizard(void) {
 	wiz_staff.words = "/";
 }
 
+void DrawWizard(Wizard wiz_body_part) {
+	CP_Settings_Fill(wiz_body_part.color);
+	CP_Settings_TextSize(wiz_body_part.size);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+	CP_Font_DrawText(wiz_body_part.words, wiz_body_part.xpos, wiz_body_part.ypos);
+}
+
 void UpdateWizard(void) {
 	// Body update
-	CP_Settings_Fill(wiz_body.color);
-	CP_Settings_TextSize(wiz_body.size);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Font_DrawText(wiz_body.words, wiz_body.xpos, wiz_body.ypos);
+	DrawWizard(wiz_body);
 
 	// Hat update
-	CP_Settings_Fill(wiz_hat.color);
-	CP_Settings_TextSize(wiz_hat.size);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Font_DrawText(wiz_hat.words, wiz_hat.xpos, wiz_hat.ypos);
+	DrawWizard(wiz_hat);
 	CP_Settings_TextSize(wiz_hat.size * 0.9f);
 	CP_Font_DrawText("^", wiz_hat.xpos, wiz_hat.ypos - GetCellSize() / 20.f);
 
 	// Staff update
-	CP_Settings_Fill(wiz_staff.color);
-	CP_Settings_TextSize(wiz_staff.size);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Font_DrawText(wiz_staff.words, wiz_staff.xpos, wiz_staff.ypos);
+	DrawWizard(wiz_staff);
 }
 
+void InitMouseIcon(void) {
+	rotation_icon = CP_Image_Load("Assets/RotationIcon.png");
+	right_click_icon = CP_Image_Load("Assets/MouseRightClickIcon.png");
+}
+/*
+float static time_elapsed = 0.f;
+void RenderMouseIcon(void) {
+	time_elapsed = CP_System_GetDt();
+	float tick = time_elapsed / 
+	CP_Image_DrawAdvanced(rotation_icon, CP_Input_GetMouseX(), CP_Input_GetMouseY(), 100.f, 100.f, 255, )
+}
+*/
 void AnimationWizard() {
 
 }
