@@ -134,21 +134,22 @@ void MainMenuExit(void) {
 }
 
 void InitLogoAnim(){
-	// Ignore this im losing it.
 	// Initalize animation per frame.
-	logoAnim[0] = CP_Image_Load("Assets/LogoAnim/Logo_0.png");
-	logoAnim[1] = CP_Image_Load("Assets/LogoAnim/Logo_1.png");
-	logoAnim[2] = CP_Image_Load("Assets/LogoAnim/Logo_2.png");
-	logoAnim[3] = CP_Image_Load("Assets/LogoAnim/Logo_3.png");
-	logoAnim[4] = CP_Image_Load("Assets/LogoAnim/Logo_4.png");
-	logoAnim[5] = CP_Image_Load("Assets/LogoAnim/Logo_5.png");
-	logoAnim[6] = CP_Image_Load("Assets/LogoAnim/Logo_6.png");
-	logoAnim[7] = CP_Image_Load("Assets/LogoAnim/Logo_7.png");
-	logoAnim[8] = CP_Image_Load("Assets/LogoAnim/Logo_8.png");
-	logoAnim[9] = CP_Image_Load("Assets/LogoAnim/Logo_9.png");
-	logoAnim[10] = CP_Image_Load("Assets/LogoAnim/Logo_10.png");
-	logoAnim[11] = CP_Image_Load("Assets/LogoAnim/Logo_11.png");
-	logoAnim[12] = CP_Image_Load("Assets/LogoAnim/Logo_12.png");
+	// Buffer to store converted integer value.
+	char str[3];
+	// Starting file path.
+	char filePath[] = "Assets/LogoAnim/Logo_00.png";
+	// Loop through every frame.
+	for (int i = 0; i < frameLength; ++i){
+		// Converts int to char.
+		sprintf_s(str, 3, "%02d", i);
+		// Rename file path for current frame.
+		filePath[21] = str[0];
+		filePath[22] = str[1];
+		// Cache file path for current frame in animation array.
+		logoAnim[i] = CP_Image_Load(filePath);
+	}
+
 }
 
 void HandleLogoAnim(){
