@@ -1,6 +1,13 @@
+/*!
+@file	  Option.c
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     21/11/2022
+@brief    This source file for displaying the option.
+________________________________________________________________________________________________________*/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "Settings.h"
+#include "Options.h"
 #include "ColorTable.h"
 #include "UIManager.h"
 #include "MainMenu.h"
@@ -79,12 +86,16 @@ void OptionsInit(void){
 void OptionsUpdate(void){
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
+	// Render all UI elements on the screen
 	RenderTexts();
 	RenderSliders();
 	RenderButtons();
 
-	HandleButtonClick();
+	// Handle adjusting of volume.
 	HandleVolumeControl();
+
+	// Handle back button click.
+	HandleButtonClick();
 }
 
 void OptionsExit(void){
@@ -188,8 +199,11 @@ void InitSettingsTexts(){
 void InitSettingsSliders(){
 	// Offset between each slider.
 	float sliderOffset = GetWindowHeight() / 10;
+
+	// Load and cache images of slider and knob.
 	CP_Image sliderImg = CP_Image_Load("Assets/Slider.png");
 	CP_Image knobImg = CP_Image_Load("Assets/Knob.png");
+
 	// Offset of knob from ends of slider.
 	float knobOffset = (float)CP_Image_GetWidth(sliderImg) / 12 * GetWidthScale();
 
@@ -209,6 +223,7 @@ void InitSettingsSliders(){
 	};
 
 	Line masterVolumeLine = {
+		// Vector position of the start and end of slider.
 		.start = CP_Vector_Set(masterVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() + knobOffset , masterVolumeRect.y),
 		.end = CP_Vector_Set(masterVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() - knobOffset , masterVolumeRect.y),
 	};
@@ -227,6 +242,7 @@ void InitSettingsSliders(){
 	};
 
 	Line sfxVolumeLine = {
+		// Vector position of the start and end of slider.
 		.start = CP_Vector_Set(sfxVolumeRect.x - CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() + knobOffset, sfxVolumeRect.y),
 		.end = CP_Vector_Set(sfxVolumeRect.x + CP_Image_GetWidth(sliderImg) / 2 * GetWidthScale() - knobOffset, sfxVolumeRect.y),
 	};
@@ -313,13 +329,15 @@ void HandleVolumeControl(){
 	UpdateKnobs();
 	// Update actual volumes.
 	UpdateVolumes();
+	// Update text of volumes.
 	UpdateMasterVolumeText();
 	UpdateSFXVolumeText();
 }
 
 void UpdateKnobs(){
-	// Get knob x position based on lerp factor.
+	// Get master knob x position based on lerp factor.
 	masterVolumeSlider.knob.transform.x = masterVolumeSlider.lerpFactor * (masterVolumeSlider.line.end.x - masterVolumeSlider.line.start.x) + masterVolumeSlider.line.start.x;
+	// Get SFX knob x position based on lerp factor.
 	sfxVolumeSlider.knob.transform.x = sfxVolumeSlider.lerpFactor * (sfxVolumeSlider.line.end.x - sfxVolumeSlider.line.start.x) + sfxVolumeSlider.line.start.x;
 }
 
@@ -332,15 +350,19 @@ void WindowSizeScrollUp(){
 }
 
 void HandleWindowSizeScroll(int dir){
+	// Scroll up/down based on button press.
 	(dir == 0) ? currentWindowSize++ : currentWindowSize--;
 
+	// Update current window size variable.
 	currentWindowSize = (currentWindowSize < 0) ? sizeof(windowSizes) / sizeof(windowSizes[0]) - 1 : currentWindowSize;
 	currentWindowSize = (currentWindowSize > (sizeof(windowSizes) / sizeof(windowSizes[0]) - 1)) ? 0 : currentWindowSize;
 	sizesTxt.textData.text = windowSizes[currentWindowSize];
+	// Update window size based on current window size variable.
 	UpdateWindowSize();
 }
 
 void UpdateWindowSize(){
+	// Update window size based on current window size variable.
 	switch (currentWindowSize)
 	{
 	case 0:
@@ -361,14 +383,18 @@ void UpdateWindowSize(){
 	default:
 		break;
 	}
+	// Update the scaling of all UI element.
 	UpdateUIScale();
+	// Refresh scene.
 	CP_Engine_SetNextGameStateForced(OptionsInit, OptionsUpdate, OptionsExit);
 }
 
 void UpdateVolumes(){
+	// Update master volume.
 	masterVolume = CP_Math_LerpInt(0, 100, masterVolumeSlider.lerpFactor);
 	CP_Sound_SetGroupVolume(CP_SOUND_GROUP_MUSIC, masterVolumeSlider.lerpFactor);
 
+	// Update SFX volume.
 	sfxVolume = CP_Math_LerpInt(0, 100, sfxVolumeSlider.lerpFactor);
 	CP_Sound_SetGroupVolume(CP_SOUND_GROUP_SFX, sfxVolumeSlider.lerpFactor);
 }
@@ -386,5 +412,6 @@ void UpdateSFXVolumeText(){
 }
 
 void LoadMainMenu(){
+	// Transition back to main menu.
 	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }

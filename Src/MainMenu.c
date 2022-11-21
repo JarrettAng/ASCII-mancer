@@ -1,3 +1,10 @@
+/*!
+@file	  MainMenu.c
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     21/11/2022
+@brief    This source file for displaying the main menu.
+________________________________________________________________________________________________________*/
+
 #include <cprocessing.h>
 #include "MainMenu.h"
 #include "Settings.h"
@@ -70,10 +77,12 @@ void ExitGame(void);
 #pragma endregion
 
 void MainMenuInit(void) {
+	// Load and cache game logo.
 	title = CP_Image_Load("Assets/MenuTitle.png");
 
 	// Populate buttons with positional, size and text values.
 	InitMenuButtons();
+	// Create select pointer using pixel data.
 	InitSelectPointer();
 
 	PlayBGM(MAINMENU);
@@ -84,10 +93,14 @@ void MainMenuUpdate(void) {
 	// Drawn 25% from top.
 	CP_Image_Draw(title, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
 
+	// Draw menu buttons.
 	RenderButtons();
+	// Draw select pointer on which button the player is hovering.
 	DrawSelectPointer();
 
+	// Apply carousel effect on button the player is hovering.
 	HandleCarouselButton();
+	// Handle scene transition.
 	HandleMenuButtonClick();
 }
 
@@ -199,6 +212,7 @@ void DrawSelectPointer(){
 		return;
 	}
 
+	// Cache the button the player is hovering.
 	Button* hoverBtn = GetButtonHover();
 
 	// Stop if no button hovered.
@@ -228,6 +242,7 @@ void HandleCarouselButton(){
 		return;
 	}
 
+	// Cache the button the player is hovering.
 	Button* hoverBtn = GetButtonHover();
 
 	// If player is not hovering on any button, reset last hovered button position.
@@ -279,18 +294,22 @@ void HandleTransition(Button* btn){
 	btn->callBack();
 }
 
+// Transition to game scene.
 void LoadGameScene(void){
 	CP_Engine_SetNextGameState(gameLevelInit, gameLevelUpdate, gameLevelExit);
 }
 
+// Transition to option scene.
 void LoadOptionsScene(void){
 	CP_Engine_SetNextGameState(OptionsInit, OptionsUpdate, OptionsExit);
 }
 
+// Transition to credits scene.
 void LoadCreditsScene(void){
 	CP_Engine_SetNextGameState(CreditsInit, CreditsUpdate, CreditsExit);
 }
 
+// Exit game.
 void ExitGame(void) {
 	CP_Engine_Terminate();
 }

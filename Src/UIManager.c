@@ -1,3 +1,10 @@
+/*!
+@file	  UIManager.c
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     21/11/2022
+@brief    This source file for handling UI elements.
+________________________________________________________________________________________________________*/
+
 #include <cprocessing.h>
 #include "UIManager.h"
 #include "Utils.h"
@@ -42,6 +49,7 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 	btn->textData = textData;
 	btn->callBack = callBack;
 
+	// Cache button.
 	btns[btnsCount++] = btn;
 }
 
@@ -53,6 +61,7 @@ void InitializeText(Text* txt, Rect transform, TextData data){
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
 	txt->textData = data;
 
+	// Cache text.
 	texts[textsCount++] = txt;
 }
 
@@ -64,6 +73,7 @@ void InitializeTextBox(Text* txt, Rect transform, TextData data){
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
 	txt->textData = data;
 
+	// Cache textbox.
 	textBoxes[textBoxesCount++] = txt;
 }
 
@@ -75,6 +85,8 @@ void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, S
 	slider->line = line;
 	slider->img = img;
 	slider->knob = knobData;
+
+	// Cache slider.
 	sliders[sliderCount++] = slider;
 }
 
@@ -133,6 +145,7 @@ void RenderText(Text* txt){
 /// Render all texts cached in texts array.
 /// </summary>
 void RenderTexts(){
+	// Loop through every text initialized.
 	for (int i = 0; i < textsCount; ++i) {
 		// Draw text
 		SetTextSetting(texts[i]->textData);
@@ -144,6 +157,7 @@ void RenderTexts(){
 /// Render all texts cached in texts array.
 /// </summary>
 void RenderTextBoxes(){
+	// Loop through every text boxes initialized.
 	for (int i = 0; i < textBoxesCount; ++i) {
 		// Draw text
 		SetTextSetting(textBoxes[i]->textData);
@@ -164,6 +178,7 @@ void RenderSlider(Slider* slider){
 /// Render all sliders cached in slider array.
 /// </summary>
 void RenderSliders(Void){
+	// Loop through every slider initialized.
 	for (int i = 0; i < sliderCount; ++i) {
 		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);
 		CP_Image_Draw(sliders[i]->knob.img, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.transform.width, sliders[i]->knob.transform.heigth, 255);
@@ -252,6 +267,7 @@ Button* GetButtonClick() {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
+				// Cache button click.
 				btnClicked = btns[i];
 				return btns[i];
 			}
@@ -295,6 +311,7 @@ Slider* GetSliderHeld(){
 
 		// Loop through all buttons initialized in this scene.
 		for (int i = 0; i < sliderCount; ++i) {
+			// Check if mouse is within knob.
 			if (pointWithinCircle(xPos, yPos, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.radius)){
 				sliderHeld = sliders[i];
 				break;

@@ -1,3 +1,10 @@
+/*!
+@file	  Credits.c
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     21/11/2022
+@brief    This source file for displaying the credits.
+________________________________________________________________________________________________________*/
+
 #include "Credits.h"
 #include "ColorTable.h"
 #include "UIManager.h"
@@ -52,13 +59,13 @@ void CreditsExit(void){
 
 void InitCreditsTexts(){
 	/*==============================Text Settings========================*/
-
 	Text* p_headerText = creditHeaders;
 	Text* p_namesText = creditNames;
 
 	// Offset of names from its header.
 	float nameOffSet = GetWindowHeight() / 10;
 
+	// Base text data for header texts.
 	TextData headerTextData = {
 		.color = MENU_RED,
 		.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
@@ -67,6 +74,7 @@ void InitCreditsTexts(){
 		.textSize = 80 * GetHeightScale()
 	};
 
+	// Base text data for names texts.
 	TextData namesTextData = {
 	.color = MENU_WHITE,
 	.font = CP_Font_Load("Assets/PressStart2P-Regular.ttf"),
@@ -86,7 +94,8 @@ void InitCreditsTexts(){
 		.y = GetWindowHeight(),
 		.width = GetWindowWidth()
 	};
-
+	//=============================================
+	// DEVELOPED BY:
 	TextData memberHeader = headerTextData;
 	memberHeader.text = "DEVELOPED BY";
 	InitializeText(p_headerText++, headerRect, memberHeader);
@@ -101,6 +110,8 @@ void InitCreditsTexts(){
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, memberNames);
 
+	//=============================================
+	// INSTRUCTORS:
 	TextData instructorHeader = headerTextData;
 	instructorHeader.text = "INSTRUCTORS";
 	headerRect.y += namesTextData.textSize * 13 + headerTextData.textSize + nameOffSet;
@@ -113,6 +124,8 @@ void InitCreditsTexts(){
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, instructorNames);
 
+	//=============================================
+	// CREATED AT:
 	TextData createdAtHeader = headerTextData;
 	createdAtHeader.text = "CREATED AT";
 	headerRect.y += namesTextData.textSize * 6 + headerTextData.textSize + nameOffSet;
@@ -124,6 +137,8 @@ void InitCreditsTexts(){
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, createdAtNames);
 
+	//=============================================
+	// PRESIDENT:
 	TextData presidentHeader = headerTextData;
 	presidentHeader.text = "PRESIDENT";
 	headerRect.y += namesTextData.textSize * 4 + headerTextData.textSize + nameOffSet;
@@ -134,6 +149,8 @@ void InitCreditsTexts(){
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, presidentName);
 
+	//=============================================
+	// EXECUTIVES:
 	TextData executiveHeader = headerTextData;
 	executiveHeader.text = "EXECUTIVES";
 	headerRect.y += namesTextData.textSize * 3 + headerTextData.textSize + nameOffSet;
@@ -158,6 +175,8 @@ void InitCreditsTexts(){
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, executiveNames);
 
+	//=============================================
+	// SPECIAL THANKS:
 	TextData specialThanksHeader = headerTextData;
 	specialThanksHeader.text = "SPECIAL THANKS";
 	headerRect.y += namesTextData.textSize * 30 + headerTextData.textSize + nameOffSet;
@@ -172,15 +191,18 @@ void InitCreditsTexts(){
 		"Rick Astley\n\n"
 		"Joe\n\n"
 		"Winnie the Pooh\n\n"
-		"\n\n"
-		;
+		"Sawcon\n\n"
+		"CD";
 
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, specialThanksNames);
 
+
+	//=============================================
+	// COPYRIGHT:
 	TextData copyRightHeader = headerTextData;
 	copyRightHeader.text = "";
-	headerRect.y += namesTextData.textSize * 12 + headerTextData.textSize + nameOffSet;
+	headerRect.y += namesTextData.textSize * 14 + headerTextData.textSize + nameOffSet;
 	InitializeText(p_headerText, headerRect, copyRightHeader);
 
 	TextData copyRightNames = namesTextData;
@@ -220,6 +242,7 @@ void InitCreditsButtons(){
 	/*==============================================================*/
 }
 
+// Cutoff to block the top and bottom of the screen.
 void RenderCreditsCutoff(){
 	CP_Settings_Fill(MENU_BLACK);
 	// Top cutoff
@@ -229,11 +252,13 @@ void RenderCreditsCutoff(){
 }
 
 void ScrollCreditTexts(){
+	// Scroll the headers and names up.
 	for (short i = 0; i < NUM_OF_CREDITS; ++i){
 		creditHeaders[i].transform.y -= scrollSpeed * CP_System_GetDt();
 		creditNames[i].transform.y -= scrollSpeed * CP_System_GetDt();
 	}
 
+	// If last name reaches the top, reset all header and names position to loop credits.
 	if (creditNames[NUM_OF_CREDITS - 1].transform.y <= 0){
 		for (short i = 0; i < NUM_OF_CREDITS; ++i){
 			creditHeaders[i].transform.y = creditHeaders[i].transform.cachedPos.y;
@@ -243,6 +268,7 @@ void ScrollCreditTexts(){
 }
 
 void LoadMainMenu(){
+	// Transition back to menu.
 	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }
 

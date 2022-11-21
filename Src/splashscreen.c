@@ -1,3 +1,10 @@
+/*!
+@file	  SplashScreen.c
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     21/11/2022
+@brief    This source file for displaying the splash screen.
+________________________________________________________________________________________________________*/
+
 #include "cprocessing.h"
 #include "SplashScreen.h"
 #include "MainMenu.h"
@@ -6,7 +13,7 @@
 #include "EnemyStats.h"
 #include "SoundManager.h"
 #include "UIManager.h"
-// TODO: For change back to 3f before release
+
 const float FADE_IN_DURATION = 3.0f;
 
 float fade = 0;	// Current fade timer
@@ -16,7 +23,6 @@ Text copyRight;
 #pragma region FORWARD_DECLARATION
 void InitTexts(void);
 #pragma endregion
-
 
 void SplashScreenInit() {
 	// Intialize logo
@@ -43,10 +49,12 @@ void SplashScreenUpdate() {
 
 	// Fade in the digipen logo
 	FadeInLogo();
+	// Draw copyright texts.
 	RenderTextBoxes();
 }
 
 void SplashScreenExit() {
+	// Free image and text.
 	CP_Image_Free(&logo);
 	FreeUI();
 }
