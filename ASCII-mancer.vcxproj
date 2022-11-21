@@ -23,7 +23,7 @@
     <ClInclude Include="Inc\MainMenu.h" />
     <ClInclude Include="Inc\Particles.h" />
     <ClInclude Include="Inc\Screenshake.h" />
-    <ClInclude Include="Inc\Settings.h" />
+    <ClInclude Include="Inc\Options.h" />
     <ClInclude Include="Inc\SoundManager.h" />
     <ClInclude Include="Inc\Splashscreen.h" />
     <ClInclude Include="Inc\TManager.h" />
