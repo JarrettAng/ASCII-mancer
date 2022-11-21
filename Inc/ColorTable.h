@@ -14,8 +14,10 @@
 #define MENU_GRAY CP_Color_Create(179, 179, 179, 255)
 #define MENU_RED CP_Color_Create(227, 23, 23, 255)
 #define MENU_WHITE CP_Color_Create(239, 239, 239, 255)
+#define LOGO_RED CP_Color_Create(233, 0, 78,255)
 
 #define MENU_RED_CODE 227, 23, 23, 255
+#define MENU_LOGO_RED_CODE 233, 0, 78,255
 
 /*======================*/
 /*	GAME OVER COLORS	*/

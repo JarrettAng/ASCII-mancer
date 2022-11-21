@@ -4,10 +4,10 @@
 @date     21/11/2022
 @brief    This source file for displaying the main menu.
 ________________________________________________________________________________________________________*/
-
+#include <stdio.h>
 #include <cprocessing.h>
 #include "MainMenu.h"
-#include "Settings.h"
+#include "Options.h"
 #include "Credits.h"
 #include "ColorTable.h"
 #include "UIManager.h"
@@ -16,15 +16,12 @@ ________________________________________________________________________________
 #include "Utils.h"
 #include "SoundManager.h"
 
-CP_Image title;
-
 Button startBtn;
 Button settingBtn;
 Button creditsBtn;
 Button exitBtn;
 
 #pragma region SELECT_POINTER_VARIABLES
-
 // Visual pointer to select menu option.
 CP_Image selectPointer;
 
@@ -41,11 +38,9 @@ Timer pointerBlink = {
 };
 
 int alpha = 255;
-
 #pragma endregion
 
 #pragma region TRANSITION_VARIABLES
-
 // Timer for transition to next scene.
 Timer transitionTimer = {
 	.time = .5,
@@ -57,17 +52,42 @@ Timer buttonBlink = {
 	.time = .1f,
 	.elaspedTime = 0,
 };
-
 #pragma endregion
+
+#pragma region LOGO_SHINE_ANIMATION
+// 13 Frame animation.
+CP_Image logoAnim[13];
+CP_Image logo;
+CP_BOOL isShining = FALSE;
+
+int frameLength = sizeof(logoAnim) / sizeof(logoAnim[0]);
+int currentAnimFrame = 0;
+
+Timer animIntervalTimer = {
+	.time = 4,
+	.elaspedTime = 4
+};
+
+Timer frameIntervalTimer = {
+	.time = .075,
+	.elaspedTime = 0
+};
+#pragma endregion
+
 
 #pragma region FORWARD_DECLARATIONS
 
+void InitLogoAnim(void);
 void InitMenuButtons(void);
 void InitSelectPointer(void);
+
 void DrawSelectPointer(void);
+
+void HandleLogoAnim(void);
 void HandleCarouselButton(void);
 void HandleMenuButtonClick(void);
 void HandleTransition(Button* btn);
+
 
 void LoadGameScene(void);
 void LoadOptionsScene(void);
@@ -77,9 +97,9 @@ void ExitGame(void);
 #pragma endregion
 
 void MainMenuInit(void) {
-	// Load and cache game logo.
-	title = CP_Image_Load("Assets/MenuTitle.png");
-
+	// Initialize frames of logo animation.
+	InitLogoAnim();
+	logo = logoAnim[0];
 	// Populate buttons with positional, size and text values.
 	InitMenuButtons();
 	// Create select pointer using pixel data.
@@ -91,24 +111,79 @@ void MainMenuInit(void) {
 void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
 	// Drawn 25% from top.
-	CP_Image_Draw(title, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(title) * GetWidthScale(), (float)CP_Image_GetHeight(title) * GetHeightScale(), 255);
+	CP_Image_Draw(logo, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(logo) * GetWidthScale() * .8, (float)CP_Image_GetHeight(logo) * GetHeightScale() * .8, 255);
 
 	// Draw menu buttons.
 	RenderButtons();
 	// Draw select pointer on which button the player is hovering.
 	DrawSelectPointer();
-
 	// Apply carousel effect on button the player is hovering.
 	HandleCarouselButton();
 	// Handle scene transition.
 	HandleMenuButtonClick();
+	// Play logo shine animation.
+	HandleLogoAnim();
 }
 
 void MainMenuExit(void) {
-	CP_Image_Free(&title);
+	CP_Image_Free(&logo);
+	CP_Image_Free(&logoAnim);
 	CP_Image_Free(&selectPointer);
 	ClearInteractCache();
 	FreeUI();
+}
+
+void InitLogoAnim(){
+	// Ignore this im losing it.
+	// Initalize animation per frame.
+	logoAnim[0] = CP_Image_Load("Assets/LogoAnim/Logo_0.png");
+	logoAnim[1] = CP_Image_Load("Assets/LogoAnim/Logo_1.png");
+	logoAnim[2] = CP_Image_Load("Assets/LogoAnim/Logo_2.png");
+	logoAnim[3] = CP_Image_Load("Assets/LogoAnim/Logo_3.png");
+	logoAnim[4] = CP_Image_Load("Assets/LogoAnim/Logo_4.png");
+	logoAnim[5] = CP_Image_Load("Assets/LogoAnim/Logo_5.png");
+	logoAnim[6] = CP_Image_Load("Assets/LogoAnim/Logo_6.png");
+	logoAnim[7] = CP_Image_Load("Assets/LogoAnim/Logo_7.png");
+	logoAnim[8] = CP_Image_Load("Assets/LogoAnim/Logo_8.png");
+	logoAnim[9] = CP_Image_Load("Assets/LogoAnim/Logo_9.png");
+	logoAnim[10] = CP_Image_Load("Assets/LogoAnim/Logo_10.png");
+	logoAnim[11] = CP_Image_Load("Assets/LogoAnim/Logo_11.png");
+	logoAnim[12] = CP_Image_Load("Assets/LogoAnim/Logo_12.png");
+}
+
+void HandleLogoAnim(){
+	// Currently animating.
+	if (isShining){
+		// End of animation.
+		if (currentAnimFrame >= frameLength){
+			// Reset.
+			currentAnimFrame = 0;
+			isShining = !isShining;
+			return;
+		}
+
+		// Interval between frames.
+		if (frameIntervalTimer.elaspedTime >= frameIntervalTimer.time){
+			// Update logo to anim frame image.
+			frameIntervalTimer.elaspedTime = 0;
+			logo = logoAnim[currentAnimFrame++];
+		}
+		else {
+			// Tick timer.
+			frameIntervalTimer.elaspedTime += CP_System_GetDt();
+		}
+		return;
+	}
+	// Interval between animation.
+	if (animIntervalTimer.elaspedTime >= animIntervalTimer.time){
+		// Start animation.
+		animIntervalTimer.elaspedTime = 0;
+		isShining = TRUE;
+	}
+	else {
+		// Tick timer.
+		animIntervalTimer.elaspedTime += CP_System_GetDt();
+	}
 }
 
 void InitMenuButtons(void) {
@@ -196,9 +271,9 @@ void InitMenuButtons(void) {
 
 void InitSelectPointer(){
 	unsigned char menuPointerData[] = {
-		MENU_RED_CODE,TRANSPERANT_CODE,
-		MENU_RED_CODE,MENU_RED_CODE,
-		MENU_RED_CODE,TRANSPERANT_CODE
+		MENU_LOGO_RED_CODE,TRANSPERANT_CODE,
+		MENU_LOGO_RED_CODE,MENU_LOGO_RED_CODE,
+		MENU_LOGO_RED_CODE,TRANSPERANT_CODE
 	};
 
 	selectPointer = CP_Image_CreateFromData(2, 3, menuPointerData);
@@ -248,12 +323,15 @@ void HandleCarouselButton(){
 	// If player is not hovering on any button, reset last hovered button position.
 	if (GetPrevBtnHovered() != NULL){
 		GetPrevBtnHovered()->transform.x = GetPrevBtnHovered()->transform.cachedPos.x;
+		GetPrevBtnHovered()->textData.color = MENU_WHITE;
+
 	}
 
 	// If hovering over a button.
 	if (hoverBtn != NULL){
 		// Offset button that player is hovering to create carousel effect.
 		hoverBtn->transform.x = hoverBtn->transform.cachedPos.x + 35;
+		hoverBtn->textData.color = LOGO_RED;
 	}
 }
 
