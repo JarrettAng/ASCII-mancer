@@ -1,56 +1,65 @@
 /*!
 @file	  EnemyDisplay.c
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
-@date     09/11/2022
-@brief    This source file
+@date     22/11/2022
+@brief    This source file contains variables for the size and positions for rendering the health, damage, movement, and information
+		  box. As well as 7 functions,
+
+		  EnemyDisplayInit - Called by Gamelevel during its initialization, loads the values needed for rendering and such.
+
+		  EnemyDisplayTimeIncrement - Subscribed to the player update event, increments the time trackers for the different animations.
+		  RenderEnemyDisplay - Renders the enemy health and damage stats in the four corners of the cell.
+		  RenderEnemyMovement - Renders the movement arrows on the left, and the shading of the final cell of its movement.
+		  DisplayEnemyInfo - Renders the information box for the enemy in the grid after hovering after a while.
+
+		  FreeEnemyDisplayIcon - Upon exit of game level, free the image since it no longer used.
+		  ResetDisplayEnemyInfoTime - Resets the timing of the elapsed hover time to 0.
 ________________________________________________________________________________________________________*/
 
-#include <stdio.h>
+#include <stdio.h>		// For converting ints to strings
 #include <stdlib.h>
 
-#include "Grid.h" // For cell size
+#include "Grid.h"		// For cell size
 #include "WaveSystem.h" // For alive enemy check
-#include "ColorTable.h"
+#include "ColorTable.h"	// For text & health bar colors
 
-#include "GameLoop.h" // For player update
+#include "GameLoop.h"	// For subscribing to player update
 #include "EnemyDisplay.h"
 
-// Numbers to display in the four corners of the cell
+// Offsets for displaying in the four corners of the cell
 CP_Vector display[4];
 
 // Size settings
-float cell_size;
-float text_size;
-float arrow_size;
+float cell_size;				// Size of a cell in the grid, sizes of everything else depends on this
+float text_size;				// Default size to render texts
+float arrow_size;				// Default size to render the movement arrows
 
 // Cell shading settings
-#define SHADE_HALFCELL_LINES 2 // How many lines to draw in the 2 halves of the cell
-float shade_length;
-float shade_spacing;
+#define SHADE_HALFCELL_LINES 2	// How many lines to draw in the 2 halves of the cell
+float shade_length;				// The size of each bar in the shade
+float shade_spacing;			// Gap between each bar
 
 // Health bar settings
-CP_Vector health_offset;
-float health_height;
-float health_width;
-float health_spacing; // The gap between each health bar
+CP_Vector health_offset;		// How high up the bar should move from the center of the cell
+float health_height;			// The y-size of the health bar
+float health_width;				// THe x-size of the entire health bar
+float health_spacing;			// Gap between each health cell in the bar
 
-// Movement settings
-float move_elapsed_time;
-float move_blink_speed = 0.5f;
-_Bool move_draw;
+// Movement blinking settings
+float move_elapsed_time;		// How much time as passed since it last blinked
+float move_blink_speed = 0.5f;	// How many seconds to wait before blinking again
+_Bool move_draw;				// Flag when enemy has 0 movement, skips the entire calculations and rendering
 
-CP_Image attack_icon;
-
-char text_buffer[4];
+CP_Image attack_icon;			// Icon for displaying enemy's attack
 
 // Zombie types description array
 E_DisplayInfo zombie_info[ZOMBIE_TYPE_LENGTH];
 
-float hover_info_display_time = 0.75f;
-float hover_elapsed_time;
-EnemyInfo *hovered_zombie;
-int last_hover_x, last_hover_y;
-E_DisplayText info_text;
+float hover_info_display_time = 0.75f;	// How long to wait before showing enemy information
+float hover_elapsed_time;				// How long the cursor has been hovering in a cell of the grid
+EnemyInfo *hovered_zombie;				// The information of the enemy in the grid, if any.
+int last_hover_x, last_hover_y;			// Check to tell if the cursor is still hovering in the same cell
+E_DisplayText info_text;				// Struct containing information for rendering
 
 #pragma region
 void EnemyDisplayTimeIncrement(void);
@@ -81,8 +90,8 @@ void EnemyDisplayInit(void) {
 	shade_spacing = (cell_size - shade_length * SHADE_HALFCELL_LINES) / (SHADE_HALFCELL_LINES - 0.5f); // Spacing is remaining
 
 	// Update health rendering values
-	health_height = cell_size * 0.1f; // Health bar is 10% of cell height
-	health_width = cell_size * 0.8f; // Health bar is 80% of cell width
+	health_height = cell_size * 0.1f;	// Health bar is 10% of cell height
+	health_width = cell_size * 0.8f;	// Health bar is 80% of cell width
 	health_spacing = cell_size * 0.05f; // The gap between each health bar cell is 5% of cell width
 	health_offset.x = cell_size * 0.4f; // Offset places bar at top of cell
 	health_offset.y = cell_size * 0.4f;
@@ -133,8 +142,11 @@ void EnemyDisplayInit(void) {
 	info_text.stroke = CP_System_GetWindowHeight() / 240.0f;
 }
 
+/*______________________________________________________________
+@brief Subscribed to the player update event, increments the time trackers for the different animations
+*/
 void EnemyDisplayTimeIncrement(void) {
-	// Update zombie move indicator flicker
+	// Update the timing for the zombie move indicator flicker
 	move_elapsed_time += CP_System_GetDt();
 
 	if (move_elapsed_time > move_blink_speed) {
@@ -146,22 +158,25 @@ void EnemyDisplayTimeIncrement(void) {
 		}
 	}
 
-	// Update zombie information hover
+	// Update the timing for the zombie information hover
+	// If the cursor is not in the playing area, skip
 	if (!IsIndexInPlayingArea(0, PosYToGridY(CP_Input_GetMouseY()))) {
 		hovered_zombie = NULL;
 		return;
 	}
 
+	// If the cursor is still in the same cell as it was last time, update the timing
 	if (last_hover_x == PosXToGridX(CP_Input_GetMouseX()) && last_hover_y == PosYToGridY(CP_Input_GetMouseY())) {
 		hover_elapsed_time += CP_System_GetDt();
 
+		// Once the time spent hovering is enough, draws the information box for the enemy
 		if (hover_elapsed_time > hover_info_display_time) {
 			if (hovered_zombie = GetAliveEnemyFromGrid(last_hover_x, last_hover_y)) {
 				info_text.zombie_index = hovered_zombie->type;
 			}
 		}
 	}
-	else {
+	else { // Else if it changed, reset the timing
 		ResetDisplayEnemyInfoTime();
 		last_hover_x = PosXToGridX(CP_Input_GetMouseX());
 		last_hover_y = PosYToGridY(CP_Input_GetMouseY());
@@ -170,7 +185,13 @@ void EnemyDisplayTimeIncrement(void) {
 }
 
 /*______________________________________________________________
-@brief Displays the enemy stats in the four corners of the cell
+@brief Renders the enemy health and damage stats in the four corners of the cell
+
+@param[in] pos_x - The x position of the cell center
+@param[in] pos_y - The y position of the cell center
+@param[in] health - The amount of health the enemy currently has
+@param[in] max_health - The maximum health of the enemy
+@param[in] wall_damage - The amount of damage the enemy does to walls
 */
 void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, int wall_damage) {
 	CP_Settings_RectMode(CP_POSITION_CORNER);
@@ -179,7 +200,7 @@ void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, in
 	if (health > 0) {
 		CP_Settings_StrokeWeight(0.0f);
 
-		// Color of health depends on percentage
+		// Color of health depends on percentage of current health / max health
 		float health_percent = (float)health / (float)max_health;
 		if (health_percent > 0.99f) {
 			CP_Settings_Fill(HEALTH_GREEN);
@@ -196,7 +217,7 @@ void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, in
 			CP_Graphics_DrawRect(pos_x - health_offset.x, pos_y - health_offset.y, health_width, health_height);
 		}
 		else {
-			// Size of each bar in health depends on number of bars
+			// Every health is a cell, the size of each cell in health depends on number of bars
 			float bar_cell_length = (health_width - health_spacing * (max_health - 1)) / max_health;
 			for (int count = 0; count < health; ++count) {
 				CP_Graphics_DrawRect(pos_x - health_offset.x + (bar_cell_length + health_spacing) * count, pos_y - health_offset.y, bar_cell_length, health_height);
@@ -209,18 +230,15 @@ void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, in
 		for (int index = 0; index < wall_damage; ++index) {
 			CP_Image_Draw(attack_icon, pos_x + display[BOTTOM_RIGHT].x - (health_spacing + text_size) * index, pos_y + display[BOTTOM_RIGHT].y, text_size, text_size, 255);
 		}
-
-		//CP_Settings_TextSize(text_size);
-		//CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-
-		//CP_Settings_Fill(HEALTH_RED);
-		//sprintf_s(text_buffer, _countof(text_buffer), "%d", wall_damage);
-		//CP_Font_DrawText(text_buffer, pos_x + display[DAMAGE].x, pos_y + display[DAMAGE].y);
 	}
 }
 
 /*______________________________________________________________
-@brief 
+@brief Renders the movement arrows on the left, and the shading of the final cell of its movement.
+
+@param[in] pos_x - The x position of the cell center
+@param[in] pos_y - The y position of the cell center
+@param[in] movement - The amount of cells the enemy can move per turn
 */
 void RenderEnemyMovement(float pos_x, float pos_y, int movement) {
 	if (!movement || !move_draw) return;
@@ -290,10 +308,16 @@ void RenderEnemyMovement(float pos_x, float pos_y, int movement) {
 	}
 }
 
+/*______________________________________________________________
+@brief Upon exit of game level, free the image since it no longer used.
+*/
 void FreeEnemyDisplayIcon(void) {
 	CP_Image_Free(&attack_icon);
 }
 
+/*______________________________________________________________
+@brief Renders the information box for the enemy in the grid after hovering after a while.
+*/
 void DisplayEnemyInfo(void) {
 	if (!hovered_zombie) return;
 
@@ -318,6 +342,9 @@ void DisplayEnemyInfo(void) {
 	CP_Font_DrawText(zombie_info[info_text.zombie_index].description, CP_Input_GetMouseX() + info_text.offset.x, CP_Input_GetMouseY() + info_text.offset.y + info_text.size / 1.2f);
 }
 
+/*______________________________________________________________
+@brief Resets the timing of the elapsed hover time to 0.
+*/
 void ResetDisplayEnemyInfoTime(void) {
 	hover_elapsed_time = 0.0f;
 }

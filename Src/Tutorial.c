@@ -1,46 +1,59 @@
 /*!
 @file	  Tutorial.c
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
-@date     14/11/2022
-@brief    This source file
+@date     22/11/2022
+@brief    This source file contains the timings and positions for all the tutorial objects, as well as 10 functions,
+
+		  TutorialInit - Sets up the text and other UI elements, and event subscription to player update and end.
+		  TutorialUpdate - Renders all the tutorial UI elements like the arrows & text.
+		  TutorialExit - When a piece is played, end the tutorial by unsubscribing the render function from update.
+
+		  TutTextCreate - Loads the information for rendering text, like position, size, color into the TutText struct.
+		  TutArrowCreate - Loads the information for rendering arrows, like position, size, color into the TutArrow struct.
+
+		  DrawArrow - Renders the arrow based on the information in TutArrow.
+		  DrawTextFull - Renders the text based on the information in TutText.
+		  DrawTextTopLeft - Renders the text with its anchor point on the top left.
+		  DrawTextCentre - Renders the text with its anchor point in the center.
+		  DrawTextBox - Renders the background box for the text.
 ________________________________________________________________________________________________________*/
 
 #include "ColorTable.h" // For text colors
 #include "WaveSystem.h" // For the tutorial zombie
 #include "EnemyStats.h" // For zombie type
-#include "Grid.h" // For grid conversion
+#include "Grid.h"		// For grid conversion
 
 #include "Tutorial.h"
-#include "GameLoop.h"
+#include "GameLoop.h"	// For subscribing to player's turn end
 
-static float tut_time_elapsed;
-_Bool timer_paused;
-static float pause_time_elapsed;
-float pause_blink_speed = 0.5f;
-float box_stroke, arrow_head;
+static float tut_time_elapsed;		// Time passed since start of tutorial
+_Bool timer_paused;					// Is the tutorial paused right now?
+static float pause_time_elapsed;	// Time passed since tutorial was paused
+float pause_blink_speed = 0.5f;		// How often the "Click to continue" text should blink
+float box_stroke, arrow_head;		// Sizes for the rendering of tutorial objects
 
 /*______________________________________________________________
 @brief Timing settings, change the values here to change the animation.
 */
-float time_skip_tut_start = 0.0f;
-float time_p_intro_start = 1.75f;
-float time_z_intro_start = 4.0f;
-float time_hover_intro_start = 7.25f;
-float time_section_1_wait = 12.0f;
+float time_skip_tut_start = 0.0f;		// Skip tutorial text
+float time_p_intro_start = 1.75f;		// This is the player text
+float time_z_intro_start = 4.0f;		// These are zombies text
+float time_hover_intro_start = 7.25f;	// Hover over zombies for more information text
+float time_section_1_wait = 12.0f;		// Click to continue text
 float time_section_1_end = 12.5f;
 
-float time_piece_start = 13.0f;
-float time_attack_start = 15.5f;
-float time_defend_start = 18.0f;
-float time_section_2_wait = 20.0f;
+float time_piece_start = 13.0f;			// Tetris pieces introduction text
+float time_attack_start = 15.5f;		// Attack pieces introduction text
+float time_defend_start = 18.0f;		// Defense pieces introduction text
+float time_section_2_wait = 20.0f;		// Click to continue text
 float time_section_2_end = 20.5f;
 
-float time_queue_start = 21.0f;
-float time_drag_start = 24.5f;
-float time_rotate_start = 27.0f;
-float time_tut_end_start = 30.0f;
+float time_queue_start = 21.0f;			// Player's hand queue introduction text
+float time_drag_start = 24.5f;			// Click and drag controls text
+float time_rotate_start = 27.0f;		// Right click to rotate text
+float time_tut_end_start = 30.0f;		// Play a piece to start game text
 
-// Tutorial Texts
+// Tutorial Texts, contains all the information for rendering
 TutText text_skip_tut;
 TutText text_p_intro;
 TutText text_z_intro;
@@ -54,7 +67,7 @@ TutText text_rotate_intro;
 TutText text_end_intro;
 TutText text_continue;
 
-// Tutorial Arrows
+// Tutorial Arrows, contains all the information for rendering
 TutArrow arrow_p_intro;
 TutArrow arrow_z_intro;
 TutArrow arrow_attack_intro;
@@ -73,6 +86,10 @@ void DrawTextCentre(char* text, float pos_x, float pos_y, CP_Color color, float 
 void DrawTextBox(float pos_x, float pos_y, float size_x, float size_y);
 #pragma endregion Forward Declarations
 
+/*______________________________________________________________
+@brief Should be called on game level load, sets up the text and other UI elements,
+	   and event subscription to player update and end.
+*/
 void TutorialInit(void) {
 	SubscribeEvent(PLAYER_UPDATE, TutorialUpdate, 2);
 	SubscribeEvent(PLAYER_END, TutorialExit, DEFAULT_PRIORITY);
@@ -255,7 +272,8 @@ void TutorialInit(void) {
 }
 
 /*______________________________________________________________
-@brief The sequence of events to show for the tutorial
+@brief Renders all the tutorial UI elements like the arrows & text, should be called in an update loop.
+	   The sequence of events to show for the tutorial
 */
 void TutorialUpdate(void) {
 	if (time_section_1_end > tut_time_elapsed) {
@@ -357,6 +375,9 @@ void TutorialUpdate(void) {
 	}
 }
 
+/*______________________________________________________________
+@brief When a piece is played, end the tutorial by unsubscribing the render function from update.
+*/
 void TutorialExit(void) {
 	// Hide the tutorial upon completion of the player's first turn
 	UnsubscribeEvent(PLAYER_UPDATE, TutorialUpdate);
@@ -365,11 +386,18 @@ void TutorialExit(void) {
 
 //______________________________________________________________
 // Initialization functions
+
+/*______________________________________________________________
+@brief Loads the information for rendering text, like position, size, color into the TutText struct.
+*/
 TutText TutTextCreate(char* message, CP_Vector pos, CP_Color color, float size, CP_Vector box_bounds, CP_Vector box_size) {
 	TutText new_text = { .text = message, .pos = pos, .color = color, .size = size, .box_bounds = box_bounds, .box_size = box_size };
 	return new_text;
 }
 
+/*______________________________________________________________
+@brief Loads the information for rendering arrows, like position, size, color into the TutArrow struct.
+*/
 TutArrow TutArrowCreate(CP_Vector pos_start, CP_Vector pos_end, CP_Color color, float thickness) {
 	TutArrow new_arrow = { .pos_start = pos_start, .pos_end = pos_end, .color = color, .thickness = thickness };
 	return new_arrow;
@@ -378,6 +406,9 @@ TutArrow TutArrowCreate(CP_Vector pos_start, CP_Vector pos_end, CP_Color color, 
 //______________________________________________________________
 // Rendering functions
 
+/*______________________________________________________________
+@brief Renders the arrow based on the information in TutArrow.
+*/
 void DrawArrow(float point_1_x, float point_1_y, float point_2_x, float point_2_y, CP_Color color, float thickness) {
 	CP_Vector line = CP_Vector_Set(point_1_x - point_2_x, point_1_y - point_2_y);
 	line = CP_Vector_Normalize(line);
@@ -397,6 +428,9 @@ void DrawArrow(float point_1_x, float point_1_y, float point_2_x, float point_2_
 	CP_Graphics_DrawLine(point_1_x, point_1_y, point_2_x + line.x, point_2_y + line.y);
 }
 
+/*______________________________________________________________
+@brief Renders the text based on the information in TutText.
+*/
 void DrawTextFull(char* text, float pos_x, float pos_y, CP_Color color, CP_TEXT_ALIGN_HORIZONTAL h_align, CP_TEXT_ALIGN_VERTICAL v_align, float size) {
 	CP_Settings_TextAlignment(h_align, v_align);
 	CP_Settings_TextSize(size);
@@ -404,14 +438,23 @@ void DrawTextFull(char* text, float pos_x, float pos_y, CP_Color color, CP_TEXT_
 	CP_Font_DrawText(text, pos_x, pos_y);
 }
 
+/*______________________________________________________________
+@brief Renders the text with its anchor point on the top left.
+*/
 void DrawTextTopLeft(char* text, float pos_x, float pos_y, CP_Color color, float size) {
 	DrawTextFull(text, pos_x, pos_y, color, CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP, size);
 }
 
+/*______________________________________________________________
+@brief Renders the text with its anchor point in the center.
+*/
 void DrawTextCentre(char* text, float pos_x, float pos_y, CP_Color color, float size) {
 	DrawTextFull(text, pos_x, pos_y, color, CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE, size);
 }
 
+/*______________________________________________________________
+@brief Renders the background box for the text
+*/
 void DrawTextBox(float pos_x, float pos_y, float size_x, float size_y, CP_Color color) {
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Fill(BLACK);

@@ -1,44 +1,59 @@
 /*!
 @file	  TPlayerHeld.c
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett)
-@date     05/11/2022
-@brief    This source file
+@date     22/11/2022
+@brief    This source file handles everything about the current piece held by the player, if any.
+		  It contains matrix arrays to store the shape of the held piece, and for rotations. A pointer for information on
+		  render and 13 functions,
+
+		  TPlayerHeldInit - Called by TPlayer during it's initialization, this function will load all the values needed.
+		  LoadIconImages - Called by TPlayer during its initialization, this function loads the attack and defend icons.
+
+		  IsPieceHeld - Checks if any piece is currently held by the player, and returns true/false.
+		  IsThisPieceHeld - Called by TPlayer when rendering, returns true if the piece to compare is the piece held.
+		  NewPieceHeld - Called by TPlayer when a click has been detected on one of the slots.
+		  TPlayerHeldProcessInput - Called by TPlayer during its process input, handles all input related to the piece held.
+		  RenderPieceHeld - Render the piece held by the player, if any.
+
+		  PieceHeldPlayed - When a Tetris Piece is dropped onto the grid, it has been played.
+		  PieceHeldRotateRight - Applies a 90 degree rotation to the right on the shape array (matrix) for the piece 
+
+		  ShapeToIndex - Converts a 2D array index into a 1D array index in shape array
+		  GridToIndex - Using a system where 0 is the origin (e.g. -3 to 3) covert it to index in shape array
+		  IndexToShapeX - Converts a 1D array index into the x index in the 2D shape array
+		  IndexToShapeY - Converts a 1D array index into the y index in the 2D shape array
 ________________________________________________________________________________________________________*/
 
-#include "ColorTable.h"
-#include "Grid.h" // For grid information
-#include "WaveSystem.h" // For enemy damaging on grid
-#include "Particles.h" // For particles on play
-#include "Screenshake.h" // For screenshake on play
-#include "SoundManager.h" // For sounds when pieces are played
+#include "ColorTable.h"		// For tetris colors
+#include "Grid.h"			// For grid information
+#include "WaveSystem.h"		// For enemy damaging on grid
+#include "Particles.h"		// For particles on play
+#include "Screenshake.h"	// For screenshake on play
+#include "SoundManager.h"	// For sounds when pieces are played
 
-#include "TPlayer.h" 
-#include "TPlayerHeld.h"
-#include "GameLoop.h" // For turn swapping
+#include "TPlayer.h"		// For removing piece from player's hand
+#include "TPlayerHeld.h"	
+#include "GameLoop.h"		// For turn swapping
 
 PlayerPieceHeld piece_held; // Information on the piece held
 
 // Icon information
-CP_Vector icon_pos; // Each cell will have a attack/defend icon at the top left
-CP_Vector icon_size; // The size of the icon for rendering
-float piece_stroke; // How thick the stroke of each cell should be
+CP_Vector icon_pos;		// Each cell will have a attack/defend icon at the top left
+CP_Vector icon_size;	// The size of the icon for rendering
+float piece_stroke;		// How thick the stroke of each cell should be
 
 // Shape information
-PieceHeldShape piece_held_shapeA; // Two matrices for rotation, ping-ponging between the two
+PieceHeldShape piece_held_shapeA;			// Two matrices for rotation, ping-ponging between the two
 PieceHeldShape piece_held_shapeB;
-PieceHeldShape *piece_held_shapeCurrent;
-int piece_held_shape_centre;
+PieceHeldShape *piece_held_shapeCurrent;	// Pointer to the current matrix used out of the two
+int piece_held_shape_centre;				// The index that is the center of the array
 
 // Transformation matrices
-int left_rotation[2][2] = { 0, -1, 1, 0 };
-int right_rotation[2][2] = { 0, 1, -1, 0 };
-PieceOrientation current_rotation;
+int left_rotation[2][2] = { 0, -1, 1, 0 };	// 90 degrees rotation left
+int right_rotation[2][2] = { 0, 1, -1, 0 };	// 90 degrees rotation right
+PieceOrientation current_rotation;			// Which of the 4 direction is the piece currenting facing
 
-// Piece on grid rendering information
-CP_Vector grid_bounds;
-CP_Vector grid_size;
-float cell_size;
-_Bool in_playing_area;
+_Bool in_playing_area;	// Render differently if it is/isn't in the playing area (grid)
 
 #pragma region
 void PieceHeldPlayed(int grid_x, int grid_y);
@@ -55,8 +70,7 @@ CP_Image attack_icon, shield_icon;
 // All "public" functions (Basically those in the TPlayer.h)
 
 /*______________________________________________________________
-@brief Called by TPlayer during it's initialization, this function will load
-	   the values needed for rendering and such
+@brief Called by TPlayer during it's initialization, this function will load the values needed for rendering and such.
 */
 void TPlayerHeldInit(void) {
 	piece_held.piece = NULL;
@@ -94,13 +108,21 @@ void TPlayerHeldInit(void) {
 	piece_stroke = GetCellSize() * 0.05f;
 }
 
+/*______________________________________________________________
+@brief Called by TPlayer during its initialization, this function loads the attack and defend icons.
+
+@param[in] attack - Attack icon (For pieces that do damage)
+@param[in] shield - Defend icon (For pieces that build walls)
+*/
 void LoadIconImages(CP_Image attack, CP_Image shield) {
 	attack_icon = attack;
 	shield_icon = shield;
 }
 
 /*______________________________________________________________
-@brief Returns true if a piece is currently held by the player.
+@brief Checks if any piece is currently held by the player, and returns true/false.
+
+@return _Bool - Returns true if any piece is currently held by the player.
 */
 _Bool IsPieceHeld(void) {
 	return piece_held.piece != NULL;
@@ -108,15 +130,22 @@ _Bool IsPieceHeld(void) {
 
 /*______________________________________________________________
 @brief Called by TPlayer when rendering, returns true if the piece to compare is the piece held,
-	   if no piece is held it will return false.
+	   if no piece is held it will also return false.
+
+@param[in] piece_to_compare - The piece in the player's hand to compare with
+
+@return _Bool - Returns true if the piece compared is the same as the piece held.
 */
 _Bool IsThisPieceHeld(TetrisPiece const *piece_to_compare) {
 	return piece_held.piece == piece_to_compare;
 }
 
 /*______________________________________________________________
-@brief Called by TPlayer when a click has been detected on one of the slots
+@brief Called by TPlayer when a click has been detected on one of the slots.
 	   The information of the piece clicked will be passed through here.
+
+@param[in] new_piece - Pointer to the information of the new piece held
+@param[in] slot_index - Which slot was this piece taken from?
 */
 void NewPieceHeld(TetrisPiece const *new_piece, int slot_index) {
 	// We found the slot clicked! Set the flags to true
@@ -149,8 +178,7 @@ void NewPieceHeld(TetrisPiece const *new_piece, int slot_index) {
 }
 
 /*______________________________________________________________
-@brief Called by TPlayer during its process input, this function will
-	   handle all input related to the piece held
+@brief Called by TPlayer during its process input, this function will handle all input related to the piece held.
 */
 void TPlayerHeldProcessInput(void) {
 	if (!IsPieceHeld()) return;
@@ -212,11 +240,13 @@ void RenderPieceHeld(void) {
 			_Bool can_place = FALSE;
 			// Color setting, red if piece is outside of grid, or invalid placement
 			if (hand_in_grid && IsInPlayingArea(current_pos.x + piece_held.x_screen_length / 2.0f, current_pos.y + piece_held.y_screen_length / 2.0f)) {
+				// If the cell is hovering over a live enemy in the grid cell
 				if (HasLiveEnemyInCell(PosXToGridX(current_pos.x + piece_held.x_screen_length / 2.0f), PosYToGridY(current_pos.y + piece_held.y_screen_length / 2.0f))) {
+					// If it is a shield, it is an invalid placement
 					if (piece_held.slot_index == 0) {
 						can_place = FALSE;
 					}
-					else {
+					else { // Else, check if the entity is actually a wall and update accordingly
 						EnemyInfo* enemy = GetAliveEnemyFromGrid(PosXToGridX(current_pos.x + piece_held.x_screen_length / 2.0f), PosYToGridY(current_pos.y + piece_held.y_screen_length / 2.0f));
 						if (enemy->type != WALL) {
 							can_place = TRUE;
@@ -226,19 +256,20 @@ void RenderPieceHeld(void) {
 						}
 					}
 				}
-				else {
-					if (piece_held.slot_index == 0) {
+				else { // If the cell is not hovering over a live enemy,
+					if (piece_held.slot_index == 0) { // If it is a shield, it is a valid placement
 						can_place = TRUE;
 					}
-					else {
+					else { // Otherwise, (for attacks) it is not a valid placement
 						can_place = FALSE;
 					}
 				}
 			}
-			else {
+			else { // If the piece is not even in the playing area, draw invalid placement
 				can_place = FALSE;
 			}
 
+			// If the placement of the cell is valid, draw a light white square with the appropriate icon
 			if (can_place) {
 				CP_Settings_Stroke(piece_held.color_stroke);
 				CP_Settings_Fill(piece_held.color);
@@ -250,13 +281,13 @@ void RenderPieceHeld(void) {
 				else {
 					CP_Image_Draw(attack_icon, current_pos.x - icon_pos.x, current_pos.y - icon_pos.y, icon_size.x, icon_size.x, 255);
 				}
-			}
+			} // If the cell is not in the playing area, draw a red square
 			else if (!hand_in_grid) {
 				CP_Settings_Stroke(TETRIS_HOVER_RED_COLOR);
 				CP_Settings_Fill(TETRIS_HOVER_RED_COLOR);
 				CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
 			}
-			else {
+			else { // If it is in the playing area, but the placement of the cell is not valid, draw a greyed out square
 				CP_Settings_Stroke(TETRIS_HOVER_GREY_COLOR);
 				CP_Settings_Fill(TETRIS_HOVER_GREY_COLOR);
 				CP_Graphics_DrawRect(current_pos.x, current_pos.y, piece_held.x_screen_length, piece_held.y_screen_length);
@@ -312,6 +343,9 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 	RemovePieceHeldFromHand();
 }
 
+/*______________________________________________________________
+@brief Applies a 90 degree rotation to the right on the shape array (matrix) for the piece 
+*/
 void PieceHeldRotateRight(void) {
 	PieceHeldShape* previous = piece_held_shapeCurrent;
 	piece_held_shapeCurrent = (piece_held_shapeCurrent == &piece_held_shapeA) ? &piece_held_shapeB : &piece_held_shapeA;
@@ -354,7 +388,7 @@ void PieceHeldRotateRight(void) {
 // Piece rotating functions
 
 /*______________________________________________________________
-@brief Using a system where 0 is the start (e.g. 0 to 5) covert it to index in shape array
+@brief Converts a 2D array index into a 1D array index in shape array
 */
 int ShapeToIndex(int shape_x, int shape_y) {
 	return shape_x + shape_y * SHAPE_BOUNDS;
@@ -369,10 +403,16 @@ int GridToIndex(int grid_x, int grid_y) {
 	return ShapeToIndex(shape_x, shape_y);
 }
 
+/*______________________________________________________________
+@brief Converts a 1D array index into the x index in the 2D shape array
+*/
 int IndexToShapeX(int index) {
 	return index % SHAPE_BOUNDS;
 }
 
+/*______________________________________________________________
+@brief Converts a 1D array index into the y index in the 2D shape array
+*/
 int IndexToShapeY(int index) {
 	return index / SHAPE_BOUNDS;
 }

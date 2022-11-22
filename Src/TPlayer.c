@@ -76,6 +76,10 @@ void TPlayerInit(void) {
 	LoadIconImages(attack_icon, shield_icon); // For player held piece
 }
 
+/*______________________________________________________________
+@brief Needs to be called in update, checks for player clicks, if the player clicks on a piece,
+	   it updates TPlayerHeld to render the held piece accordingly.
+*/
 void TPlayerProcessInput(void) {
 	// When the player first clicks
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_1)) {

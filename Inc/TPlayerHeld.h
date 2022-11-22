@@ -69,22 +69,35 @@ void TPlayerHeldInit(void);
 
 /*______________________________________________________________
 @brief Called by TPlayer during its initialization, this function loads the attack and defend icons.
+
+@param[in] attack - Attack icon (For pieces that do damage)
+@param[in] shield - Defend icon (For pieces that build walls)
 */
 void LoadIconImages(CP_Image attack, CP_Image shield);
 
 /*______________________________________________________________
-@brief Returns true if any piece is currently held by the player.
+@brief Checks if any piece is currently held by the player, and returns true/false.
+
+@return _Bool - Returns true if any piece is currently held by the player.
 */
 _Bool IsPieceHeld(void);
 
 /*______________________________________________________________
-@brief Returns true if the piece to compare is the piece held, if no piece is held it will return false.
+@brief Called by TPlayer when rendering, returns true if the piece to compare is the piece held,
+       if no piece is held it will also return false.
+
+@param[in] piece_to_compare - The piece in the player's hand to compare with
+
+@return _Bool - Returns true if the piece compared is the same as the piece held.
 */
 _Bool IsThisPieceHeld(TetrisPiece const* piece_to_compare);
 
 /*______________________________________________________________
 @brief Called by TPlayer when a click has been detected on one of the slots.
        The information of the piece clicked will be passed through here.
+
+@param[in] new_piece - Pointer to the information of the new piece held
+@param[in] slot_index - Which slot was this piece taken from?
 */
 void NewPieceHeld(TetrisPiece const *new_piece, int slot_index);
 
