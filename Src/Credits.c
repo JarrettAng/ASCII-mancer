@@ -268,8 +268,8 @@ void RenderCreditsCutoff(){
 void ScrollCreditTexts(){
 	// Scroll the headers and names up.
 	for (short i = 0; i < NUM_OF_CREDITS; ++i){
-		creditHeaders[i].transform.y -= scrollSpeed * CP_System_GetDt();
-		creditNames[i].transform.y -= scrollSpeed * CP_System_GetDt();
+		creditHeaders[i].transform.y -= scrollSpeed * GetHeightScale() * CP_System_GetDt();
+		creditNames[i].transform.y -= scrollSpeed * GetHeightScale() * CP_System_GetDt();
 	}
 
 	// If last name reaches the top, reset all header and names position to loop credits.
