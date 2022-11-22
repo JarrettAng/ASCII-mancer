@@ -86,10 +86,8 @@ void OptionsInit(void){
 void OptionsUpdate(void){
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
-	// Render all UI elements on the screen
-	RenderTexts();
-	RenderSliders();
-	RenderButtons();
+	// Render UI elements and handling UI interactions.
+	UIManagerUpdate();
 
 	// Handle adjusting of volume.
 	HandleVolumeControl();
@@ -99,8 +97,7 @@ void OptionsUpdate(void){
 }
 
 void OptionsExit(void){
-	ClearInteractCache();
-	FreeUI();
+	FreeUIManager();
 }
 
 void InitSettingsTexts(){

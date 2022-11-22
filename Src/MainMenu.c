@@ -41,6 +41,7 @@ int alpha = 255;
 #pragma endregion
 
 #pragma region TRANSITION_VARIABLES
+Button* transitionBtn = NULL;
 // Timer for transition to next scene.
 Timer transitionTimer = {
 	.time = .5,
@@ -74,9 +75,7 @@ Timer frameIntervalTimer = {
 };
 #pragma endregion
 
-
 #pragma region FORWARD_DECLARATIONS
-
 void InitLogoAnim(void);
 void InitMenuButtons(void);
 void InitSelectPointer(void);
@@ -93,7 +92,6 @@ void LoadGameScene(void);
 void LoadOptionsScene(void);
 void LoadCreditsScene(void);
 void ExitGame(void);
-
 #pragma endregion
 
 void MainMenuInit(void) {
@@ -110,12 +108,12 @@ void MainMenuInit(void) {
 
 void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
+
 	// Drawn 25% from top.
 	CP_Image_Draw(logo, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(logo) * GetWidthScale() * .8, (float)CP_Image_GetHeight(logo) * GetHeightScale() * .8, 255);
 
-
-	// Draw menu buttons.
-	RenderButtons();
+	// Render UI elements and handling UI interactions.
+	UIManagerUpdate();
 	// Draw select pointer on which button the player is hovering.
 	DrawSelectPointer();
 	// Apply carousel effect on button the player is hovering.
@@ -130,8 +128,8 @@ void MainMenuExit(void) {
 	CP_Image_Free(&logo);
 	CP_Image_Free(&logoAnim);
 	CP_Image_Free(&selectPointer);
-	ClearInteractCache();
-	FreeUI();
+	transitionBtn = NULL;
+	FreeUIManager();
 }
 
 void InitLogoAnim(){
@@ -281,18 +279,14 @@ void InitSelectPointer(){
 }
 
 void DrawSelectPointer(){
-
 	// When player click on a button, pointer will not move from the clicked button.
-	if (GetBtnClicked() != NULL){
-		CP_Image_Draw(selectPointer, GetBtnClicked()->transform.cachedPos.x - (pointerOffset * GetWidthScale()), GetBtnClicked()->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
+	if (transitionBtn != NULL){
+		CP_Image_Draw(selectPointer, transitionBtn->transform.cachedPos.x - (pointerOffset * GetWidthScale()), transitionBtn->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), 255);
 		return;
 	}
 
-	// Cache the button the player is hovering.
-	Button* hoverBtn = GetButtonHover();
-
 	// Stop if no button hovered.
-	if (hoverBtn == NULL){
+	if (GetBtnHovered() == NULL){
 		return;
 	}
 
@@ -308,7 +302,7 @@ void DrawSelectPointer(){
 	}
 
 	// Image scale has to be 2:3 for its X and Y because pixel data is 2,3.
-	CP_Image_Draw(selectPointer, hoverBtn->transform.cachedPos.x - (pointerOffset * GetWidthScale()), hoverBtn->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), alpha);
+	CP_Image_Draw(selectPointer, GetBtnHovered()->transform.cachedPos.x - (pointerOffset * GetWidthScale()), GetBtnHovered()->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), alpha);
 }
 
 void HandleCarouselButton(){
@@ -318,35 +312,31 @@ void HandleCarouselButton(){
 		return;
 	}
 
-	// Cache the button the player is hovering.
-	Button* hoverBtn = GetButtonHover();
-
 	// If player is not hovering on any button, reset last hovered button position.
 	if (GetPrevBtnHovered() != NULL){
 		GetPrevBtnHovered()->transform.x = GetPrevBtnHovered()->transform.cachedPos.x;
 		GetPrevBtnHovered()->textData.color = MENU_WHITE;
-
 	}
 
 	// If hovering over a button.
-	if (hoverBtn != NULL){
+	if (GetBtnHovered() != NULL){
 		// Offset button that player is hovering to create carousel effect.
-		hoverBtn->transform.x = hoverBtn->transform.cachedPos.x + 35;
-		hoverBtn->textData.color = LOGO_RED;
+		GetBtnHovered()->transform.x = GetBtnHovered()->transform.cachedPos.x + 35;
+		GetBtnHovered()->textData.color = LOGO_RED;
 	}
 }
 
 void HandleMenuButtonClick(){
-	if (GetBtnClicked() != NULL){
-		// Blink button that the player clicked on and then go to next scene.
-		HandleTransition(GetBtnClicked());
+	// Cache the first button clicked.
+	if (transitionBtn == NULL){
+		transitionBtn = GetBtnClicked();
 	}
-	else {
-		// Check if player clicked any button.
-		GetButtonClick();
+	// Transition to the scene based on first button clicked.
+	if (transitionBtn != NULL){
+		// Blink button that the player clicked on and then go to next scene.
+		HandleTransition(transitionBtn);
 	}
 }
-
 
 void HandleTransition(Button* btn){
 	// No blink when exiting game.

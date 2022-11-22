@@ -36,6 +36,42 @@ Slider* sliderHeld = NULL;
 Slider* prevSliderHeld = NULL;
 #pragma endregion
 
+#pragma region FORWARD_DECLARTIONS
+void RenderButtons(void);
+void RenderTexts(void);
+void RenderTextBoxes(void);
+void RenderSliders(Void);
+
+void SetGraphicSetting(GraphicData data);
+void SetTextSetting(TextData data);
+
+void UpdateButtonClick(void);
+void UpdateButtonHover(void);
+void UpdateSliderHeld(void);
+
+void FreeUI(void);
+void FreeText(void);
+void FreeButton(void);
+void FreeSlider(void);
+void ClearInteractCache(void);
+#pragma endregion
+
+
+#pragma region UPDATE_LOOP
+void UIManagerUpdate(){
+	// Render UI elements();
+	RenderTexts();
+	RenderTextBoxes();
+	RenderButtons();
+	RenderSliders();
+
+	// Update UI intereaction cache.
+	UpdateButtonClick();
+	UpdateButtonHover();
+	UpdateSliderHeld();
+}
+#pragma endregion
+
 #pragma region INITIALIZE
 // Intialize button with the given data.
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack) {
@@ -134,6 +170,13 @@ void RenderTexts(){
 	}
 }
 
+// Require text to be intialized before rendering.
+void RenderTextBox(Text* txt){
+	// Draw text
+	SetTextSetting(txt->textData);
+	CP_Font_DrawTextBox(txt->textData.text, txt->transform.x, txt->transform.y, txt->transform.width);
+}
+
 // Render all texts cached in texts array.
 void RenderTextBoxes(){
 	// Loop through every text boxes initialized.
@@ -180,12 +223,13 @@ void SetTextSetting(TextData data) {
 #pragma endregion
 
 #pragma region UI_INTERACTION
-void UIManagerUpdate(){
-	GetButtonClick();
-	GetButtonHover();
-	GetSliderHeld();
+Button* GetBtnClicked(){
+	return btnClicked;
 }
 
+Button* GetPrevBtnClicked(){
+	return prevBtnClicked;
+}
 
 Button* GetBtnHovered(){
 	return btnHovered;
@@ -195,8 +239,12 @@ Button* GetPrevBtnHovered(){
 	return prevBtnHovered;
 }
 
-Button* GetBtnClicked(){
-	return btnClicked;
+Slider* GetSliderHeld(){
+	return sliderHeld;
+}
+
+Slider* GetPrevSliderHeld(){
+	return prevSliderHeld;
 }
 
 // Triggers button's callback when player click on it.
@@ -233,8 +281,8 @@ void HandleButtonClick() {
 	}
 }
 
-// Get the address of the button the player clicked.
-Button* GetButtonClick() {
+// Cache the previous and current button clicked.
+void UpdateButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
 		float xPos = CP_Input_GetMouseX();
@@ -251,20 +299,21 @@ Button* GetButtonClick() {
 					if (prevBtnClicked != btnClicked && btnClicked != NULL) prevBtnClicked = btnClicked;
 					// Cache current button click.
 					btnClicked = btns[i];
+					return;
 				}
-				return btnClicked;
 			}
 		}
 		// Player did not click on any button.
-		return NULL;
+		if (btnClicked != NULL) prevBtnClicked = btnClicked;
+		btnClicked = NULL;
 	}
 }
 
-// Returns the button the player is hovering over.
-Button* GetButtonHover(){
+// Cache the previous and current button hovered.
+void UpdateButtonHover(){
 	if (btnHovered != NULL && !CP_Input_MouseMoved()){
 		// If already hovering and player did not move his mouse, just return to save resource.
-		return GetBtnHovered();
+		return btnHovered;
 	}
 
 	float xPos = CP_Input_GetMouseX();
@@ -281,19 +330,17 @@ Button* GetButtonHover(){
 				// Cache current button hovered.
 				btnHovered = btns[i];
 			}
-			// Retunr current button the player is hovering.
-			return btnHovered;
+			return;
 		}
 	}
 	// Cache last hovered button if player stop hovering.
 	if (btnHovered != NULL) prevBtnHovered = btnHovered;
 	// Player is not hovering on a button.
 	btnHovered = NULL;
-	return btnHovered;
 }
 
-// Return the slider the player is holding.
-Slider* GetSliderHeld(){
+// Cache the previous and current slider held.
+void UpdateSliderHeld(){
 	if (CP_Input_MouseDown(MOUSE_BUTTON_LEFT)){
 		// If player is already holding a slider, return it to save resources.
 		// Only when player let go of the current slider, allow to hold another slider.
@@ -314,9 +361,8 @@ Slider* GetSliderHeld(){
 					if (prevSliderHeld != sliderHeld && sliderHeld != NULL) prevSliderHeld = sliderHeld;
 					// Cache current slider held.
 					sliderHeld = sliders[i];
+					return;
 				}
-				// Retunr current slider the player is holding.
-				return sliderHeld;
 			}
 		}
 	}
@@ -327,15 +373,23 @@ Slider* GetSliderHeld(){
 		// Player is not holding a slider.
 		sliderHeld = NULL;
 	}
-	return sliderHeld;
 }
 #pragma endregion
 
-// Clear cached interaction.
+#pragma region MISC
+// Clear all caches and free UI elements.
+void FreeUIManager(){
+	ClearInteractCache();
+	FreeUI();
+}
+
 void ClearInteractCache(){
 	btnClicked = NULL;
+	prevBtnClicked = NULL;
 	btnHovered = NULL;
 	prevBtnHovered = NULL;
+	sliderHeld = NULL;
+	prevSliderHeld = NULL;
 }
 
 // Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
@@ -367,3 +421,4 @@ void FreeSlider(){
 	memset(sliders, 0, sizeof(sliders));
 	sliderCount = 0;
 }
+#pragma endregion

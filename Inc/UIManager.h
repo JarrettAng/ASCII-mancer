@@ -97,44 +97,19 @@ void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, S
 void RenderButton(Button* btn);
 
 /*
-@brief RenderButtons will render all button initialized.
-*/
-void RenderButtons(void);
-
-/*
 @brief RenderText will render the given text on screen if it is initialized.
 */
 void RenderText(Text* txt);
 
 /*
-@brief RenderTexts will render all texts initialized.
+@brief RenderTextBoxes will render the given textboxes on screen if it is initialized.
 */
-void RenderTexts(void);
-
-/*
-@brief RenderTextBoxes will render all text boxes initialized.
-*/
-void RenderTextBoxes(void);
+void RenderTextBox(Text* txt);
 
 /*
 @brief RenderSlider will render the given slider on screen if it is initialized.
 */
 void RenderSlider(Slider* slider);
-
-/*
-@brief RenderSliders will render all sliders initialized.
-*/
-void RenderSliders(Void);
-
-/*
-@brief Update cprocessing graphics settings based on the given data.
-*/
-void SetGraphicSetting(GraphicData data);
-
-/*
-@brief Update cprocessing text settings based on the given data.
-*/
-void SetTextSetting(TextData data);
 
 /*
 @brief Draws and handle interaction of UI elements.
@@ -147,45 +122,36 @@ void UIManagerUpdate();
 void HandleButtonClick(void);
 
 /*
-@brief Get the button that was clicked in this frame.
-*/
-Button* GetButtonClick(void);
-
-
-/*
-@brief Get the last button clicked.
+@brief Get the current button clicked.
 */
 Button* GetBtnClicked(void);
 
 /*
-@brief Get the button that was hovered in this frame.
+@brief Get the previous button clicked.
 */
-Button* GetButtonHover(void);
+Button* GetPrevBtnClicked(void);
 
 /*
-@brief Get the cached button hovered in the frame. To avoid extra checks.
+@brief Get the current button hovered.
 */
 Button* GetBtnHovered(void);
 
 /*
-@brief Get the last button hovered.
+@brief Get the previous button hovered.
 */
 Button* GetPrevBtnHovered(void);
 
 /*
-@brief Get the slider that is held.
+@brief Get the current slider that is held.
 */
 Slider* GetSliderHeld(void);
 
 /*
-@brief Clear all cached interactions.
+@brief Get the previous slider that is held.
 */
-void ClearInteractCache(void);
+Slider* GetPrevSliderHeld(void);
 
 /*
 @brief Free all UI elements.
 */
-void FreeUI();
-void FreeText(void);
-void FreeButton(void);
-void FreeSlider(void);
+void FreeUIManager(void);

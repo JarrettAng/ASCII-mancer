@@ -43,18 +43,18 @@ void CreditsInit(void){
 
 void CreditsUpdate(void){
 	CP_Graphics_ClearBackground(MENU_BLACK);
-	RenderTexts();
-	RenderTextBoxes();
+	// Render UI elements and handling UI interactions.
+	UIManagerUpdate();
 	RenderCreditsCutoff();
-	RenderButtons();
+	// Render back button above the credits cutoff.
+	RenderButton(&backBtn);
 
 	HandleButtonClick();
 	ScrollCreditTexts();
 }
 
 void CreditsExit(void){
-	ClearInteractCache();
-	FreeUI();
+	FreeUIManager();
 }
 
 void InitCreditsTexts(){
