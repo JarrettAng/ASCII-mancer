@@ -12,7 +12,6 @@ ________________________________________________________________________________
 #include "SoundManager.h"
 
 #pragma region UI_CACHE
-
 Button* btns[MAX_UI_BUTTONS];
 int btnsCount = 0;
 
@@ -24,23 +23,21 @@ int textBoxesCount = 0;
 
 Slider* sliders[MAX_UI_SLIDERS];
 int sliderCount = 0;
-
 #pragma endregion
 
 #pragma region UI_INTERACT_CACHE
-Slider* sliderHeld = NULL;
 Button* btnClicked = NULL;
+Button* prevBtnClicked = NULL;
+
 Button* btnHovered = NULL;
 Button* prevBtnHovered = NULL;
+
+Slider* sliderHeld = NULL;
+Slider* prevSliderHeld = NULL;
 #pragma endregion
 
-
-
 #pragma region INITIALIZE
-
-/// <summary>
-/// Intialize button with the given data.
-/// </summary>
+// Intialize button with the given data.
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack) {
 	btn->transform = transform;
 	// Initialized position.
@@ -53,9 +50,7 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 	btns[btnsCount++] = btn;
 }
 
-/// <summary>
-/// Intialize text with the given data.
-/// </summary>
+// Intialize text with the given data.
 void InitializeText(Text* txt, Rect transform, TextData data){
 	txt->transform = transform;
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
@@ -65,9 +60,7 @@ void InitializeText(Text* txt, Rect transform, TextData data){
 	texts[textsCount++] = txt;
 }
 
-/// <summary>
-/// Intialize text with the given data.
-/// </summary>
+// Intialize text with the given data.
 void InitializeTextBox(Text* txt, Rect transform, TextData data){
 	txt->transform = transform;
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
@@ -77,9 +70,7 @@ void InitializeTextBox(Text* txt, Rect transform, TextData data){
 	textBoxes[textBoxesCount++] = txt;
 }
 
-/// <summary>
-/// Intialize slider with the given data.
-/// </summary>
+// Intialize slider with the given data.
 void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, SliderKnob knobData){
 	slider->transform = transform;
 	slider->line = line;
@@ -89,14 +80,10 @@ void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, S
 	// Cache slider.
 	sliders[sliderCount++] = slider;
 }
-
 #pragma endregion
 
 #pragma region RENDERING
-
-/// <summary>
-/// Require button to be intialized before rendering.
-/// </summary>
+// Require button to be intialized before rendering.
 void RenderButton(Button* btn){
 	// Draw rect
 	SetGraphicSetting(btn->graphicData);
@@ -111,9 +98,7 @@ void RenderButton(Button* btn){
 	}
 }
 
-/// <summary>
-/// Render all buttons cached in btns array.
-/// </summary>
+// Render all buttons cached in btns array.
 void RenderButtons() {
 	for (int i = 0; i < btnsCount; ++i) {
 		// Draw rect
@@ -132,18 +117,14 @@ void RenderButtons() {
 	}
 }
 
-/// <summary>
-/// Require text to be intialized before rendering.
-/// </summary>
+// Require text to be intialized before rendering.
 void RenderText(Text* txt){
 	// Draw text
 	SetTextSetting(txt->textData);
 	CP_Font_DrawText(txt->textData.text, txt->transform.x, txt->transform.y);
 }
 
-/// <summary>
-/// Render all texts cached in texts array.
-/// </summary>
+// Render all texts cached in texts array.
 void RenderTexts(){
 	// Loop through every text initialized.
 	for (int i = 0; i < textsCount; ++i) {
@@ -153,9 +134,7 @@ void RenderTexts(){
 	}
 }
 
-/// <summary>
-/// Render all texts cached in texts array.
-/// </summary>
+// Render all texts cached in texts array.
 void RenderTextBoxes(){
 	// Loop through every text boxes initialized.
 	for (int i = 0; i < textBoxesCount; ++i) {
@@ -165,18 +144,14 @@ void RenderTextBoxes(){
 	}
 }
 
-/// <summary>
-/// Require slider to be intialized before rendering.
-/// </summary>
+// Require slider to be intialized before rendering.
 void RenderSlider(Slider* slider){
 	CP_Image_Draw(slider->img, slider->transform.x, slider->transform.y, slider->transform.width, slider->transform.heigth, 255);
 	CP_Image_Draw(slider->knob.img, slider->knob.transform.x, slider->knob.transform.y, slider->knob.transform.width, slider->knob.transform.heigth, 255);
 }
 
 
-/// <summary>
-/// Render all sliders cached in slider array.
-/// </summary>
+// Render all sliders cached in slider array.
 void RenderSliders(Void){
 	// Loop through every slider initialized.
 	for (int i = 0; i < sliderCount; ++i) {
@@ -185,9 +160,7 @@ void RenderSliders(Void){
 	}
 }
 
-/// <summary>
-/// For updating engine graphic settings before drawing an UI element.
-/// </summary>
+// For updating engine graphic settings before drawing an UI element.
 void SetGraphicSetting(GraphicData data) {
 	CP_Settings_RectMode(data.imagePosMode);
 	CP_Settings_ImageFilterMode(data.imageFilterMode);
@@ -197,19 +170,22 @@ void SetGraphicSetting(GraphicData data) {
 }
 
 
-/// <summary>
-/// For updating engine text settings before drawing an UI element.
-/// </summary>
+// For updating engine text settings before drawing an UI element.
 void SetTextSetting(TextData data) {
 	CP_Font_Set(data.font);
 	CP_Settings_TextSize(data.textSize);
 	CP_Settings_Fill(data.color);
 	CP_Settings_TextAlignment(data.hAlign, data.vAlign);
 }
-
 #pragma endregion
 
 #pragma region UI_INTERACTION
+void UIManagerUpdate(){
+	GetButtonClick();
+	GetButtonHover();
+	GetSliderHeld();
+}
+
 
 Button* GetBtnHovered(){
 	return btnHovered;
@@ -223,9 +199,7 @@ Button* GetBtnClicked(){
 	return btnClicked;
 }
 
-/// <summary>
-/// Triggers button's callback when player click on it.
-/// </summary>
+// Triggers button's callback when player click on it.
 void HandleButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
@@ -236,14 +210,20 @@ void HandleButtonClick() {
 		for (int i = 0; i < btnsCount; i++) {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
-				// Cache callback to be triggered after the conditional statement.
-				// Will cause error if callback is triggered here.
-				btnClicked = btns[i];
+				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
+				// If clciking a different button.
+				if (btnClicked != btns[i]){
+					// Cache prev button click.
+					if (prevBtnClicked != btnClicked && btnClicked != NULL) prevBtnClicked = btnClicked;
+					// Cache current button click.
+					btnClicked = btns[i];
+				}
 				// Stop checking for buttons once a button is clicked.
 				// Make sure the button has a callback event before breaking loop.
 				// In an event where 2 buttons are overlapping, and one button doesnt have a callback, the other button callback will still be triggered.
-				if (btnClicked->callBack != NULL) break;
+				if (btnClicked != NULL && btnClicked->callBack != NULL) break;
 			}
+			// Player did not click on any button.
 			btnClicked = NULL;
 		}
 		// Trigger onclick event if needed.
@@ -253,9 +233,7 @@ void HandleButtonClick() {
 	}
 }
 
-/// <summary>
-/// Get the address of the button the player clicked.
-/// </summary>
+// Get the address of the button the player clicked.
 Button* GetButtonClick() {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
@@ -267,20 +245,28 @@ Button* GetButtonClick() {
 			// Check if player is clicking a button.
 			if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
 				PlaySound(MOUSECLICK, CP_SOUND_GROUP_SFX);
-				// Cache button click.
-				btnClicked = btns[i];
-				return btns[i];
+				// If clciking a different button.
+				if (btnClicked != btns[i]){
+					// Cache prev button click.
+					if (prevBtnClicked != btnClicked && btnClicked != NULL) prevBtnClicked = btnClicked;
+					// Cache current button click.
+					btnClicked = btns[i];
+				}
+				return btnClicked;
 			}
 		}
+		// Player did not click on any button.
 		return NULL;
 	}
-	return NULL;
 }
 
-/// <summary>
-/// Returns the button the player is hovering over.
-/// </summary>
+// Returns the button the player is hovering over.
 Button* GetButtonHover(){
+	if (btnHovered != NULL && !CP_Input_MouseMoved()){
+		// If already hovering and player did not move his mouse, just return to save resource.
+		return GetBtnHovered();
+	}
+
 	float xPos = CP_Input_GetMouseX();
 	float yPos = CP_Input_GetMouseY();
 
@@ -288,24 +274,33 @@ Button* GetButtonHover(){
 	for (int i = 0; i < btnsCount; i++) {
 		// Check if player is hovering a button.
 		if (pointWithinArea(btns[i]->transform.x, btns[i]->transform.y, btns[i]->transform.width, btns[i]->transform.heigth, xPos, yPos, btns[i]->graphicData.imagePosMode)) {
+			// If hovering a different button.
 			if (btnHovered != btns[i]){
-				// Cached previous button if player is hovering on a new button.
-				if (btnHovered != NULL) prevBtnHovered = btnHovered;
+				// Cache prev button hovered.
+				if (prevBtnHovered != btnHovered && btnHovered != NULL) prevBtnHovered = btnHovered;
+				// Cache current button hovered.
 				btnHovered = btns[i];
 			}
-			// Break loop and return the button the player is hovering.
-			return btns[i];
+			// Retunr current button the player is hovering.
+			return btnHovered;
 		}
 	}
 	// Cache last hovered button if player stop hovering.
 	if (btnHovered != NULL) prevBtnHovered = btnHovered;
 	// Player is not hovering on a button.
 	btnHovered = NULL;
-	return NULL;
+	return btnHovered;
 }
 
+// Return the slider the player is holding.
 Slider* GetSliderHeld(){
 	if (CP_Input_MouseDown(MOUSE_BUTTON_LEFT)){
+		// If player is already holding a slider, return it to save resources.
+		// Only when player let go of the current slider, allow to hold another slider.
+		if (sliderHeld != NULL){
+			return sliderHeld;
+		}
+
 		float xPos = CP_Input_GetMouseX();
 		float yPos = CP_Input_GetMouseY();
 
@@ -313,47 +308,51 @@ Slider* GetSliderHeld(){
 		for (int i = 0; i < sliderCount; ++i) {
 			// Check if mouse is within knob.
 			if (pointWithinCircle(xPos, yPos, sliders[i]->knob.transform.x, sliders[i]->knob.transform.y, sliders[i]->knob.radius)){
-				sliderHeld = sliders[i];
-				break;
+				// If holding a different slider.
+				if (sliderHeld != sliders[i]){
+					// Cache prev slider held.
+					if (prevSliderHeld != sliderHeld && sliderHeld != NULL) prevSliderHeld = sliderHeld;
+					// Cache current slider held.
+					sliderHeld = sliders[i];
+				}
+				// Retunr current slider the player is holding.
+				return sliderHeld;
 			}
 		}
 	}
-
-	if (CP_Input_MouseReleased(MOUSE_BUTTON_LEFT)){
+	// Player let go of current held slider.
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_LEFT) && sliderHeld != NULL){
+		// Cache last held slider.
+		prevSliderHeld = sliderHeld;
+		// Player is not holding a slider.
 		sliderHeld = NULL;
 	}
 	return sliderHeld;
 }
-
 #pragma endregion
 
+// Clear cached interaction.
 void ClearInteractCache(){
 	btnClicked = NULL;
 	btnHovered = NULL;
 	prevBtnHovered = NULL;
 }
 
-/// <summary>
-/// Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
-/// </summary>
+// Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
 void FreeUI(){
 	FreeButton();
 	FreeText();
 	FreeSlider();
 }
 
-/// <summary>
-/// Empty button array when exiting a scene, so that next scene can reuse the array.
-/// </summary>
+// Empty button array when exiting a scene, so that next scene can reuse the array.
 void FreeButton(){
 	// Empty array so next scene can use.
 	memset(btns, 0, sizeof(btns));
 	btnsCount = 0;
 }
 
-/// <summary>
-/// Empty text array when exiting a scene, so that next scene can reuse the array.
-/// </summary>
+// Empty text array when exiting a scene, so that next scene can reuse the array.
 void FreeText(){
 	// Empty array so next scene can use.
 	memset(texts, 0, sizeof(texts));
@@ -362,9 +361,7 @@ void FreeText(){
 	textBoxesCount = 0;
 }
 
-/// <summary>
-/// Empty slider array when exiting a scene, so that next scene can reuse the array.
-/// </summary>
+// Empty slider array when exiting a scene, so that next scene can reuse the array.
 void FreeSlider(){
 	// Empty array so next scene can use.
 	memset(sliders, 0, sizeof(sliders));

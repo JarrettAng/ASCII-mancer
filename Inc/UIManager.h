@@ -137,6 +137,11 @@ void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
 
 /*
+@brief Draws and handle interaction of UI elements.
+*/
+void UIManagerUpdate();
+
+/*
 @brief Invoke callback function of button if clicked.
 */
 void HandleButtonClick(void);

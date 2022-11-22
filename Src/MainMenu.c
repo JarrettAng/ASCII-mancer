@@ -113,6 +113,7 @@ void MainMenuUpdate(void) {
 	// Drawn 25% from top.
 	CP_Image_Draw(logo, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(logo) * GetWidthScale() * .8, (float)CP_Image_GetHeight(logo) * GetHeightScale() * .8, 255);
 
+
 	// Draw menu buttons.
 	RenderButtons();
 	// Draw select pointer on which button the player is hovering.
@@ -149,7 +150,6 @@ void InitLogoAnim(){
 		// Cache file path for current frame in animation array.
 		logoAnim[i] = CP_Image_Load(filePath);
 	}
-
 }
 
 void HandleLogoAnim(){
@@ -235,7 +235,7 @@ void InitMenuButtons(void) {
 	.x = xPos,
 	.y = yPos + offSet,
 	.heigth = textData.textSize,
-	.width = 700 * GetWidthScale(),
+	.width = 600 * GetWidthScale(),
 	};
 
 	textData.text = "OPTIONS";
