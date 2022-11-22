@@ -25,7 +25,7 @@ Copyright:
 Text creditHeaders[NUM_OF_CREDITS];
 Text creditNames[NUM_OF_CREDITS];
 
-int scrollSpeed = 500;
+int scrollSpeed = 300;
 
 Button backBtn;
 

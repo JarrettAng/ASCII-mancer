@@ -2,7 +2,7 @@
 @file	  SplashScreen.c
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This source file for displaying the splash screen.
+@brief    This source file for displaying the splash screen screen.
 ________________________________________________________________________________________________________*/
 
 #include "cprocessing.h"
@@ -22,14 +22,15 @@ Text copyRight;
 
 #pragma region FORWARD_DECLARATION
 void InitTexts(void);
+void FadeInLogo(void);
 #pragma endregion
 
 void SplashScreenInit() {
 	// Intialize logo
 	logo = CP_Image_Load("Assets/DigiPen_WHITE.png");
 
-	//CP_System_Fullscreen();
-	CP_System_SetWindowSize(1920, 1080);
+	CP_System_Fullscreen();
+	//CP_System_SetWindowSize(1920, 1080);
 
 	// Update the scale for the UI elements based on window size.
 	UpdateUIScale();

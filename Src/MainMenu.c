@@ -2,7 +2,7 @@
 @file	  MainMenu.c
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This source file for displaying the main menu.
+@brief    This source file for displaying the main menu screen.
 ________________________________________________________________________________________________________*/
 #include <stdio.h>
 #include <cprocessing.h>
