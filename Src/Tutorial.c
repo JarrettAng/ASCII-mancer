@@ -1,6 +1,6 @@
 /*!
 @file	  Tutorial.c
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     22/11/2022
 @brief    This source file contains the timings and positions for all the tutorial objects, as well as 10 functions,
 

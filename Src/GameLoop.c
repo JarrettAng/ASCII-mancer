@@ -1,6 +1,6 @@
 /*!
 @file	  GameLoop.c
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     22/11/2022
 @brief    This source file contains event arrays for different events in game, such as player start, zombie update, etc. Functions from
 		  elsewhere in the solution can subscribe to these events and will be called when it happens. There are 9 functions in this file,

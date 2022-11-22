@@ -1,6 +1,6 @@
 /*!
 @file	  TPlayer.c
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     18/11/2022
 @brief    This source file handles the rendering and storing of piece information of the Tetris pieces in the player's
 		  hand and the peek queue. There are 7 functions in this file,

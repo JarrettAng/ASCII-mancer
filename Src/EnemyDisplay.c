@@ -1,6 +1,6 @@
 /*!
 @file	  EnemyDisplay.c
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     22/11/2022
 @brief    This source file contains variables for the size and positions for rendering the health, damage, movement, and information
 		  box. As well as 7 functions,

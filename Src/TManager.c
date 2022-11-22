@@ -1,6 +1,6 @@
 /*!
 @file	  TManager.c
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     18/11/2022
 @brief    TManager's header file handles the interfacing of Tetris pieces and any other files in the project; 
           This source file contains the implementation of those functions, and stores the array of all the 

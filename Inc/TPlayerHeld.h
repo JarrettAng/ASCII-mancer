@@ -1,6 +1,6 @@
 /*!
 @file	  TPlayerHeld.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file contains 3 structs used to store information about rotations and rendering,
           an enum to identify the current piece's rotation and 7 functions,

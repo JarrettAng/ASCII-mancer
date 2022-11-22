@@ -1,6 +1,6 @@
 /*!
 @file	  TPlayerHeld.c
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     22/11/2022
 @brief    This source file handles everything about the current piece held by the player, if any.
 		  It contains matrix arrays to store the shape of the held piece, and for rotations. A pointer for information on

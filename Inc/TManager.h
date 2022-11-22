@@ -1,6 +1,6 @@
 /*!
 @file	  TManager.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file handles the interfacing of Tetris pieces and any other files in the project,
           Any file not tetris-piece related that wants to use tetris pieces should include this header file instead.

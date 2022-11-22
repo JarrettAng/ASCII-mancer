@@ -1,6 +1,6 @@
 /*!
 @file	  TPiece.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file contains the information about Tetris pieces, e.g. the types and shapes of all Tetris Pieces 
 		  as well as the actual Tetris Piece struct.

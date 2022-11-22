@@ -1,6 +1,6 @@
 /*!
 @file	  TPlayer.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file contains a struct used to store positions and piece information (like shape) for rendering,
           many variables for position scaling based on screen size, hand size, and peek size. As well as 5 functions,

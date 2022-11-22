@@ -1,6 +1,6 @@
 /*!
 @file	  EnemyDisplay.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file contains an enum to reference the 4 corners of the cell used for rendering enemy stats,
 		  structs to hold information to render different stats and 5 functions,

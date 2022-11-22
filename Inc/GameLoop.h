@@ -1,6 +1,6 @@
 /*!
 @file	  GameLoop.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file contains enums for turn types (player, zombies) and event types (start, update, end) for those turns,
 		  structs to hold information (pointers, priority) for the events and an array of events for each turn, and 7 functions.

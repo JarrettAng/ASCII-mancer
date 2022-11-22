@@ -1,6 +1,6 @@
 /*!
 @file	  Tutorial.h
-@author	  Ang Jiawei Jarrett (a.jiaweijarrett)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @date     17/11/2022
 @brief    This header file contains structs holding information for rendering arrows and text, as well as 2 functions,
 
