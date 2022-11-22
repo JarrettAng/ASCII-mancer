@@ -10,7 +10,7 @@ ________________________________________________________________________________
 #include "UIManager.h"
 #include "MainMenu.h"
 
-#define NUM_OF_CREDITS 7
+#define NUM_OF_CREDITS 8
 
 /*
 Developed by:
@@ -19,12 +19,13 @@ Created at:
 President:
 Executives:
 Special thanks:
+Licenses:
 Copyright:
 */
 Text creditHeaders[NUM_OF_CREDITS];
 Text creditNames[NUM_OF_CREDITS];
 
-int scrollSpeed = 200;
+int scrollSpeed = 500;
 
 Button backBtn;
 
@@ -197,12 +198,25 @@ void InitCreditsTexts(){
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, specialThanksNames);
 
+	//=============================================
+	// LICENSES:
+	TextData licenseHeader = headerTextData;
+	licenseHeader.text = "LICENSES";
+	headerRect.y += namesTextData.textSize * 20 + headerTextData.textSize + nameOffSet;
+	InitializeText(p_headerText++, headerRect, licenseHeader);
+
+	TextData licenseNames = namesTextData;
+	licenseNames.text =
+		"Soundly Cloud Library";
+
+	namesRect.y = headerRect.y + nameOffSet;
+	InitializeTextBox(p_namesText++, namesRect, licenseNames);
 
 	//=============================================
 	// COPYRIGHT:
 	TextData copyRightHeader = headerTextData;
 	copyRightHeader.text = "";
-	headerRect.y += namesTextData.textSize * 14 + headerTextData.textSize + nameOffSet;
+	headerRect.y += namesTextData.textSize * 2 + headerTextData.textSize + nameOffSet;
 	InitializeText(p_headerText, headerRect, copyRightHeader);
 
 	TextData copyRightNames = namesTextData;
