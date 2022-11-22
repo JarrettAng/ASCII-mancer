@@ -2,7 +2,7 @@
 @file	  UIManager.c
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This source file for handling UI elements.
+@brief    This source file for handling UI elements and UI interactions.
 ________________________________________________________________________________________________________*/
 
 #include <cprocessing.h>
@@ -75,11 +75,15 @@ void UIManagerUpdate(){
 #pragma region INITIALIZE
 // Intialize button with the given data.
 void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, TextData textData, Callback callBack) {
+	// Initialized position / size.
 	btn->transform = transform;
-	// Initialized position.
 	btn->transform.cachedPos = CP_Vector_Set(btn->transform.x, btn->transform.y);
+	btn->transform.cachedSize = CP_Vector_Set(btn->transform.width, btn->transform.heigth);
+
+	// Initialize button data.
 	btn->graphicData = graphicsData;
 	btn->textData = textData;
+
 	btn->callBack = callBack;
 
 	// Cache button.
@@ -88,8 +92,12 @@ void InitializeButton(Button* btn, Rect transform, GraphicData graphicsData, Tex
 
 // Intialize text with the given data.
 void InitializeText(Text* txt, Rect transform, TextData data){
+	// Initialized position / size.
 	txt->transform = transform;
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
+	txt->transform.cachedSize = CP_Vector_Set(txt->transform.width, txt->transform.heigth);
+
+	// Initialize text data.
 	txt->textData = data;
 
 	// Cache text.
@@ -98,8 +106,12 @@ void InitializeText(Text* txt, Rect transform, TextData data){
 
 // Intialize text with the given data.
 void InitializeTextBox(Text* txt, Rect transform, TextData data){
+	// Initialized position / size.
 	txt->transform = transform;
 	txt->transform.cachedPos = CP_Vector_Set(txt->transform.x, txt->transform.y);
+	txt->transform.cachedSize = CP_Vector_Set(txt->transform.width, txt->transform.heigth);
+
+	// Initialize text data.
 	txt->textData = data;
 
 	// Cache textbox.
@@ -108,10 +120,19 @@ void InitializeTextBox(Text* txt, Rect transform, TextData data){
 
 // Intialize slider with the given data.
 void InitializeSlider(Slider* slider, Rect transform, Line line, CP_Image img, SliderKnob knobData){
+	// Initialized position / size.
 	slider->transform = transform;
+	slider->transform.cachedPos = CP_Vector_Set(slider->transform.x, slider->transform.y);
+	slider->transform.cachedSize = CP_Vector_Set(slider->transform.width, slider->transform.heigth);
+
+	// Initialize knob data.
+	slider->knob = knobData;
+	slider->knob.transform.cachedPos = CP_Vector_Set(slider->knob.transform.x, slider->knob.transform.y);
+	slider->knob.transform.cachedSize = CP_Vector_Set(slider->knob.transform.width, slider->knob.transform.heigth);
+
+	// Initialize slider.
 	slider->line = line;
 	slider->img = img;
-	slider->knob = knobData;
 
 	// Cache slider.
 	sliders[sliderCount++] = slider;

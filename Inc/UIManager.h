@@ -2,7 +2,7 @@
 @file	  UIManager.h
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This header file contains function declartion that handles UI interactions.
+@brief    This header file contains function declartion that handles UI rendering and interactions.
 ________________________________________________________________________________________________________*/
 
 #pragma once
@@ -20,6 +20,7 @@ typedef struct Rect {
 	CP_Vector cachedPos;
 	float width;
 	float heigth;
+	CP_Vector cachedSize;
 }Rect;
 
 typedef struct Line {

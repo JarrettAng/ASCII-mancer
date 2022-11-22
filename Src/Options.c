@@ -1,8 +1,8 @@
 /*!
-@file	  Option.c
+@file	  Options.c
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This source file for displaying the option.
+@brief    This source file for displaying the options screen.
 ________________________________________________________________________________________________________*/
 
 #include <stdio.h>
@@ -66,6 +66,7 @@ void UpdateKnobs(void);
 void UpdateMasterVolumeText(void);
 void UpdateSFXVolumeText(void);
 
+void HandleWindowSizeHover(void);
 void HandleWindowSizeScroll(int dir);
 
 void UpdateWindowSize(void);
@@ -94,6 +95,8 @@ void OptionsUpdate(void){
 
 	// Handle back button click.
 	HandleButtonClick();
+
+	HandleWindowSizeHover();
 }
 
 void OptionsExit(void){
@@ -314,13 +317,21 @@ void InitVolume(){
 }
 
 void HandleVolumeControl(){
+	// Reset previous slider knob to original size.
 	if (GetSliderHeld() == NULL){
+		if (GetPrevSliderHeld() != NULL){
+			GetPrevSliderHeld()->knob.transform.width = GetPrevSliderHeld()->knob.transform.cachedSize.x;
+			GetPrevSliderHeld()->knob.transform.heigth = GetPrevSliderHeld()->knob.transform.cachedSize.y;
+		}
 		return;
 	}
-
 	// Clamp knob between the limits of the slider.
 	float xPos = CP_Math_ClampFloat(CP_Input_GetMouseX(), GetSliderHeld()->line.start.x, GetSliderHeld()->line.end.x);
 	GetSliderHeld()->lerpFactor = (xPos - GetSliderHeld()->line.start.x) / (GetSliderHeld()->line.end.x - GetSliderHeld()->line.start.x);
+
+	// Enlarge current slider knob held.
+	GetSliderHeld()->knob.transform.width = GetSliderHeld()->knob.transform.cachedSize.x * 1.2;
+	GetSliderHeld()->knob.transform.heigth = GetSliderHeld()->knob.transform.cachedSize.y * 1.2;
 
 	// Update position of knob on slider based on lerp factor.
 	UpdateKnobs();
@@ -336,6 +347,20 @@ void UpdateKnobs(){
 	masterVolumeSlider.knob.transform.x = masterVolumeSlider.lerpFactor * (masterVolumeSlider.line.end.x - masterVolumeSlider.line.start.x) + masterVolumeSlider.line.start.x;
 	// Get SFX knob x position based on lerp factor.
 	sfxVolumeSlider.knob.transform.x = sfxVolumeSlider.lerpFactor * (sfxVolumeSlider.line.end.x - sfxVolumeSlider.line.start.x) + sfxVolumeSlider.line.start.x;
+}
+
+void HandleWindowSizeHover(){
+	// Reset previous button to original size.
+	if (GetBtnHovered() == NULL){
+		if (GetPrevBtnHovered() != NULL){
+			GetPrevBtnHovered()->transform.width = GetPrevBtnHovered()->transform.cachedSize.x;
+			GetPrevBtnHovered()->transform.heigth = GetPrevBtnHovered()->transform.cachedSize.y;
+		}
+		return;
+	}
+	// Enlarge current hovered button.
+	GetBtnHovered()->transform.width = GetBtnHovered()->transform.cachedSize.x * 1.3;
+	GetBtnHovered()->transform.heigth = GetBtnHovered()->transform.cachedSize.y * 1.3;
 }
 
 void WindowSizeScrollDown(){
