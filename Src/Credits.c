@@ -13,6 +13,7 @@ ________________________________________________________________________________
 #define NUM_OF_CREDITS 8
 
 /*
+Copyright:
 Developed by:
 Instructors:
 Created at:
@@ -20,12 +21,11 @@ President:
 Executives:
 Special thanks:
 Licenses:
-Copyright:
 */
 Text creditHeaders[NUM_OF_CREDITS];
 Text creditNames[NUM_OF_CREDITS];
 
-int scrollSpeed = 300;
+int scrollSpeed = 250;
 
 Button backBtn;
 
@@ -96,9 +96,23 @@ void InitCreditsTexts(){
 		.width = GetWindowWidth()
 	};
 	//=============================================
+	// COPYRIGHT:
+	TextData copyRightHeader = headerTextData;
+	copyRightHeader.text = "";
+	InitializeText(p_headerText++, headerRect, copyRightHeader);
+
+	TextData copyRightNames = namesTextData;
+	copyRightNames.text =
+		"All content copyright 2022 Digipen Institute of Technology Singapore.\n\n"
+		"All Rights Reserved";
+	copyRightNames.textSize = 20;
+	InitializeTextBox(p_namesText++, namesRect, copyRightNames);
+
+	//=============================================
 	// DEVELOPED BY:
 	TextData memberHeader = headerTextData;
 	memberHeader.text = "DEVELOPED BY";
+	headerRect.y += namesTextData.textSize * 2 + headerTextData.textSize + nameOffSet;
 	InitializeText(p_headerText++, headerRect, memberHeader);
 
 	TextData memberNames = namesTextData;
@@ -203,29 +217,14 @@ void InitCreditsTexts(){
 	TextData licenseHeader = headerTextData;
 	licenseHeader.text = "LICENSES";
 	headerRect.y += namesTextData.textSize * 20 + headerTextData.textSize + nameOffSet;
-	InitializeText(p_headerText++, headerRect, licenseHeader);
+	InitializeText(p_headerText, headerRect, licenseHeader);
 
 	TextData licenseNames = namesTextData;
 	licenseNames.text =
 		"Soundly Cloud Library";
 
 	namesRect.y = headerRect.y + nameOffSet;
-	InitializeTextBox(p_namesText++, namesRect, licenseNames);
-
-	//=============================================
-	// COPYRIGHT:
-	TextData copyRightHeader = headerTextData;
-	copyRightHeader.text = "";
-	headerRect.y += namesTextData.textSize * 2 + headerTextData.textSize + nameOffSet;
-	InitializeText(p_headerText, headerRect, copyRightHeader);
-
-	TextData copyRightNames = namesTextData;
-	copyRightNames.text =
-		"All content copyright 2022 Digipen Institute of Technology Singapore.\n\n"
-		"All Rights Reserved";
-	namesRect.y = headerRect.y + nameOffSet;
-	copyRightNames.textSize = 20;
-	InitializeTextBox(p_namesText, namesRect, copyRightNames);
+	InitializeTextBox(p_namesText, namesRect, licenseNames);
 }
 
 void InitCreditsButtons(){
