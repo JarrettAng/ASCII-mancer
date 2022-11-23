@@ -1,10 +1,18 @@
+/*!
+@file	  Grid.h
+@author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
+@date     21/11/2022
+@brief    1.Drawing of the grid
+*		  2.Calculate,set and send info about each in the cell
+________________________________________________________________________________________________________*/
+
 #pragma once
 
 #include <cprocessing.h>
 
 #define WINDOWHEIGHT CP_System_GetWindowHeight()
 #define WINDOWLENGTH CP_System_GetWindowWidth()
-//GRID VALUE MUST ALWYAS BE EVEN
+
 #define	TOTAL_YGRID 7
 #define TOTAL_XGRID 13
 
@@ -33,7 +41,6 @@ int PosYToGridY(float pos);
 
 void grid_init(void);
 void grid_update(void);
-void grid_exit(void);
 
 //Check if given point is in playing area
 _Bool IsInPlayingArea(float x,float y);

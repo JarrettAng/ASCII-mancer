@@ -1,3 +1,12 @@
+/*!
+@file	  Enemy.h
+@author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
+@date     21/11/2022
+@brief    1.Creation and declaration of enemy types
+		  2.Keep track of enemy movement and status
+		  3.Render enemy in the grid
+________________________________________________________________________________________________________*/
+
 #pragma once
 
 #define ENEMYPOOL 10
@@ -14,7 +23,6 @@ typedef enum ZombieType{
 }ZombieType;
 typedef struct EnemyInfo
 {
-	//Maybe have an enum for enemy type
 	//Position 
 	int x;
 	int y;
@@ -35,18 +43,14 @@ typedef struct EnemyInfo
 	BOOL is_Alive;
 
 }EnemyInfo;
-//Set how many types are there
-//int enemy_TotalType;
-void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,ZombieType type,CP_Color color);
-void InitEnemyPool(void);		//Fills the enemyArray with predefined enemies
-void MoveEnemy(EnemyInfo* enemy);
-void OnDeath(void);
 
+void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,ZombieType type,CP_Color color);
+void InitEnemyPool(void);
+void MoveEnemy(EnemyInfo* enemy);
 void DrawEnemy(EnemyInfo* enemy);
 
 //Helper functions
 int GetEnemyCount(void);
 EnemyInfo* GetEnemyPrefab(int index);
 EnemyInfo* GetRandomEnemyPrefab(void);
-void ClearEnemyPool(void);
 void SendDamage(int x, int y,int damage);

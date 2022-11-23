@@ -1,3 +1,11 @@
+/*!
+@file	  Grid.c
+@author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
+@date     21/11/2022
+@brief    1.Drawing of the grid
+*		  2.Calculate,set and send info about each in the cell
+________________________________________________________________________________________________________*/
+
 #include <cprocessing.h>
 #include "Grid.h"
 #include "ColorTable.h"
@@ -5,13 +13,7 @@
 #include <stdlib.h>
 #include "WaveSystem.h"
 
-/*
-* @Code brief:
-*	1.Code that set up the playing area of the game
-*	2.All value must be set to ensure the grid is in propotion to the current player size screen
-*	3.Grid draw and the cell are 2 different entities
-*	4.Grid uses a 2D array to set the cell
-*/
+
 
 float cellLength = 0;
 float gridXOffset = 0;
@@ -76,6 +78,10 @@ void grid_init(void) {
 @brief Create the cell for player to place their piece and enemy to move in
 ______________________________________________________________*/
 void CreatePlayingSpace() {
+	/*
+	* NOTE:
+	* DOES NOT DRAW THE GRID LINE, ONLY SET UP CELL
+	*/
 	for (int y = 0; y < TOTAL_YGRID; y++){
 		for (int x = 1; x< TOTAL_XGRID; x++){
 			space[x][y].x_pos = (float)(gridTop + (x* cellLength/2));//set index pos for x-pos

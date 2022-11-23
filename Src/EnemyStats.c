@@ -1,3 +1,12 @@
+/*!
+@file	  Enemy.c
+@author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
+@date     21/11/2022
+@brief    1.Creation and declaration of enemy types
+		  2.Keep track of enemy movement and status
+		  3.Render enemy in the grid
+________________________________________________________________________________________________________*/
+
 #include <cprocessing.h>
 #include <stdio.h>
 #include "EnemyDisplay.h"
@@ -8,6 +17,8 @@
 #include "Particles.h"
 #include "Hearts.h"
 #include "SoundManager.h"
+
+
 
 //-----ENEMYTYPE-----//
 #define ZOMBIE 1,1,1,2,"Z",ZOMBIE
