@@ -1,125 +1,118 @@
-#include <math.h>
+/*!
+@file	  WaveSystem.c
+@author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
+@date     23/11/2022
+@brief    This source file handles the AI director and spawning of enemies to the grid. 
+======== WAVE SYSTEM ALGORITHM ========
+1) Define enemy types in an array. This will be like your enemy prefabs that you will not touch but only reference. The equivalent is the EnemyPool.
+2) Populate an enemyArray by randomly selecting an enemy from enemyPool until the credit cost is 0.
+3) Iterate through enemyArray and spawn enemies, placing them in waveArray. Once all the enemies in enemyArray have been spawned, clear it
+4) Goto 2
+*/
 
+#include <math.h>
 #include "WaveSystem.h"
 #include "Particles.h"
 #include "SoundManager.h"
 #include "GameLoop.h"
 #include "Win.h"
-int currentWave=1;			
-int enemyThreshold = 10;			//Set to a ratio of the current wave credits (used later)
 
+int currentWave=15;			
 int enemiesKilled = 0;
-#define MAXENEMYCOUNT 20
-EnemyInfo EnemiesToSpawn[MAXENEMYCOUNT];			//Max size for now is the enemythreshold
+#define MAXENEMYCOUNT 20							//The maximum amount of enemies that can be on screen at a time
+EnemyInfo EnemiesToSpawn[MAXENEMYCOUNT];			//Populated in GenerateWave()
 int enemySpawnIndex = 0;
-EnemyInfo WaveObjects[WAVEOBJECTCOUNT];	//Max size of the array probably = gridsize. I don't think we'll have more enemies than that
-int tombstoneObjectCount = 0;
+EnemyInfo WaveObjects[WAVEOBJECTCOUNT];				//The main array containing all enemies in the wave
 int enemyCount =0; 			//Keeps track of how many enemies are generated, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
-int tombstoneCount = 0;			//Keep track of how many tombstone are there in the grid currently
 int waveCredits = 0; 		//Arbritarily set to currentWave * 10
 int waveIndex = 0;			//Used to keep track of which enemy to spawn in the wavearray, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
-//Wave array, Filled with enemies based off of cost.
-int x_SpawnPos = TOTAL_XGRID - 1;//Enemy x-grid spawn position
-/*
-@Brief (just in case anyone wants to know the logic)
-1) Define enemy types in an array. This will be like your enemy prefabs that you will not touch but only reference. The equivalent is the EnemyPool.
-2) Populate a waveArray by randomly selecting an enemy from enemyPool until the credit cost is 0.
-3) Iterate through the waveArray and spawn. Since we cannot removeAt(index), we have to manually track it and once the index hits the total enemy count, it means we've spawned all enemies and we can generate the next wave. Goto 2
-*/
 
 
-//Initialises the wave system
+//Initialises the wave system, generates the first wave and subscribes turn events.
 void InitWaveSystem(){
-	//InitEnemyPool();				//Starts up the enemy prefabs array
+	//** Enemy Pool is initialised at the very start of the game so we do not need to initialise it here!
 	GenerateWave();	
-	// UpdateWave();
 	SubscribeEvent(PLAYER_END,SpawnTombEnemies,1);
 	SubscribeEvent(ZOMBIE_START,UpdateWave,0);
 }
-/*______________________________________________________________
-@brief Generates the wave by deducting credits and adding enemies to the wave
-______________________________________________________________*/
-void GenerateWave(){
-	// Formula made in desmos
-	waveCredits = (int)(12.0f / (0.5f + powf(expf((float)-currentWave+10), 0.2f))); //magic number, will tweak
 
-	while(waveCredits > 0 && enemyThreshold <=10){				//Spawn as long as we have credits or lesser than 10 enemies to spawn
+//Generates the wave by deducting credits and populating the array of enemies to spawn
+void GenerateWave(){
+	// Formula made in desmos, curve is a nice S curve.
+	waveCredits = (int)(12.0f / (0.5f + powf(expf((float)-currentWave+10), 0.2f))); 
+
+	while(waveCredits > 0){				
 		//Gets random enemy index for prefab from enemystats.c
-		//1 is Wall so do not spawn it
+		//Index 0 is the wall so we exclude it from the random selection
 		int randomEnemyIndex = CP_Random_RangeInt(1,GetEnemyCount()-1);
+
 		//Check if Credits-Enemy cost is valid. (it loops and tries again if it isn't)
 		//NOTE: Because there's no break, there MUST be an enemy with at least 1 for it's cost.
-
 		if((waveCredits-GetEnemyPrefab(randomEnemyIndex)->Cost)>=0){
 			//enemy%WAVEOBJECTCOUNT is so that the enemyCount index loops back around once it = WAVEOBJECTCOUNT
 			//Ensure only the desire number of tombstone is generated and place in Waveobject array
-
 				EnemiesToSpawn[enemySpawnIndex % MAXENEMYCOUNT] = *GetEnemyPrefab(randomEnemyIndex);
 				EnemiesToSpawn[enemySpawnIndex % MAXENEMYCOUNT].is_Alive = FALSE;
 				waveCredits -= GetEnemyPrefab(randomEnemyIndex)->Cost;
 				enemySpawnIndex++;
-
 		}
 	}
 
 }
 
-/*______________________________________________________________
-@brief Update function for the wave system, subscribed to gameloop enemy wave
-______________________________________________________________*/
+//Update function for the wave enemies, handles their spawning and movement.
 void UpdateWave(){
-		//MOVE ENEMIES
-		for(short y = 0; y < TOTAL_YGRID; ++y){
-			for(short x = 0; x < TOTAL_XGRID; ++x){
-				if(HasLiveEnemyInCell(x,y)){
-					if(GetAliveEnemyFromGrid(x,y)->moveCooldown){
-						GetAliveEnemyFromGrid(x,y)->moveCooldown = FALSE;
-						continue;
-					}
-					if(GetAliveEnemyFromGrid(x,y)->MovementSpeed >0){
-						MoveEnemy(GetAliveEnemyFromGrid(x,y));
-					}
+	//MOVES ENEMIES
+	for(short y = 0; y < TOTAL_YGRID; ++y){
+		for(short x = 0; x < TOTAL_XGRID; ++x){
+			if(HasLiveEnemyInCell(x,y)){
+				if(GetAliveEnemyFromGrid(x,y)->moveCooldown){
+					GetAliveEnemyFromGrid(x,y)->moveCooldown = FALSE;
+					continue;
+				}
+				if(GetAliveEnemyFromGrid(x,y)->MovementSpeed >0){
+					MoveEnemy(GetAliveEnemyFromGrid(x,y));
 				}
 			}
 		}
-		//Gets the number of enemies left to spawn
-		int enemiesRemainingToSpawn = enemySpawnIndex-waveIndex;
-		//Gets a random number that is either the column size or the enemies left to spawn, whichever is lesser.
-		int randEnemyCount = CP_Random_RangeInt(1,min((TOTAL_YGRID-1),enemiesRemainingToSpawn));
-		int currCount = 0;
-		if(waveIndex < enemySpawnIndex){
-			//We loop through all the enemies we wanna spawn
-			while(currCount < randEnemyCount){
-				SpawnEnemy(&EnemiesToSpawn[waveIndex]);
-				currCount++;//gotta increment
-				//If we hit the maxenemycount, it means this wave has ended
-				if(waveIndex >= enemySpawnIndex){
-					NextWave();
-					break;
-				} 
-			}
+	}
+	//=========================== SPAWNING OF ENEMIES HERE ===========================
+	//Gets the number of enemies left to spawn
+	int enemiesRemainingToSpawn = enemySpawnIndex-waveIndex;
+	//Gets a random number that is either the column size or the enemies left to spawn, whichever is lesser.
+	int randEnemyCount = CP_Random_RangeInt(1,min((TOTAL_YGRID-1),enemiesRemainingToSpawn));
+	int currCount = 0;
+	//As long as there are still enemies to spawn, we continue
+	if(waveIndex < enemySpawnIndex){
+		//We loop through all the enemies we CAN spawn
+		while(currCount < randEnemyCount){
+			SpawnEnemy(&EnemiesToSpawn[waveIndex]);
+			currCount++;//gotta increment
+			//If we finish spawning all the enemies, it means this wave has ended
+			if(waveIndex >= enemySpawnIndex){
+				NextWave();
+				break;
+			} 
 		}
-		else{
-			//extra catch just in case
-			NextWave();
-		}
+	}
+	else{
+		//extra catch just in case
+		NextWave();
+	}
+	//Once all the possible spawns have been done, we switch over to players turn
 	GameLoopSwitch(TURN_PLAYER);
 }
 
-//DISPLAY ENEMIES
+//Displays enemies in the grid
 void RenderEnemy(void){
-	for(short i =0; i<WAVEOBJECTCOUNT; ++i)		
-	{
+	for(short i =0; i<WAVEOBJECTCOUNT; ++i){
 		if(WaveObjects[i].is_Alive){
 			DrawEnemy(&WaveObjects[i]);
 		} 
 	}
 }
 
-/*______________________________________________________________
-@brief void spawn... spawn that enemy/special type being call and add them in the array containing all enemy in the that's currently
-alive
-______________________________________________________________*/
+//Spawns a specific enemy in the specified cell if it is unoccupied. Used in tutorial for scripted spawns.
 void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy){
 	if(HasLiveEnemyInCell(x,y)) return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -133,10 +126,12 @@ void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy){
 	}
 }
 
+//Spawns enemies to the grid, used by update wave to spawn enemies into the grid.
 void SpawnEnemy(EnemyInfo* enemy){
+	//Grave enemies have a different spawning positon to other zombies.
 	if(enemy->type == GRAVE) enemy->x = CP_Random_RangeInt(TOTAL_XGRID-2, TOTAL_XGRID-4);
 	else enemy->x = TOTAL_XGRID-1;
-
+	//The Y position of all zombies are randomised
 	enemy->y = (CP_Random_RangeInt(0, TOTAL_YGRID - 1));
 	if(HasLiveEnemyInCell(enemy->x,enemy->y))return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -151,7 +146,7 @@ void SpawnEnemy(EnemyInfo* enemy){
 	}
 }
 
-
+//Creates a wall in unoccupied cell.
 void CreateWall(int x, int y){
 	if(HasLiveEnemyInCell(x,y))return;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -166,6 +161,7 @@ void CreateWall(int x, int y){
 	}
 }
 
+//Spawns random enemy in cell occupied by grave enemies
 void SpawnTombEnemies(void){
 	for(short i=0; i<WAVEOBJECTCOUNT; ++i){
 		if(HasLiveEnemyInCell(WaveObjects[i].x,WaveObjects[i].y)){
@@ -182,9 +178,8 @@ void SpawnTombEnemies(void){
 		}
 	}
 }
-/*______________________________________________________________
-@brief Check if all enemy in the grid are dead or not
-______________________________________________________________*/
+
+//Iterates through grid, returns true if all enemies are dead, false if otherwise
 BOOL IsAllEnemiesDead(){
 	int count = 0;
 	for(short i = 0; i<WAVEOBJECTCOUNT; ++i){
@@ -196,9 +191,7 @@ BOOL IsAllEnemiesDead(){
 }
 
 
-/*______________________________________________________________
-@brief Return address of enemy in grid if its alive. Return null is current cell contains nothing
-______________________________________________________________*/
+//Returns the live enemy in the specified grid. Returns NULL if otherwise.
 EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	if(!HasLiveEnemyInCell(x,y))return NULL;
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
@@ -208,6 +201,8 @@ EnemyInfo* GetAliveEnemyFromGrid(int x, int y){
 	}
 	return NULL;
 }
+
+//Returns the specified cell. 
 EnemyInfo* GetCell(int x, int y){
     for(short i=0; i< WAVEOBJECTCOUNT;++i){
         if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
@@ -216,9 +211,9 @@ EnemyInfo* GetCell(int x, int y){
     }
     return NULL;
 }
-/*______________________________________________________________
-@brief Check if the cell contains an enemy whos alive
-______________________________________________________________*/
+
+
+//Checks if the enemy in the specified cell is alive.
 BOOL HasLiveEnemyInCell(int x, int y){
 	for(short i=0; i< WAVEOBJECTCOUNT;++i){
 		if((WaveObjects[i].x == x) && (WaveObjects[i].y ==y)){
@@ -228,14 +223,16 @@ BOOL HasLiveEnemyInCell(int x, int y){
 	return FALSE;
 }
 
+//Returns the current wave count
 int GetCurrentWave(){
 	return currentWave;
 }
+//Returns the count of enemies killed
 int GetEnemiesKilled(void){
 	return enemiesKilled;
 }
 
-//Function to send damage to enemy in grid
+//Sends damage to enemy in specified cell. Called by tetromino pieces.
 void SendDamage(int x, int y,int damage){
 	//Make sure the thing we want to send damage to is in the playing area
 	if(!IsInPlayingArea(GridXToPosX(x),GridYToPosY(y)))return;
@@ -250,6 +247,7 @@ void SendDamage(int x, int y,int damage){
 		enemiesKilled++;
 	}
 }
+
 //Function for zombies to deal damage to walls
 void ZombieDealDamage(int x, int y,int damage){
 	//Make sure the thing we want to send damage to is in the playing area
@@ -264,8 +262,9 @@ void ZombieDealDamage(int x, int y,int damage){
 	}
 }
 
-void NextWave()
-{
+//Starts the next wave
+void NextWave(){
+	//Check if it's the last wave
 	if(currentWave >= WAVES_TO_WIN) return;
 	//reset array for enemies to spawn
 	memset(EnemiesToSpawn,0,sizeof(EnemyInfo)*MAXENEMYCOUNT);

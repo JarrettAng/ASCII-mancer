@@ -1,7 +1,13 @@
+/*!
+@file	  SoundManager.h
+@author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
+@date     21/11/2022
+@brief    This header file contains the information about the sound manager and the functions that can be called from it.
+*/
 #pragma once
 #include <cprocessing.h>
 
-#define SOUNDCOUNT 25
+#define SOUNDCOUNT 25   //designating 25 sounds as the max count
 //Maybe do #define SFX CP_SOUND_GROUP_SFX
 //Maybe do #define BGM CP_SOUND_GROUP_MUSIC
 
@@ -33,7 +39,7 @@ typedef struct SoundClip{
     CP_Sound sound;
     float volumeModifier;
     Clip clipName;
-}SoundClip;
+} SoundClip;
 
 
 //========= MUST DECLARE FUNCTIONS ========================

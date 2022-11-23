@@ -55,6 +55,10 @@ void UpdateWizard(void) {
 	DrawWizard(wiz_staff);
 }
 
+CP_Vector GetWizardPosition(){
+	return CP_Vector_Set(wiz_body.xpos,wiz_body.ypos);
+}
+
 void InitMouseIcon(void) {
 	rotation_icon = CP_Image_Load("Assets/RotationIcon.png");
 	right_click_icon = CP_Image_Load("Assets/MouseRightClickIcon.png");

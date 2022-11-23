@@ -10,8 +10,8 @@
 
           DrawFromBag - Draws the next Tetris Piece from the queue, note: the queue will never run out of pieces.
           FillBag - Fills the chosen bag with a copy of every Tetris Piece possible.
-          ShuffleBag - Shuffles the piece order in the chosen bag, the Fisher–Yates shuffle is used for the shuffling.
-          RandInt - Returns a random int. Used by ShuffleBag to shuffle the pieces Fisher–Yates shuffle.
+          ShuffleBag - Shuffles the piece order in the chosen bag, the Fisherï¿½Yates shuffle is used for the shuffling.
+          RandInt - Returns a random int. Used by ShuffleBag to shuffle the pieces Fisherï¿½Yates shuffle.
 
           CreatePiece - Creates a Tetris Piece based on the chosen type.
 ________________________________________________________________________________________________________*/
@@ -45,6 +45,7 @@ void TManagerInit(int rand_seed) {
     current_bag = current_index = 0;
 
     srand(rand_seed);
+    CP_Random_Seed(rand_seed);
 
     for (int index = 0; index < TOTAL_BAGS; ++index) {
         FillBag(index);
@@ -86,7 +87,7 @@ void FillBag(int bag) {
 }
 
 /*______________________________________________________________
-@brief Shuffles the chosen bag, the Fisher–Yates shuffle is used for the shuffling process.
+@brief Shuffles the chosen bag, the Fisherï¿½Yates shuffle is used for the shuffling process.
 
 @param[in] bag - The index of the bag to shuffle, the bags are placed in an array.
 */
@@ -102,7 +103,7 @@ void ShuffleBag(int bag) {
 }
 
 /*______________________________________________________________
-@brief Returns a random int. Used by ShuffleBag to shuffle the pieces Fisher–Yates shuffle.
+@brief Returns a random int. Used by ShuffleBag to shuffle the pieces Fisherï¿½Yates shuffle.
 
 @param[in] min - The smallest number (inclusive)
 @param[in] max - The largest number (inclusive)

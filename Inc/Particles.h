@@ -20,6 +20,8 @@ ________________________________________________________________________________
 typedef struct Particle{
     float x;
     float y;
+    float cachedX;
+    float cachedY;
     float xVelocity;
     float yVelocity;        
     float lifeTime;         //Current lifetime remaining for particle. Disappears when <0
@@ -61,6 +63,9 @@ void DrawParticle(Particle* particlePointer);
 */
 void UpdateEffects(void);
 /*____________________________________________________________________*/
+
+void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lifeTime, float size, const char* animString);
+void UpdateLerpParticle();
 
 
 /*
@@ -116,6 +121,7 @@ void ZombieDeathParticle(float x, float y,ZombieType type);
 void ZombieSpawnParticle(float x, float y);
 /*____________________________________________________________________*/
 
+void PlayerMagicParticle(float endX, float endY);
 
 /*
 @brief Spawns the particle of the enemy moving towards the player.

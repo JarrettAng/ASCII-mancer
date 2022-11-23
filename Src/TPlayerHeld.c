@@ -207,8 +207,8 @@ void TPlayerHeldProcessInput(void) {
 		// If the piece is in the playing area, play it, otherwise it will just return to hand
 		if (in_playing_area) {
 			PieceHeldPlayed(PosXToGridX(mouse_pos.x), PosYToGridY(mouse_pos.y)); // Do damage and remove from hand
+			PlayerMagicParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
 		}
-
 		piece_held.piece = NULL; // Removes information on piece held once the player has released.
 	}
 }
@@ -333,7 +333,6 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 
 	// Screen the shake
 	trauma += 0.35f;
-
 	// Play tetris piece sound
 	piece_held.slot_index == 0 ? PlaySound(THUD, CP_SOUND_GROUP_SFX) : PlaySoundEx(TETROMINOEXPLODE, CP_SOUND_GROUP_SFX);
 

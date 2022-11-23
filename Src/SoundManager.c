@@ -7,6 +7,7 @@ int SoundIndex = 0;
 float volume =1.0f;     //original sound, no modification
 float pitch = 1.0f;     
 
+//toggle booleans
 _Bool toggleMuteAll = FALSE;
 _Bool toggleMuteSFX = FALSE;
 _Bool toggleMuteBGM = FALSE;
@@ -49,6 +50,7 @@ void PlayBGM(Clip clipName){
     CP_Sound_StopGroup(CP_SOUND_GROUP_MUSIC);
     CP_Sound_PlayAdvanced(GetSound(clipName), GetVolume(clipName), 1, TRUE, CP_SOUND_GROUP_MUSIC);
 }
+
 //Returns sound from SoundArray based off clip name
 CP_Sound GetSound(Clip clipName){
     for(short i=0; i<SoundIndex; ++i){
@@ -59,6 +61,7 @@ CP_Sound GetSound(Clip clipName){
     return NULL;
 }
 
+//Function that returns the current volume of the clip name. Returns 0 if clip is null.
 float GetVolume(Clip clipName){
     for(short i=0; i<SoundIndex; ++i){
         if (SoundArray[i].clipName == clipName){
@@ -102,16 +105,13 @@ void ToggleMuteBGM(void){
     toggleMuteSFX ? CP_Sound_PauseGroup(CP_SOUND_GROUP_MUSIC) : CP_Sound_ResumeGroup(CP_SOUND_GROUP_MUSIC);
 }
 
-
+//Function that stops all sounds from playing
 void StopAllSounds(){
     CP_Sound_StopAll();
 }
 //Stops all sounds and frees them. Remember to call on exit.
 void KillSoundManager(){
     CP_Sound_StopAll();
-    // for(short i=0; i< SoundIndex; ++i){
-    //     CP_Sound_Free(&SoundArray[i].sound);
-    // }
     SoundIndex = 0;
     memset(SoundArray, 0, sizeof(SoundClip) * SOUNDCOUNT);
 }

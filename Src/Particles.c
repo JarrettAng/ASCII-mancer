@@ -10,11 +10,14 @@ ________________________________________________________________________________
 #include "SoundManager.h"       
 #include "WaveSystem.h"         //for access to enemies
 #include "Grid.h"               //for grid coordinate conversions
+#include "Wizard.h"
 
 //Particle Array. Will use some form of Object Pooling.
 //ParticleCount defined in particles.h, 1000. 
 Particle particleArray[PARTICLECOUNT];
 particleIndex =0;
+Particle lerpedParticleArray[20];
+int lerpParticleIndex = 0;
 
 //=========== PARTICLE ANIMATIONS ===========
 char* SparkleAnimString = "x+*\".";
@@ -27,7 +30,7 @@ char* WallDeathAnimString = "XXXX    XXXX    XXXX    XXXvvwwnncu*\'`";
 char* ZombieAnim = "ZzZzZzZzZzZzZzZz";
 char* ZombieSpawnAnimString = "@Oo*\'";
 
-
+float particleDelay = 0.1f;
 
 //Function that handles creating of particle. Calling this will add the particle to the array
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB,float timeBeforeActive){
@@ -54,6 +57,46 @@ void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gra
     particleIndex++;
 }
 
+void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lifeTime, float size, const char* animString){
+    Particle newPartice = {
+        .x = xPos,
+        .y = yPos,
+        .cachedX = xPos,
+        .cachedY = yPos,
+        .lifeTime = lifeTime,
+        .cachedLifeTime = lifeTime,
+        .size = size,
+        .gravityScale = 0,
+        .color = MENU_RED,
+        .xVelocity =endX,
+        .yVelocity =endY,
+        .force = CP_Vector_Zero(),
+        .animString = animString,
+        .isRGB = TRUE,
+        .timeBeforeActive = 0,
+        .isLoop = FALSE
+    };
+    lerpedParticleArray[lerpParticleIndex%20]=newPartice;
+    lerpParticleIndex++;
+}
+
+void UpdateLerpParticle(){
+    //Index-1 because we want the most recent particle
+    Particle* lerpedParticle = &lerpedParticleArray[(lerpParticleIndex-1)%20];
+    if(lerpedParticle->lifeTime >0){
+
+        //Gets frame count and time step by mapping number of frames to particle lifetime using lerp.
+        float elapsedLifeTime = lerpedParticle->cachedLifeTime-lerpedParticle->lifeTime;
+        float timeStep = elapsedLifeTime/lerpedParticle->cachedLifeTime;
+        int totalFrames = (int)strlen(lerpedParticle->animString);
+
+        //For a small hack, I store the endx and endy positions in velocity.
+        lerpedParticle->x = CP_Math_LerpFloat(lerpedParticle->cachedX,lerpedParticle->xVelocity,timeStep);
+        lerpedParticle->y = CP_Math_LerpFloat(lerpedParticle->cachedY,lerpedParticle->yVelocity,timeStep);
+
+        lerpedParticle->lifeTime-=CP_System_GetDt();
+    }
+}
 //Function that updates a given particle. Used in Update effects forloop. Handles particle movement and lifetime.
 void UpdateParticle(Particle* particlePointer){
 
@@ -81,7 +124,6 @@ void UpdateParticle(Particle* particlePointer){
     else{
         // catch any errors here
     }
-
 }
 
 //Spawns a radial particle with variance in angle, force and particle count
@@ -94,7 +136,7 @@ void RadialParticleVaried(float x, float y){
         float randomForceVariance = CP_Random_RangeFloat(1.f,4.f);
         float angle = (float)(360/randomParticleCount)*i+(CP_Random_Gaussian()*2.f);
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),randomForceVariance);
-        CreateParticle(x,y,.5f, GetCellSize()/3,0.f, MENU_GRAY, forceDirection,SparkleAnimString,FALSE,0);
+        CreateParticle(x,y,.5f, GetCellSize()/3,1.f, MENU_GRAY, forceDirection,SparkleAnimString,FALSE,0);
     }
 }
 
@@ -103,7 +145,7 @@ void RadialParticleColor(float x, float y,int particleCount,float force,CP_Color
     for(short i =0; i<particleCount;++i){
         float angle = (float)360/particleCount*i;
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),force);
-        CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,color,forceDirection,SparkleAnimString,FALSE,0);
+        CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,color,forceDirection,SparkleAnimString,FALSE,particleDelay);
     }
 }
 
@@ -112,7 +154,7 @@ void RadialParticleRGB(float x, float y,int particleCount,float force){
     for(short i =0; i<particleCount;++i){
         float angle = (float)360/particleCount*i;
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),force);
-        CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,MENU_RED,forceDirection,SparkleAnimString,TRUE,0);
+        CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,MENU_RED,forceDirection,SparkleAnimString,TRUE,particleDelay);
     }
 }
 //Spawns the death particle of a zombie.
@@ -148,7 +190,9 @@ void ZombieDeathParticle(float x, float y,ZombieType type){
 void ZombieSpawnParticle(float x, float y){
     CreateParticle(x,y,0.5f,GetCellSize(),0.1f,MENU_RED,CP_Vector_Zero(),ZombieSpawnAnimString,TRUE,0);
 }
-
+void PlayerMagicParticle(float endX, float endY){
+    CreateLerpedParticle(GetWizardPosition().x,GetWizardPosition().y,endX,endY,particleDelay,GetCellSize(),SparkleAnimString);
+}
 //Spawns the particle of the zombie moving to the player 
 void ZombieToPlayerParticle(float x,float y){
     CP_Vector dirToPlayer = CP_Vector_Set((CP_System_GetWindowWidth()*0.05f)-x,(GetGridPlayingArea()/2)+GetGridTopBuffer() - y);
@@ -200,7 +244,8 @@ void DrawParticle(Particle* particlePointer){
 //Function that is required to be called to update all particles. If particles don't work, check that this is in update loop.
 void UpdateEffects(void){
     // if(CP_Input_MouseTriggered(1)){
-    //     RadialParticleVaried(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+    //     // RadialParticleVaried(CP_Input_GetMouseX(),CP_Input_GetMouseY());
+    //     PlayerMagicParticle(CP_Input_GetMouseX(),CP_Input_GetMouseY());
     // }
     //Main loop for handling particle movement and rendering.
     //Important to loop through the whole array because the index wraps around.
@@ -208,6 +253,13 @@ void UpdateEffects(void){
         if(particleArray[i].lifeTime <=0) continue; //an attempt at optimisation to skip dead particles.
         UpdateParticle(&particleArray[i]);
         DrawParticle(&particleArray[i]);
+    }
+    if(lerpParticleIndex >0){
+        for(short i =0; i<20;++i){
+            if(lerpedParticleArray[i].lifeTime <=0) continue;
+            UpdateLerpParticle();
+            DrawParticle(&lerpedParticleArray[i]);
+        }
     }
 }
 
