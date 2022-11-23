@@ -20,6 +20,8 @@
 
 #include "EnemyDisplay.h" // For drawing the enemy stats on the grid
 
+#include "MainMenu.h" // For exiting to main menu.
+
 void gameLevelInit(void){
 	// Zero out all the events in the event system first!
 	ZeroOutAllEvents();
@@ -42,7 +44,6 @@ void gameLevelInit(void){
 
 	// Initialize game loop last, after all the events have been subscribed
 	GameLoopInit();
-
 }
 void gameLevelUpdate(void){
 	UpdateCameraShaker();
@@ -54,7 +55,7 @@ void gameLevelUpdate(void){
 		// SpawnTombEnemies();
 	}
 	if (CP_Input_KeyTriggered(KEY_V)){
-		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()),GetEnemyPrefab(1));
+		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(1));
 	}
 
 	RenderEnemy();
@@ -82,6 +83,10 @@ void gameLevelUpdate(void){
 	// CLEAR SCREEN
 	CP_Graphics_ClearBackground(BLACK);
 
+	if (CP_Input_KeyTriggered(KEY_ESCAPE)){
+		ExitToMainMenu();
+	}
+
 }
 
 void ShowCurrentWave(void){
@@ -97,11 +102,11 @@ void ShowCurrentWave(void){
 //!Only used for testing!! remove on release!!
 void ShowTestEnemiesKilled(void){
 	CP_Settings_Fill(TETRIS_COLOR);
-	CP_Settings_TextSize(GetCellSize()/5.f);
+	CP_Settings_TextSize(GetCellSize() / 5.f);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 	char buffer[25] = { 0 };
 	sprintf_s(buffer, 25, "TEST ENEMIES KILLED %02d", GetEnemiesKilled());
-	float xPosition = WINDOWLENGTH/2.f;
+	float xPosition = WINDOWLENGTH / 2.f;
 	float yPosition = GetCellSize();
 	CP_Font_DrawText(buffer, xPosition, yPosition);
 }
@@ -112,4 +117,8 @@ void gameLevelExit(void){
 	FreeIconImages();
 	FreeMouseIcons();
 	FreeEnemyDisplayIcon();
+}
+
+void ExitToMainMenu(){
+	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }
