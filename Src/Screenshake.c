@@ -32,6 +32,7 @@ float GetPerlinFloat(float seed){
 CP_Vector GetRandomVector(void){
     return CP_Vector_Set(GetPerlinFloat(1),GetPerlinFloat(10));
 }
+
 //Main function to update the position of the camera and do the shaking.
 //NOTE: Has to be called FIRST before any background clears or it won't work!!
 void UpdateCameraShaker(void){
@@ -46,4 +47,9 @@ void UpdateCameraShaker(void){
         //Decrement the trauma values down. Will be tweaking the values
         trauma-=CP_System_GetDt()*traumaDecay*(trauma+0.3f);
     }
+}
+
+//Resets the camera shake, used when exiting game to menu
+void ResetCameraShake(void){
+    trauma=0;
 }

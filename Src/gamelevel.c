@@ -1,3 +1,14 @@
+/*!
+@file	  gamelevel.c
+@author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
+@author	  Justine Carlo Villa Ilao (justine.c@digipen.edu)
+@author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     21/11/2022
+@brief    This header file contains the information about the sound manager and the functions that can be called from it.
+*/
+
 //Header files here
 #include <stdio.h>
 
@@ -25,46 +36,42 @@
 void gameLevelInit(void){
 	// Zero out all the events in the event system first!
 	ZeroOutAllEvents();
-
+	//Start the game BGM
 	PlayBGM(GAMEBGM);
-	grid_init();
 
+	//INITIALISE GAME 
+	grid_init();
 	InitWaveSystem();
 	InitializeLife();
+
+	//INITIALISE UI ELEMENTS
 	InitWizard();
 	WinTextInit();
 	InitMouseIcon();
 
+	//INITIALISE TETRIS PIECE
 	TManagerInit(DEFAULT_SPAWN_SEED);
-
 	TPlayerInit();
-	EnemyDisplayInit();
 
+	//INITIALISE TUTORIAL
+	EnemyDisplayInit();
 	TutorialInit();
 
-	// Initialize game loop last, after all the events have been subscribed
+	//Initialize game loop last, after all the events have been subscribed
 	GameLoopInit();
 }
+
 void gameLevelUpdate(void){
 	UpdateCameraShaker();
 
-	// DRAWING AND UPDATING OF GRID
+	//DRAWING AND UPDATING OF GRID
 	grid_update();
-	if (CP_Input_KeyTriggered(KEY_K)){
-		CreateWall(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()));
-		// SpawnTombEnemies();
-	}
-	if (CP_Input_KeyTriggered(KEY_V)){
-		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(1));
-	}
-
 	RenderEnemy();
 
 	// Call the functions subscribed to the update events
 	GameLoopUpdate();
 
-	//UpdateWave();
-	// UPDATE VFX
+	//UPDATE VFX
 	UpdateEffects();
 	RenderHand();
 	ShowCurrentWave();
@@ -86,7 +93,12 @@ void gameLevelUpdate(void){
 	if (CP_Input_KeyTriggered(KEY_ESCAPE)){
 		ExitToMainMenu();
 	}
-
+	// if (CP_Input_KeyTriggered(KEY_K)){
+	// 	CreateWall(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()));
+	// }
+	// if (CP_Input_KeyTriggered(KEY_V)){
+	// 	SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(1));
+	// }
 }
 
 void ShowCurrentWave(void){
@@ -117,6 +129,8 @@ void gameLevelExit(void){
 	FreeIconImages();
 	FreeMouseIcons();
 	FreeEnemyDisplayIcon();
+	ResetGame();
+	ResetCameraShake();
 }
 
 void ExitToMainMenu(){

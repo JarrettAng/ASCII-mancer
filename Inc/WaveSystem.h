@@ -4,6 +4,9 @@
 @date     21/11/2022
 @brief    This header file contains the information about the wavesystem and the functions that can be called for it. The specifics of the wavesystem algorithm is detailed in WaveSystem.c
 */
+
+/*
+________________________________________________________________________________________________*/
 #pragma once
 #include <cprocessing.h>
 #include "EnemyStats.h"

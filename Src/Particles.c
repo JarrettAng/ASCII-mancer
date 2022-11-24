@@ -13,10 +13,10 @@ ________________________________________________________________________________
 #include "Wizard.h"
 
 //Particle Array. Will use some form of Object Pooling.
-//ParticleCount defined in particles.h, 1000. 
+//ParticleCount defined in particles.h, 1001. 
 Particle particleArray[PARTICLECOUNT];
-particleIndex =0;
-Particle lerpedParticleArray[20];
+int particleIndex =0;
+Particle lerpedParticleArray[LERPPARTICLECOUNT];
 int lerpParticleIndex = 0;
 
 //=========== PARTICLE ANIMATIONS ===========
@@ -57,6 +57,7 @@ void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gra
     particleIndex++;
 }
 
+//Adds lerped particle to the particle array for use.
 void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lifeTime, float size, const char* animString){
     Particle newPartice = {
         .x = xPos,
@@ -80,6 +81,7 @@ void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lif
     lerpParticleIndex++;
 }
 
+//Updates the lerped particles, needs to be called every frame!
 void UpdateLerpParticle(){
     //Index-1 because we want the most recent particle
     Particle* lerpedParticle = &lerpedParticleArray[(lerpParticleIndex-1)%20];
@@ -254,6 +256,7 @@ void UpdateEffects(void){
         UpdateParticle(&particleArray[i]);
         DrawParticle(&particleArray[i]);
     }
+    //Loops through the lerp particles
     if(lerpParticleIndex >0){
         for(short i =0; i<20;++i){
             if(lerpedParticleArray[i].lifeTime <=0) continue;
@@ -261,6 +264,14 @@ void UpdateEffects(void){
             DrawParticle(&lerpedParticleArray[i]);
         }
     }
+}
+
+//Resets the particles and their indexes. Used when exiting game to menu
+void ResetParticles(void){
+    particleIndex =0;
+    lerpParticleIndex =0;
+    memset(particleArray,0,sizeof(Particle)*(PARTICLECOUNT));
+	memset(lerpedParticleArray,0,sizeof(Particle)*LERPPARTICLECOUNT);
 }
 
 //Retuns color from lerping of hues to make rainbow color effect.

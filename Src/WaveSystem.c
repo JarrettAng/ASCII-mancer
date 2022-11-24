@@ -3,12 +3,15 @@
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @date     23/11/2022
 @brief    This source file handles the AI director and spawning of enemies to the grid. 
+
 ======== WAVE SYSTEM ALGORITHM ========
 1) Define enemy types in an array. This will be like your enemy prefabs that you will not touch but only reference. The equivalent is the EnemyPool.
 2) Populate an enemyArray by randomly selecting an enemy from enemyPool until the credit cost is 0.
 3) Iterate through enemyArray and spawn enemies, placing them in waveArray. Once all the enemies in enemyArray have been spawned, clear it
 4) Goto 2
 */
+/*
+________________________________________________________________________________________________________*/
 
 #include <math.h>
 #include "WaveSystem.h"
@@ -17,7 +20,7 @@
 #include "GameLoop.h"
 #include "Win.h"
 
-int currentWave=15;			
+int currentWave=1;			
 int enemiesKilled = 0;
 #define MAXENEMYCOUNT 20							//The maximum amount of enemies that can be on screen at a time
 EnemyInfo EnemiesToSpawn[MAXENEMYCOUNT];			//Populated in GenerateWave()
@@ -227,6 +230,7 @@ BOOL HasLiveEnemyInCell(int x, int y){
 int GetCurrentWave(){
 	return currentWave;
 }
+
 //Returns the count of enemies killed
 int GetEnemiesKilled(void){
 	return enemiesKilled;
@@ -285,4 +289,5 @@ void ResetGame(){
 	enemiesKilled =0;
 	memset(WaveObjects,0,sizeof(EnemyInfo)*(WAVEOBJECTCOUNT));
 	memset(EnemiesToSpawn,0,sizeof(EnemyInfo)*MAXENEMYCOUNT);
+	ResetParticles();
 }

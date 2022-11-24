@@ -15,6 +15,7 @@ ________________________________________________________________________________
 #define VECTOR_UP CP_Vector_Set(0,-1)
 #define VECTOR_DOWN CP_Vector_Set(0,1)
 #define PARTICLECOUNT 1001
+#define LERPPARTICLECOUNT 20
 
 
 typedef struct Particle{
@@ -62,10 +63,20 @@ void DrawParticle(Particle* particlePointer);
 @brief Needs to be called every frame in update in order for all particles to be updated!
 */
 void UpdateEffects(void);
-/*____________________________________________________________________*/
+/*____________________________________________________________________*
 
+/*
+@brief Adds lerped particle to the particle array for use.
+@param[in] Params : Refer to particle struct for full list of params.
+*/
 void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lifeTime, float size, const char* animString);
-void UpdateLerpParticle();
+/*____________________________________________________________________*
+
+/*
+@brief Updates the lerped particles, needs to be called every frame!
+*/
+void UpdateLerpParticle(void);
+/*____________________________________________________________________*
 
 
 /*
@@ -119,10 +130,19 @@ void ZombieDeathParticle(float x, float y,ZombieType type);
 @param[in] Position is the particles x and y positions respectively.
 */
 void ZombieSpawnParticle(float x, float y);
-/*____________________________________________________________________*/
+/*____________________________________________________________________*
 
+/*
+@brief Shoots a particle from the player to the cell where piece is placed.
+@param[in] endX,endY the end point that the particle lerps to from the player.
+*/
 void PlayerMagicParticle(float endX, float endY);
+/*____________________________________________________________________*
 
+/*
+@brief Resets particle array and index. Used when exiting game to mainmenu
+*/
+void ResetParticles(void);
 /*
 @brief Spawns the particle of the enemy moving towards the player.
 @param[in] Position is the particles x and y positions respectively.
