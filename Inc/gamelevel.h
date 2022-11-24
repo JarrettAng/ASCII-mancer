@@ -1,12 +1,12 @@
 /*!
-@file	  gamelevel.c
+@file	  gamelevel.h
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
 @author	  Justine Carlo Villa Ilao (justine.c@digipen.edu)
 @author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This header file contains the information about the sound manager and the functions that can be called from it.
+@brief    This header file contains the information about the gamelevel
 */
 
 /*____________________________________________________________________*/

@@ -76,14 +76,6 @@ void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lif
 @brief Updates the lerped particles, needs to be called every frame!
 */
 void UpdateLerpParticle(void);
-/*____________________________________________________________________*
-
-
-/*
-@brief Helper function for RGB values
-@param[in] Color,timeStep Returns a HSL color based on the time step given. 
-*/
-CP_Color LerpedHSLColor(CP_Color color,float timeStep);
 /*____________________________________________________________________*/
 
 
@@ -143,6 +135,8 @@ void PlayerMagicParticle(float endX, float endY);
 @brief Resets particle array and index. Used when exiting game to mainmenu
 */
 void ResetParticles(void);
+/*____________________________________________________________________*
+
 /*
 @brief Spawns the particle of the enemy moving towards the player.
 @param[in] Position is the particles x and y positions respectively.
@@ -150,10 +144,17 @@ void ResetParticles(void);
 void ZombieToPlayerParticle(float x,float y);
 /*____________________________________________________________________*/
 
-
 /*
 @brief Helper function for spawning particles in a circle. Returns the vector from the angle.
 @param[in] Angle is in degrees.
 */
 CP_Vector AngleToVector(float degreeAngle);
+/*____________________________________________________________________*
+
+
+/*
+@brief Helper function for RGB values
+@param[in] Color,timeStep Returns a HSL color based on the time step given. 
+*/
+CP_Color LerpedHSLColor(CP_Color color,float timeStep);
 /*____________________________________________________________________*/

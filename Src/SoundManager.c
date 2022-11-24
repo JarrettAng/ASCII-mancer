@@ -1,3 +1,9 @@
+/*!
+@file	  SoundManager.h
+@author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
+@date     24/11/2022
+@brief    This header file contains the information about the SoundManger and the functions that can be called for it. 
+*/
 #include "SoundManager.h"
 
 //Sound Array 
@@ -13,7 +19,7 @@ _Bool toggleMuteSFX = FALSE;
 _Bool toggleMuteBGM = FALSE;
 
 
-//Inits sounds to soundclip array and PLAYS BGM. 
+//Inits sounds to soundclip array.
 void InitSoundManager(void){
     AddSoundToArray(CP_Sound_Load("Assets/GameBGM.wav"),GAMEBGM,.8f);
     AddSoundToArray(CP_Sound_Load("Assets/MainMenu.wav"),MAINMENU,.1f);
@@ -34,6 +40,7 @@ void InitSoundManager(void){
     AddSoundToArray(CP_Sound_Load("Assets/WallBreak.wav"), WALLBREAK, .8f);
 
 }
+
 //Adds sound to array of soundclips
 void AddSoundToArray(CP_Sound sound,Clip clipName,float volumeModifier){
     SoundClip newSoundClip = {
@@ -70,14 +77,17 @@ float GetVolume(Clip clipName){
     }
     return 0;
 }
+
 //Plays sound set in the enum. Only use either group_SFX or group_MUSIC (Includes pitch variance)
 void PlaySoundEx(Clip clipName,CP_SOUND_GROUP group){
     CP_Sound_PlayAdvanced(GetSound(clipName),GetVolume(clipName),pitch+(CP_Random_Gaussian()/4.f),FALSE,group);
 }
+
 //Plays sound set in the enum. Only use either group_SFX or group_MUSIC
 void PlaySound(Clip clipName,CP_SOUND_GROUP group){
     CP_Sound_PlayAdvanced(GetSound(clipName),GetVolume(clipName),pitch,FALSE,group);
 }
+
 //Function that sets sfx volume. 1.0f default, 0.f is silence.
 void SetSFXVolume(float volume){
     CP_Sound_SetGroupVolume(CP_SOUND_GROUP_SFX,volume);
@@ -109,6 +119,7 @@ void ToggleMuteBGM(void){
 void StopAllSounds(){
     CP_Sound_StopAll();
 }
+
 //Stops all sounds and frees them. Remember to call on exit.
 void KillSoundManager(){
     CP_Sound_StopAll();

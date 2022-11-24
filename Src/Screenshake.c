@@ -13,7 +13,7 @@
   @brief Contains the implementation and logic of screenshaking. Note that you MUST include the UpdateCameraShaker function into the update loop in order to use it. 
   
   Increment Trauma by any value between 0 to 1 to induce screen shaking.
-*/
+________________________________________________________________________________________________*/
 
 
 float trauma;                       //Value clamped rom 0 to 1, used to control shake

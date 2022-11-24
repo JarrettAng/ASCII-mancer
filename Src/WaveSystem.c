@@ -5,11 +5,10 @@
 @brief    This source file handles the AI director and spawning of enemies to the grid. 
 
 ======== WAVE SYSTEM ALGORITHM ========
-1) Define enemy types in an array. This will be like your enemy prefabs that you will not touch but only reference. The equivalent is the EnemyPool.
+1) Define enemy types in an array. This will be like your enemy prefabs that you will not touch but only reference. The equivalent is the EnemyPool. Each enemy has a cost assigned to it based off of how strong it is. Weaker enemies have lower cost than stronger enemies.
 2) Populate an enemyArray by randomly selecting an enemy from enemyPool until the credit cost is 0.
 3) Iterate through enemyArray and spawn enemies, placing them in waveArray. Once all the enemies in enemyArray have been spawned, clear it
 4) Goto 2
-*/
 /*
 ________________________________________________________________________________________________________*/
 
@@ -27,7 +26,7 @@ EnemyInfo EnemiesToSpawn[MAXENEMYCOUNT];			//Populated in GenerateWave()
 int enemySpawnIndex = 0;
 EnemyInfo WaveObjects[WAVEOBJECTCOUNT];				//The main array containing all enemies in the wave
 int enemyCount =0; 			//Keeps track of how many enemies are generated, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
-int waveCredits = 0; 		//Arbritarily set to currentWave * 10
+int waveCredits = 0; 		
 int waveIndex = 0;			//Used to keep track of which enemy to spawn in the wavearray, loops back to index 0 when it exceeds WAVEOBJECTCOUNT
 
 
@@ -227,7 +226,7 @@ BOOL HasLiveEnemyInCell(int x, int y){
 }
 
 //Returns the current wave count
-int GetCurrentWave(){
+int GetCurrentWave(void){
 	return currentWave;
 }
 
@@ -285,7 +284,7 @@ void ResetGame(){
 	enemySpawnIndex = 0;
 	waveIndex = 0;
 	enemyCount = 0;
-	currentWave = 0;
+	currentWave = 1;
 	enemiesKilled =0;
 	memset(WaveObjects,0,sizeof(EnemyInfo)*(WAVEOBJECTCOUNT));
 	memset(EnemiesToSpawn,0,sizeof(EnemyInfo)*MAXENEMYCOUNT);

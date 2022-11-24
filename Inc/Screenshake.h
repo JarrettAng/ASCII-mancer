@@ -1,3 +1,9 @@
+/*!
+@file	  Screenshake.h
+@author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
+@date     24/11/2022
+@brief    This header file contains the information about the screenshake and the functions that can be called for it.
+*/
 #pragma once
 #include <cprocessing.h>            //CP_Vector, CP_Random_Noise
 

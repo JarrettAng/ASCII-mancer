@@ -16,6 +16,7 @@ ________________________________________________________________________________
 //ParticleCount defined in particles.h, 1001. 
 Particle particleArray[PARTICLECOUNT];
 int particleIndex =0;
+
 Particle lerpedParticleArray[LERPPARTICLECOUNT];
 int lerpParticleIndex = 0;
 
@@ -30,6 +31,7 @@ char* WallDeathAnimString = "XXXX    XXXX    XXXX    XXXvvwwnncu*\'`";
 char* ZombieAnim = "ZzZzZzZzZzZzZzZz";
 char* ZombieSpawnAnimString = "@Oo*\'";
 
+//Particle delay used for the lerped particle
 float particleDelay = 0.1f;
 
 //Function that handles creating of particle. Calling this will add the particle to the array
@@ -99,6 +101,7 @@ void UpdateLerpParticle(){
         lerpedParticle->lifeTime-=CP_System_GetDt();
     }
 }
+
 //Function that updates a given particle. Used in Update effects forloop. Handles particle movement and lifetime.
 void UpdateParticle(Particle* particlePointer){
 
@@ -133,8 +136,7 @@ void RadialParticleVaried(float x, float y){
     //Values are hardcoded and tuned for the game.
     int randomParticleCount = CP_Random_RangeInt(20,30);
     //CP_Vector gravity = CP_Vector_Scale(VECTOR_DOWN,9.81f);
-    for(short i = 0;i<(short)randomParticleCount;++i)
-    {
+    for(short i = 0;i<(short)randomParticleCount;++i){
         float randomForceVariance = CP_Random_RangeFloat(1.f,4.f);
         float angle = (float)(360/randomParticleCount)*i+(CP_Random_Gaussian()*2.f);
         CP_Vector forceDirection = CP_Vector_Scale(AngleToVector(angle),randomForceVariance);
@@ -159,8 +161,10 @@ void RadialParticleRGB(float x, float y,int particleCount,float force){
         CreateParticle(x,y,1.0f,GetCellSize()/3,0.f,MENU_RED,forceDirection,SparkleAnimString,TRUE,particleDelay);
     }
 }
+
 //Spawns the death particle of a zombie.
 void ZombieDeathParticle(float x, float y,ZombieType type){
+    //Stronger enemies give a bigger screenshake when they die
     switch (type){
     case ZOMBIE:
         CreateParticle(x,y,1.8f,GetCellSize()/3,0,MENU_RED,CP_Vector_Zero(),ZombieDeathAnimString,FALSE,0);
@@ -192,9 +196,12 @@ void ZombieDeathParticle(float x, float y,ZombieType type){
 void ZombieSpawnParticle(float x, float y){
     CreateParticle(x,y,0.5f,GetCellSize(),0.1f,MENU_RED,CP_Vector_Zero(),ZombieSpawnAnimString,TRUE,0);
 }
+
+//Shoots a particle from the player to the cell where piece is placed.
 void PlayerMagicParticle(float endX, float endY){
     CreateLerpedParticle(GetWizardPosition().x,GetWizardPosition().y,endX,endY,particleDelay,GetCellSize(),SparkleAnimString);
 }
+
 //Spawns the particle of the zombie moving to the player 
 void ZombieToPlayerParticle(float x,float y){
     CP_Vector dirToPlayer = CP_Vector_Set((CP_System_GetWindowWidth()*0.05f)-x,(GetGridPlayingArea()/2)+GetGridTopBuffer() - y);

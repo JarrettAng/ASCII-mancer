@@ -6,7 +6,7 @@
 @author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
-@brief    This header file contains the information about the sound manager and the functions that can be called from it.
+@brief    This source file handles the rendering and the gameplay of the game. Essentially the main game scene.
 */
 
 //Header files here
@@ -129,10 +129,10 @@ void gameLevelExit(void){
 	FreeIconImages();
 	FreeMouseIcons();
 	FreeEnemyDisplayIcon();
-	ResetGame();
 	ResetCameraShake();
 }
 
-void ExitToMainMenu(){
+void ExitToMainMenu(void){
+	ResetGame();
 	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }
