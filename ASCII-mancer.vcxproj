@@ -36,6 +36,7 @@
     <ClInclude Include="Inc\WaveSystem.h" />
     <ClInclude Include="Inc\Win.h" />
     <ClInclude Include="Inc\Wizard.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Credits.c" />
@@ -62,6 +63,12 @@
     <ClCompile Include="Src\WaveSystem.c" />
     <ClCompile Include="Src\Win.c" />
     <ClCompile Include="Src\Wizard.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ASCII-mancer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\momo.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

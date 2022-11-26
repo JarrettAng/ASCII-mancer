@@ -135,3 +135,9 @@ EnemyInfo* GetEnemyFromGrid(int x, int y);
 @brief Resets the game stats and clears the arrays to be repopulated again.
 */
 void ResetGame(void);
+/*____________________________________________________________________*/
+
+/*
+@brief Debug mode function to set the wave
+*/
+void SetWave(int wave);

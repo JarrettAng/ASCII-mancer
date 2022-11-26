@@ -41,6 +41,13 @@ void ShowCurrentWave(void);
 
 
 /*
+@brief Test function for showing if game is in playtest mode or not.
+*/
+void ShowPlaytestMode(void);
+/*____________________________________________________________________*/
+
+
+/*
 @brief Test function for showing total enemies killed
 */
 void ShowTestEnemiesKilled(void);

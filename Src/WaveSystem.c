@@ -278,6 +278,10 @@ void NextWave(){
 	GenerateWave();				//generates the next wave
 }
 
+void SetWave(int wave){
+	currentWave = wave;
+}
+
 //Resets the game state
 void ResetGame(){
 	//Reset wave index, enemyCount and the waveArray

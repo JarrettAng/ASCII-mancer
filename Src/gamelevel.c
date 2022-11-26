@@ -33,6 +33,9 @@
 
 #include "MainMenu.h" // For exiting to main menu.
 
+BOOL debugMode = FALSE;
+
+
 void gameLevelInit(void){
 	// Zero out all the events in the event system first!
 	ZeroOutAllEvents();
@@ -93,12 +96,53 @@ void gameLevelUpdate(void){
 	if (CP_Input_KeyTriggered(KEY_ESCAPE)){
 		ExitToMainMenu();
 	}
-	// if (CP_Input_KeyTriggered(KEY_K)){
-	// 	CreateWall(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()));
-	// }
-	// if (CP_Input_KeyTriggered(KEY_V)){
-	// 	SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(1));
-	// }
+
+
+
+	//DEBUG MODE STUFF
+	if(CP_Input_KeyDown(KEY_LEFT_SHIFT))
+	{
+		if(CP_Input_KeyTriggered(KEY_D)){
+			debugMode = TRUE;
+		}
+	}
+
+	if(debugMode){
+		ShowPlaytestMode();
+		//SPAWN WALL
+		if(CP_Input_KeyTriggered(KEY_0)){
+	 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(0));
+		}
+		//SPAWN NORMAL ZOMBIE
+		if(CP_Input_KeyTriggered(KEY_1)){
+	 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(1));
+		}
+		//SPAWN LEAPER
+		if(CP_Input_KeyTriggered(KEY_2)){
+	 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(2));
+		}
+		//SPAWN TANK
+		if(CP_Input_KeyTriggered(KEY_3)){
+	 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(3));
+		}
+		//SPAWN BREAKER
+		if(CP_Input_KeyTriggered(KEY_4)){
+	 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(4));
+		}
+		//SPAWN GRAVE
+		if(CP_Input_KeyTriggered(KEY_5)){
+	 		SpawnEnemyInCell(PosXToGridX(CP_Input_GetMouseX()), PosYToGridY(CP_Input_GetMouseY()), GetEnemyPrefab(5));
+		}
+		//CLEAR BOARD
+		if(CP_Input_KeyTriggered(KEY_R)){
+			ResetGame();
+			ResetCameraShake();
+		}
+		//INSTANT WIN
+		if(CP_Input_KeyTriggered(KEY_W)){
+			SetWave(30);
+		}
+	}
 }
 
 void ShowCurrentWave(void){
@@ -111,6 +155,7 @@ void ShowCurrentWave(void){
 	float yPosition = GetCellSize();
 	CP_Font_DrawText(buffer, xPosition, yPosition);
 }
+
 //!Only used for testing!! remove on release!!
 void ShowTestEnemiesKilled(void){
 	CP_Settings_Fill(TETRIS_COLOR);
@@ -120,6 +165,17 @@ void ShowTestEnemiesKilled(void){
 	sprintf_s(buffer, 25, "TEST ENEMIES KILLED %02d", GetEnemiesKilled());
 	float xPosition = WINDOWLENGTH / 2.f;
 	float yPosition = GetCellSize();
+	CP_Font_DrawText(buffer, xPosition, yPosition);
+}
+
+void ShowPlaytestMode(void){
+	CP_Settings_Fill(TETRIS_COLOR);
+	CP_Settings_TextSize(GetCellSize() / 5.f);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
+	char buffer[25] = { 0 };
+	sprintf_s(buffer, 25, "PLAYTESTMODE");
+	float xPosition = 0;
+	float yPosition = GetCellSize()/5.f;
 	CP_Font_DrawText(buffer, xPosition, yPosition);
 }
 

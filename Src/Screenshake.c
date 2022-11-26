@@ -1,6 +1,3 @@
-#include "Screenshake.h" 
-#include "math.h"
-
 /*
    _____  _____ _____  ______ ______ _   _  _____ _    _          _  ________ 
   / ____|/ ____|  __ \|  ____|  ____| \ | |/ ____| |  | |   /\   | |/ /  ____|
@@ -15,6 +12,8 @@
   Increment Trauma by any value between 0 to 1 to induce screen shaking.
 ________________________________________________________________________________________________*/
 
+#include "Screenshake.h" 
+#include "math.h"
 
 float trauma;                       //Value clamped rom 0 to 1, used to control shake
 float traumaMultiplier = 16.f;      //Shake POWERRR. Magic number for now.
@@ -28,6 +27,7 @@ float GetPerlinFloat(float seed){
     //We want values from -1 to 1 instead of 0 to 1.
     return(CP_Random_Noise(seed,timeCounter,0)-0.5f)*2.f;
 }
+
 //Returns a random vector based off of perlin floats. Currently locked into seeds 1 and 10 for x y respectively.
 CP_Vector GetRandomVector(void){
     return CP_Vector_Set(GetPerlinFloat(1),GetPerlinFloat(10));
