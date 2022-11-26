@@ -1,4 +1,10 @@
-
+/*!
+@file	  Win.c
+@author	  Justine Ilao (justine.c@digipen.edu)
+@date     26/11/2022
+@brief    This source file defines the GameOver states and all the function definitions to render all the
+text in the Game Over screen
+________________________________________________________________________________________________________*/
 #include "cprocessing.h"
 #include "ColorTable.h"
 #include "GameOver.h"
@@ -24,6 +30,9 @@ TextOnly Enemies_Killed_Number;
 TextOnly Turns_Made;
 TextOnly Turns_Made_Number;
 
+/*----------------------------------------------------------------------------
+@brief Initializes the buttons for the Win Screen
+------------------------------------------------------------------------------*/
 void InitializeButtonsWinScreen(void) {
 	float xPos = (float)CP_System_GetWindowWidth() / 6;
 	float yPos = (float)CP_System_GetWindowHeight() / 2;
@@ -67,16 +76,9 @@ void InitializeButtonsWinScreen(void) {
 // Text and Button function definitions
 //===========================================
 
-/*
-void CreateText(TextOnly New_Text ,char* words, float font_size, CP_Color color, float xpos, float ypos) {
-	New_Text.font_size = font_size;
-	New_Text.color = color;
-	New_Text.words = words;
-	New_Text.xpos = xpos;
-	New_Text.xpos = ypos;
-}
-*/
-
+/*----------------------------------------------------------------------------
+@brief Initializes the text for the Win Screen
+------------------------------------------------------------------------------*/
 void InitializeAllTextWin(void) {
 	Win_Title.color = MENU_WHITE;
 	Win_Title.font_size = CP_System_GetWindowWidth() / 15.f;
@@ -98,6 +100,10 @@ void InitializeAllTextWin(void) {
 	Turns_Made.ypos = CP_System_GetWindowHeight() * 1.3f / 2.f;
 }
 
+/*----------------------------------------------------------------------------
+@brief Renders all the text for the Win Screen as well as the tracked number for
+the Waves and the amount of Enemies Killed
+------------------------------------------------------------------------------*/
 void RenderAllTextWin(void) {
 	RenderGOText(Win_Title);
 
@@ -118,6 +124,11 @@ void RenderAllTextWin(void) {
 // 
 //=========================================================
 
+
+/*----------------------------------------------------------------------------
+@brief Initializes the text and background for the title card 
+for the transition when winning the game
+------------------------------------------------------------------------------*/
 void WinTextInit(void) {
 	// Make box for You Lose title card after losing all life
 	win_bg.xpos = CP_System_GetWindowWidth() / 2.f;
@@ -133,12 +144,17 @@ void WinTextInit(void) {
 	win_text.words = "YOU SURVIVED!";
 }
 
+/*----------------------------------------------------------------------------
+@brief Checks if the player has won the game
+------------------------------------------------------------------------------*/
 void CheckWinCondition(void) {
 	if (GetCurrentWave() >= WAVES_TO_WIN && IsAllEnemiesDead() && CheckLoseCondition() != 1) WinAnimation();
 }
 
+/*----------------------------------------------------------------------------
+@brief Renders the Win Animation
+------------------------------------------------------------------------------*/
 static float time_elapsed = 0.f;
-
 void WinAnimation(void) {
 	//Makes it such that the win sound only plays once
 	if(time_elapsed <=0) PlaySound(GAMEWIN,CP_SOUND_GROUP_SFX);
@@ -169,6 +185,9 @@ void WinAnimation(void) {
 	}
 }
 
+/*----------------------------------------------------------------------------
+@brief WinInit state, loads the background, font and all the texts and buttons
+------------------------------------------------------------------------------*/
 void WinInit(void) {
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	main_font = CP_Font_Load("Assets/PressStart2P-Regular.ttf");
@@ -179,6 +198,10 @@ void WinInit(void) {
 	InitializeAllTextWin();
 }
 
+/*----------------------------------------------------------------------------
+@brief Updates the Win Screen, renders the background, font, all the texts and
+buttons
+------------------------------------------------------------------------------*/
 void WinUpdate(void) {
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	CP_Font_Set(main_font); // Uses main_font for all fonts
@@ -189,15 +212,12 @@ void WinUpdate(void) {
 	// Draw buttons
 	RenderButtons();
 	HandleButtonClick();
-
-	// FOR DEBUGGING PURPOSES DELETE LATER
-	/*
-	if (CP_Input_KeyTriggered(KEY_Z) == 1) {
-		CP_Engine_Terminate();
-	}
-	*/
 }
 
+/*----------------------------------------------------------------------------
+@brief WinExit state, reset the wave and the enemies killed counter and also frees
+the UI elements like the buttons
+------------------------------------------------------------------------------*/
 void WinExit(void) {
 	ResetGame();
 	ClearInteractCache();
