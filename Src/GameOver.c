@@ -1,3 +1,11 @@
+/*!
+@file	  GameOver.c
+@author	  Justine Ilao (justine.c@digipen.edu)
+@date     23/11/2022
+@brief    This source file defines the GameOver states and all the function definitions to render all the
+text in the Game Over screen
+________________________________________________________________________________________________________*/
+
 #include "cprocessing.h"
 #include "ColorTable.h"
 #include "GameOver.h"
@@ -26,10 +34,17 @@ TextOnly Turns_Made_Number;
 // Button Settings
 //============================================
 
+/*----------------------------------------------------------------------------
+@brief Sets the next game state to the main menu
+------------------------------------------------------------------------------*/
 void BackToMainMenu(void) {
 	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }
 
+/*----------------------------------------------------------------------------
+@brief Initializes the buttons like the back to main menu button in the game over
+screen
+------------------------------------------------------------------------------*/
 void InitializeButtonsGameOverScreen(void) {
 	float xPos = (float)CP_System_GetWindowWidth() / 6;
 	float yPos = (float)CP_System_GetWindowHeight() / 2;
@@ -83,6 +98,10 @@ void CreateText(TextOnly New_Text ,char* words, float font_size, CP_Color color,
 }
 */
 
+/*----------------------------------------------------------------------------
+@brief Renders only the text, using the data from TextOnly structs
+@param The TextOnly struct to be rendered
+------------------------------------------------------------------------------*/
 void RenderGOText(TextOnly Rendered_Text) {
 	CP_Settings_Fill(Rendered_Text.color); // Color of text
 	CP_Settings_TextSize(Rendered_Text.font_size); // Size of text
@@ -90,6 +109,9 @@ void RenderGOText(TextOnly Rendered_Text) {
 	CP_Font_DrawText(Rendered_Text.words, Rendered_Text.xpos, Rendered_Text.ypos);
 }
 
+/*----------------------------------------------------------------------------
+@brief Initializes all the TextOnly structs
+------------------------------------------------------------------------------*/
 void InitializeAllText(void) {
 	Game_Over_Title.color = MENU_RED;
 	Game_Over_Title.font_size = CP_System_GetWindowWidth() / 15.f;
@@ -111,6 +133,10 @@ void InitializeAllText(void) {
 	Turns_Made.ypos = CP_System_GetWindowHeight() * 1.3f / 2.f;
 }
 
+/*----------------------------------------------------------------------------
+@brief Renders all the TextOnly structs and as well as the Wave number and Enemies
+Killed number in the Game Over screen
+------------------------------------------------------------------------------*/
 void RenderAllText(void) {
 	RenderGOText(Game_Over_Title);
 
@@ -131,11 +157,11 @@ void RenderAllText(void) {
 // 
 //=========================================================
 
-int EnemiesKilled[1] = { 7 };
-int TurnsMade[1] = { 10 };
-
+/*----------------------------------------------------------------------------
+@brief GameOverInit state, initializes the font, the background and all the text
+and buttons for the Game Over screen
+------------------------------------------------------------------------------*/
 void GameOverInit(void) {
-	CP_System_Fullscreen();
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	main_font = CP_Font_Load("Assets/PressStart2P-Regular.ttf");
 
@@ -145,6 +171,9 @@ void GameOverInit(void) {
 	InitializeAllText();
 }
 
+/*----------------------------------------------------------------------------
+@brief GameOverUpdate state, all the buttons and text are rendered in this state
+------------------------------------------------------------------------------*/
 void GameOverUpdate(void) {
 	CP_Graphics_ClearBackground(GAMEOVER_DARKGRAY);
 	CP_Font_Set(main_font); // Uses main_font for all fonts
@@ -162,6 +191,10 @@ void GameOverUpdate(void) {
 	}
 }
 
+/*----------------------------------------------------------------------------
+@brief GameOverExit state, resets the game parameters, wave count and enemies killed
+as well as clearing the UI elements in the GameOver state
+------------------------------------------------------------------------------*/
 void GameOverExit(void) {
 	ResetGame();
 	ClearInteractCache();

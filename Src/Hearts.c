@@ -1,3 +1,10 @@
+/*!
+@file	  GameOver.c
+@author	  Justine Ilao (justine.c@digipen.edu)
+@date     26/11/2022
+@brief    This source file defines the GameOver states and all the function definitions to render all the
+text in the Game Over screen
+________________________________________________________________________________________________________*/
 #include "cprocessing.h"
 #include "GameOver.h"
 #include "Hearts.h"
@@ -12,8 +19,10 @@ TextOnlyHearts life_text;
 TextOnlyHearts lose_text;
 RectHearts lose_bg;
 
-// Initializes the life counter
-// Remember spacing to be a value of above 1
+/*----------------------------------------------------------------------------
+@brief Initializes the life image load, and fills in the HeartContainer struct
+for the data of each heart to be initialized
+------------------------------------------------------------------------------*/
 void InitializeLife(void) {
 	heart_image = CP_Image_Load("Assets/Heart.png");
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
@@ -46,8 +55,12 @@ void InitializeLife(void) {
 	lose_text.words = "YOU DIED!";
 }
 
-float time_elapsed_lose = 0.f;
-void YouLoseTitleRender() {
+/*----------------------------------------------------------------------------
+@brief Initializes the You Lose rendering and transistions to the Game Over screen
+after a few seconds
+------------------------------------------------------------------------------*/
+static float time_elapsed_lose = 0.f;
+void YouLoseTitleRender(void) {
 	float bg_transistion_time_max = 2.f;
 	float stay_time_max = 5.8f;
 
@@ -78,6 +91,10 @@ void YouLoseTitleRender() {
 //-----------------------
 //  INPUTS
 //-----------------------
+
+/*----------------------------------------------------------------------------
+@brief Function to allow for the gaining of life
+------------------------------------------------------------------------------*/
 void GainLife(int gain_life) {
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		if (heart_stats[i].heartAlive == 0) {
@@ -87,9 +104,11 @@ void GainLife(int gain_life) {
 		}
 	}
 	PlaySound(GAINHEART, CP_SOUND_GROUP_SFX);
-	// TO DO : Add Gain Life Animation
 }
 
+/*----------------------------------------------------------------------------
+@brief Function to allow for the losing of life
+------------------------------------------------------------------------------*/
 void LoseLife(int lose_life) {
 	int i = 0;
 	float total_flicker_time = 5.f;
@@ -109,7 +128,10 @@ void LoseLife(int lose_life) {
 // CHECKS
 //-----------------------
 
-// Check if total life = 0, if 0 bring to Game Over Screen
+/*----------------------------------------------------------------------------
+@brief Checks if there are zero hearts, then if there are no hearts left for the player,
+play the Game Over sound
+------------------------------------------------------------------------------*/
 int CheckLoseCondition(void) {
 	// Sum the total of heartAlive in heart_stats to total_life
 	int total_life = 0;
@@ -119,7 +141,6 @@ int CheckLoseCondition(void) {
 	if (total_life == 0) {
 		PlaySound(GAMEOVER, CP_SOUND_GROUP_SFX);
 		return 1;
-		//CP_Engine_SetNextGameState(GameOverInit, GameOverUpdate, GameOverExit);
 	}
 	return 0;
 }
@@ -127,6 +148,11 @@ int CheckLoseCondition(void) {
 //-----------------------
 // RENDERS
 //-----------------------
+
+/*----------------------------------------------------------------------------
+@brief Initializes the You Lose rendering and transistions to the Game Over screen
+after a few seconds
+------------------------------------------------------------------------------*/
 void DrawLife(void) {
 	for (int i = 0; i < MAX_HEART_COUNT; ++i) {
 		if (heart_stats[i].heartAlive == 1) {
@@ -134,7 +160,9 @@ void DrawLife(void) {
 		}
 	}
 }
-
+/*----------------------------------------------------------------------------
+@brief Renders the heart text
+------------------------------------------------------------------------------*/
 void RenderHeartText(void) {
 	CP_Settings_Fill(life_text.color); // Color of text
 	CP_Settings_TextSize(life_text.font_size); // Size of text
@@ -142,6 +170,10 @@ void RenderHeartText(void) {
 	CP_Font_DrawText(life_text.words, life_text.xpos, life_text.ypos); // Draw text
 }
 
+/*----------------------------------------------------------------------------
+@brief Function for Bezier Curve
+@param Place the tick time here, to have a smoother animation
+------------------------------------------------------------------------------*/
 float BezierCurve(float t) {
 	return t * t * (3.0f - 2.0f * t);
 }
@@ -152,7 +184,10 @@ static int up_tick_marker = 1;
 static int down_tick_marker = 0;
 static float duration = 0.75f; // 0.75 Seconds to loop
 
-void AnimationLife() {
+/*----------------------------------------------------------------------------
+@brief Animates the hearts to go up and down
+------------------------------------------------------------------------------*/
+void AnimationLife(void) {
 	float tick = time_elapsed / duration;
 	// To check whether the heart needs to go down or up
 	if (up_tick_marker == 1) time_elapsed += CP_System_GetDt();
@@ -174,8 +209,10 @@ void AnimationLife() {
 
 }
 
-//void EndTitleRender()
-
+/*----------------------------------------------------------------------------
+@brief Updates the life to check for the lose condition, render the hearts and the
+heart text and if the hearts are 0, start the You Lose render
+------------------------------------------------------------------------------*/
 void UpdateLife(void) {
 	// DEBUGGING CHANGE TO THE GAIN LIFE AND LOSE LIFE CONDITIONS LATER
 	if (CP_Input_KeyReleased(KEY_O) == 1) LoseLife(1);
@@ -190,6 +227,9 @@ void UpdateLife(void) {
 	if (CheckLoseCondition() == 1) YouLoseTitleRender();
 }
 
-void ClearHearts() {
+/*----------------------------------------------------------------------------
+@brief Clear the heart image that was loaded previously
+------------------------------------------------------------------------------*/
+void ClearHearts(void) {
 	CP_Image_Free(&heart_image);
 }

@@ -1,3 +1,11 @@
+/*!
+@file	  Wizard.c
+@author	  Justine Ilao (justine.c@digipen.edu)
+@date     26/11/2022
+@brief    This source file defines the GameOver states and all the function definitions to render all the
+text in the Game Over screen
+________________________________________________________________________________________________________*/
+
 #include "cprocessing.h"
 #include "ColorTable.h"
 #include "Grid.h"
@@ -12,6 +20,9 @@ Wizard wiz_staff;
 CP_Image rotation_icon;
 CP_Image right_click_icon;
 
+/*----------------------------------------------------------------------------
+@brief Initializes the Wizard's text body part
+------------------------------------------------------------------------------*/
 void InitWizard(void) {
 	// Body stats
 	wiz_body.color = TETRIS_COLOR;
@@ -35,6 +46,9 @@ void InitWizard(void) {
 	wiz_staff.words = "/";
 }
 
+/*----------------------------------------------------------------------------
+@brief Draws the Wizard's body part
+------------------------------------------------------------------------------*/
 void DrawWizard(Wizard wiz_body_part) {
 	CP_Settings_Fill(wiz_body_part.color);
 	CP_Settings_TextSize(wiz_body_part.size);
@@ -42,6 +56,9 @@ void DrawWizard(Wizard wiz_body_part) {
 	CP_Font_DrawText(wiz_body_part.words, wiz_body_part.xpos, wiz_body_part.ypos);
 }
 
+/*----------------------------------------------------------------------------
+@brief Updates all the Wizard's body parts
+------------------------------------------------------------------------------*/
 void UpdateWizard(void) {
 	// Body update
 	DrawWizard(wiz_body);
@@ -55,15 +72,24 @@ void UpdateWizard(void) {
 	DrawWizard(wiz_staff);
 }
 
+/*----------------------------------------------------------------------------
+@brief Get's the Wizard's x-pos and y-pos
+------------------------------------------------------------------------------*/
 CP_Vector GetWizardPosition(){
 	return CP_Vector_Set(wiz_body.xpos,wiz_body.ypos);
 }
 
+/*----------------------------------------------------------------------------
+@brief Initializes the images for the rotation icon and the mouse right click icon
+------------------------------------------------------------------------------*/
 void InitMouseIcon(void) {
 	rotation_icon = CP_Image_Load("Assets/RotationIcon.png");
 	right_click_icon = CP_Image_Load("Assets/MouseRightClickIcon.png");
 }
 
+/*----------------------------------------------------------------------------
+@brief Renders the mouse icon and the rotation icon
+------------------------------------------------------------------------------*/
 float static time_elapsed = 0.f;
 void RenderMouseIcon(void) {
 
@@ -74,11 +100,14 @@ void RenderMouseIcon(void) {
 	time_elapsed += CP_System_GetDt();
 	float rotation = CP_Math_LerpFloat(0.f, 360.f, tick);
 	if (IsPieceHeld() == TRUE) {
-		CP_Image_DrawAdvanced(rotation_icon, CP_Input_GetMouseX() + GetCellSize() / 3, CP_Input_GetMouseY() + GetCellSize() / 3, GetCellSize() / 2, GetCellSize() / 2, 200, rotation);
-		CP_Image_DrawAdvanced(right_click_icon, CP_Input_GetMouseX() + GetCellSize() / 1.5, CP_Input_GetMouseY() + GetCellSize() / 1.5, GetCellSize() / 3, GetCellSize() / 3, 200, 0.f);
+		CP_Image_DrawAdvanced(rotation_icon, CP_Input_GetMouseX() + GetCellSize() / 3.f, CP_Input_GetMouseY() + GetCellSize() / 3.f, GetCellSize() / 2.f, GetCellSize() / 2.f, 200, rotation);
+		CP_Image_DrawAdvanced(right_click_icon, CP_Input_GetMouseX() + GetCellSize() / 1.5f, CP_Input_GetMouseY() + GetCellSize() / 1.5f, GetCellSize() / 3.f, GetCellSize() / 3.f, 200, 0.f);
 	}
 }
 
+/*----------------------------------------------------------------------------
+@brief Frees the images of the rotation and right click icon that was loaded previously
+------------------------------------------------------------------------------*/
 void FreeMouseIcons(void) {
 	CP_Image_Free(&rotation_icon);
 	CP_Image_Free(&right_click_icon);
