@@ -83,7 +83,7 @@ void DrawArrow(float point_1_x, float point_1_y, float point_2_x, float point_2_
 void DrawTextFull(char* text, float pos_x, float pos_y, CP_Color color, CP_TEXT_ALIGN_HORIZONTAL h_align, CP_TEXT_ALIGN_VERTICAL v_align, float size);
 void DrawTextTopLeft(char* text, float pos_x, float pos_y, CP_Color color, float size);
 void DrawTextCentre(char* text, float pos_x, float pos_y, CP_Color color, float size);
-void DrawTextBox(float pos_x, float pos_y, float size_x, float size_y);
+void DrawTextBox(float pos_x, float pos_y, float size_x, float size_y, CP_Color color);
 #pragma endregion Forward Declarations
 
 /*______________________________________________________________
@@ -95,9 +95,9 @@ void TutorialInit(void) {
 	SubscribeEvent(PLAYER_END, TutorialExit, DEFAULT_PRIORITY);
 
 	// Initialize the texts
-	CP_Vector box_bounds, box_size;
-	CP_Vector spawn_pos, end_pos;
-	float width = CP_System_GetWindowWidth(), height = CP_System_GetWindowHeight();
+	CP_Vector box_bounds = CP_Vector_Zero(), box_size = CP_Vector_Zero();
+	CP_Vector spawn_pos = CP_Vector_Zero(), end_pos = CP_Vector_Zero();
+	float width = (float)CP_System_GetWindowWidth(), height = (float)CP_System_GetWindowHeight();
 	float text_size = height / 40.0f;
 	float arrow_size = height / 80.0f;
 	box_stroke = arrow_size / 3.0f;
@@ -244,7 +244,7 @@ void TutorialInit(void) {
 	end_pos.x = width / 2.25f;
 	end_pos.y = height / 1.75f;
 	arrow_drag_intro = TutArrowCreate(spawn_pos, end_pos, TUTORIAL_COLOR, arrow_size);
-	
+
 	//______________________________________________________________
 	// Rotate introduction text
 	spawn_pos.x = width / 1.345f;
@@ -339,7 +339,7 @@ void TutorialUpdate(void) {
 			DrawTextBox(text_rotate_intro.box_bounds.x, text_rotate_intro.box_bounds.y, text_rotate_intro.box_size.x, text_rotate_intro.box_size.y, text_rotate_intro.color);
 			DrawTextCentre(text_rotate_intro.text, text_rotate_intro.pos.x, text_rotate_intro.pos.y, text_rotate_intro.color, text_rotate_intro.size);
 		}
-		if (time_tut_end_start <  tut_time_elapsed) {
+		if (time_tut_end_start < tut_time_elapsed) {
 			DrawTextBox(text_end_intro.box_bounds.x, text_end_intro.box_bounds.y, text_end_intro.box_size.x, text_end_intro.box_size.y, text_end_intro.color);
 			DrawTextCentre(text_end_intro.text, text_end_intro.pos.x, text_end_intro.pos.y, text_end_intro.color, text_end_intro.size);
 		}
