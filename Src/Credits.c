@@ -201,13 +201,14 @@ void InitCreditsTexts(){
 	specialThanksNames.text =
 		"Ligma Johnson\n\n"
 		"Ben Dover\n\n"
+		"Sawcon\n\n"
 		"Xi Jinping\n\n"
 		"Mike Sugandese\n\n"
+		"CD\n\n"
 		"Rick Astley\n\n"
 		"Joe\n\n"
 		"Winnie the Pooh\n\n"
-		"Sawcon\n\n"
-		"CD";
+		"Candice";
 
 	namesRect.y = headerRect.y + nameOffSet;
 	InitializeTextBox(p_namesText++, namesRect, specialThanksNames);
@@ -216,7 +217,7 @@ void InitCreditsTexts(){
 	// LICENSES:
 	TextData licenseHeader = headerTextData;
 	licenseHeader.text = "LICENSES";
-	headerRect.y += namesTextData.textSize * 20 + headerTextData.textSize + nameOffSet;
+	headerRect.y += namesTextData.textSize * 21 + headerTextData.textSize + nameOffSet;
 	InitializeText(p_headerText, headerRect, licenseHeader);
 
 	TextData licenseNames = namesTextData;
