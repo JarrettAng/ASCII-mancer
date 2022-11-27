@@ -3,6 +3,8 @@
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @date     18/11/2022
 @brief    This source file for the handling of particles in game
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "Particles.h"
@@ -84,7 +86,7 @@ void CreateLerpedParticle(float xPos, float yPos,float endX,float endY,float lif
 }
 
 //Updates the lerped particles, needs to be called every frame!
-void UpdateLerpParticle(){
+void UpdateLerpParticle(void){
     //Index-1 because we want the most recent particle
     Particle* lerpedParticle = &lerpedParticleArray[(lerpParticleIndex-1)%20];
     if(lerpedParticle->lifeTime >0){

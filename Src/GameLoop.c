@@ -16,6 +16,8 @@
 		  
 		  InsertToArrayAt - Inserts a new function pointer into the events array.
 		  RemoveFromArrayAt - Removes an existing function pointer from the events array.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "GameLoop.h"

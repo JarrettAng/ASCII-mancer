@@ -1,23 +1,25 @@
-#pragma once
 /*!
 @file	  Wizard.h
 @author	  Justine Ilao (justine.c@digipen.edu)
 @date     26/11/2022
-@brief    This source file declaration the GameOver states and all the function definitions to render all the
-text in the Game Over screen
+@brief    This header file handles the wizard animations and rendering
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
-typedef struct Wizard {
+#pragma once
+
+typedef struct Wizard{
 	CP_Color color;
 	float xpos;
 	float ypos;
 	float size;
 	char* words;
-}Wizard;
+} Wizard;
 /*----------------------------------------------------------------------------
 @brief Get's the Wizard's x-pos and y-pos
 ------------------------------------------------------------------------------*/
-CP_Vector GetWizardPosition();
+CP_Vector GetWizardPosition(void);
 
 /*----------------------------------------------------------------------------
 @brief Initializes the Wizard's text body part

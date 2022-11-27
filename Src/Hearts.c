@@ -4,6 +4,8 @@
 @date     26/11/2022
 @brief    This source file defines the GameOver states and all the function definitions to render all the
 text in the Game Over screen
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 #include "cprocessing.h"
 #include "GameOver.h"
@@ -214,9 +216,6 @@ void AnimationLife(void) {
 heart text and if the hearts are 0, start the You Lose render
 ------------------------------------------------------------------------------*/
 void UpdateLife(void) {
-	// DEBUGGING CHANGE TO THE GAIN LIFE AND LOSE LIFE CONDITIONS LATER
-	if (CP_Input_KeyReleased(KEY_O) == 1) LoseLife(1);
-	if (CP_Input_KeyReleased(KEY_P) == 1) GainLife(1);
 	//Checks
 	CheckLoseCondition();
 	//Renders

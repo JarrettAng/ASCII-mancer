@@ -3,6 +3,8 @@
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @date     18/11/2022
 @brief    This header file contains the information about all particles in the game. The values of the particles are tweaked in the source file.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 #pragma once
 #include "cprocessing.h"
@@ -29,8 +31,8 @@ typedef struct Particle{
     float timeBeforeActive; //Used to control the delay before a particle spawns.
     float cachedLifeTime;   //Used for calculating time particle has been alive for.
     float size;             //NOTE!! Size is normally set to cell size!
-    BOOL isRGB;
-    BOOL isLoop;            //Manually set for certain particles in source
+    _Bool isRGB;
+    _Bool isLoop;            //Manually set for certain particles in source
     CP_Vector force;        //force that is acting on particle. Cummulative and will be calculated in UpdateParticle.
     char* animString;
     CP_Color color;

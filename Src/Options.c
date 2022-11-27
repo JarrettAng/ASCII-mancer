@@ -3,6 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file for displaying the options screen.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include <stdio.h>
@@ -103,7 +105,7 @@ void OptionsExit(void){
 	FreeUIManager();
 }
 
-void InitSettingsTexts(){
+void InitSettingsTexts(void){
 	// Offfset between the volume texts.
 	float volumeOffset = GetWindowHeight() / 4;
 	// Offfset between the volume text and volume value text.
@@ -196,7 +198,7 @@ void InitSettingsTexts(){
 	/*==============================================================*/
 }
 
-void InitSettingsSliders(){
+void InitSettingsSliders(void){
 	// Offset between each slider.
 	float sliderOffset = GetWindowHeight() / 10;
 
@@ -253,7 +255,7 @@ void InitSettingsSliders(){
 	/*==============================================================*/
 }
 
-void InitSettingsButtons(){
+void InitSettingsButtons(void){
 	/*========================Back Button===========================*/
 	GraphicData backBtnGraphicsData = {
 		.color = TRANSPERANT,
@@ -306,7 +308,7 @@ void InitSettingsButtons(){
 	/*==============================================================*/
 }
 
-void InitVolume(){
+void InitVolume(void){
 	// Update knob position based on initial volume group lerp factor.
 	UpdateKnobs();
 	// Update actual volume based on initial volume group lerp factor.
@@ -316,7 +318,7 @@ void InitVolume(){
 	UpdateSFXVolumeText();
 }
 
-void HandleVolumeControl(){
+void HandleVolumeControl(void){
 	// Reset previous slider knob to original size.
 	if (GetSliderHeld() == NULL){
 		if (GetPrevSliderHeld() != NULL){
@@ -342,14 +344,14 @@ void HandleVolumeControl(){
 	UpdateSFXVolumeText();
 }
 
-void UpdateKnobs(){
+void UpdateKnobs(void){
 	// Get master knob x position based on lerp factor.
 	masterVolumeSlider.knob.transform.x = masterVolumeSlider.lerpFactor * (masterVolumeSlider.line.end.x - masterVolumeSlider.line.start.x) + masterVolumeSlider.line.start.x;
 	// Get SFX knob x position based on lerp factor.
 	sfxVolumeSlider.knob.transform.x = sfxVolumeSlider.lerpFactor * (sfxVolumeSlider.line.end.x - sfxVolumeSlider.line.start.x) + sfxVolumeSlider.line.start.x;
 }
 
-void HandleWindowSizeHover(){
+void HandleWindowSizeHover(void){
 	// Reset previous button to original size.
 	if (GetBtnHovered() == NULL){
 		if (GetPrevBtnHovered() != NULL){
@@ -363,11 +365,11 @@ void HandleWindowSizeHover(){
 	GetBtnHovered()->transform.heigth = GetBtnHovered()->transform.cachedSize.y * 1.3f;
 }
 
-void WindowSizeScrollDown(){
+void WindowSizeScrollDown(void){
 	HandleWindowSizeScroll(0);
 }
 
-void WindowSizeScrollUp(){
+void WindowSizeScrollUp(void){
 	HandleWindowSizeScroll(1);
 }
 
@@ -383,7 +385,7 @@ void HandleWindowSizeScroll(int dir){
 	UpdateWindowSize();
 }
 
-void UpdateWindowSize(){
+void UpdateWindowSize(void){
 	// Update window size based on current window size variable.
 	switch (currentWindowSize)
 	{
@@ -411,7 +413,7 @@ void UpdateWindowSize(){
 	CP_Engine_SetNextGameStateForced(OptionsInit, OptionsUpdate, OptionsExit);
 }
 
-void UpdateVolumes(){
+void UpdateVolumes(void){
 	// Update master volume.
 	masterVolume = CP_Math_LerpInt(0, 100, masterVolumeSlider.lerpFactor);
 	CP_Sound_SetGroupVolume(CP_SOUND_GROUP_MUSIC, masterVolumeSlider.lerpFactor);
@@ -421,19 +423,19 @@ void UpdateVolumes(){
 	CP_Sound_SetGroupVolume(CP_SOUND_GROUP_SFX, sfxVolumeSlider.lerpFactor);
 }
 
-void UpdateMasterVolumeText(){
+void UpdateMasterVolumeText(void){
 	// Convert int to string and store it in buffer.
 	sprintf_s((char* const)masterVolumeBuffer, sizeof(masterVolumeBuffer), "-%d-", masterVolume);
 	masterVolumeTxt.textData.text = (char*)masterVolumeBuffer;
 }
 
-void UpdateSFXVolumeText(){
+void UpdateSFXVolumeText(void){
 	// Convert int to string and store it in buffer.
 	sprintf_s((char* const)sfxVolumeBuffer, sizeof(sfxVolumeBuffer), "-%d-", sfxVolume);
 	sfxVolumeTxt.textData.text = (char*)sfxVolumeBuffer;
 }
 
-void LoadMainMenu(){
+void LoadMainMenu(void){
 	// Transition back to main menu.
 	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }

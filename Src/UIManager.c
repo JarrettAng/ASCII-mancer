@@ -3,7 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file for handling UI elements and UI interactions.
-@license  ©
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include <cprocessing.h>
@@ -59,7 +60,7 @@ void FreeSlider(void);
 
 
 #pragma region UPDATE_LOOP
-void UIManagerUpdate(){
+void UIManagerUpdate(void){
 	// Render UI elements();
 	RenderTexts();
 	RenderTextBoxes();

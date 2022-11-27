@@ -14,6 +14,8 @@
           RandInt - Returns a random int. Used by ShuffleBag to shuffle the pieces Fisher�Yates shuffle.
 
           CreatePiece - Creates a Tetris Piece based on the chosen type.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include <stdlib.h>     // For srand & rand
@@ -41,7 +43,7 @@ TetrisPiece CreatePiece(PieceType type);
 
 @param[in] rand_seed - Which seed to use to randomly spawn the Tetris pieces. (Use DEFAULT_SPAWN_SEED for debugging)
 */
-void TManagerInit(int rand_seed) {
+void TManagerInit(int rand_seed){
     current_bag = current_index = 0;
 
     srand(rand_seed);
@@ -58,7 +60,7 @@ void TManagerInit(int rand_seed) {
 
 @return TetrisPiece - The next Tetris Piece in queue.
 */
-TetrisPiece DrawFromBag(void) {
+TetrisPiece DrawFromBag(void){
     PieceType drawn_piece = pieces_bag[current_bag][current_index++];
 
     // If the queue is running low, swap bags and shuffle in more pieces.
@@ -79,7 +81,7 @@ TetrisPiece DrawFromBag(void) {
 
 @param[in] bag - The index of the bag to fill, the bags are placed in an array.
 */
-void FillBag(int bag) {
+void FillBag(int bag){
     PieceType *current_bag = &pieces_bag[bag][0];
     for (int index = 0; index < TOTAL_PIECES; ++index) {
         *(current_bag + index) = (PieceType)index;
@@ -91,7 +93,7 @@ void FillBag(int bag) {
 
 @param[in] bag - The index of the bag to shuffle, the bags are placed in an array.
 */
-void ShuffleBag(int bag) {
+void ShuffleBag(int bag){
     PieceType (*current_bag) = &pieces_bag[bag][0];
     for (int index = TOTAL_PIECES - 1; index > 0; --index) {
         int rand_index = RandInt(0, index);
@@ -110,7 +112,7 @@ void ShuffleBag(int bag) {
 
 @return int - A random int between min and max
 */
-int RandInt(int min, int max) {
+int RandInt(int min, int max){
     return rand() % (max - min + 1) + min;
 }
 
@@ -121,7 +123,7 @@ int RandInt(int min, int max) {
 
 @return TetrisPiece - The new tetris piece, warranty not included.
 */
-TetrisPiece CreatePiece(PieceType type) {
+TetrisPiece CreatePiece(PieceType type){
     TetrisPiece new_piece = { .color = TETRIS_COLOR, .color_stroke = BLACK, .type = type, .x_length = 0, .y_length = 0, 
                               .x_screen_length = 0, .y_screen_length = 0, .shape = { 0 } , .draw_pos = { 0 } };
     

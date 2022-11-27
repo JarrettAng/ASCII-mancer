@@ -7,10 +7,11 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This header file contains the information about the gamelevel
-*/
 
-/*____________________________________________________________________*/
+@license  Copyright © 2022 DigiPen, All rights reserved.
+_______________________________________________________________________*/
 
+#pragma once // Only include this header file once
 
 /*
 @brief Initialises all the necessary game level functions

@@ -14,6 +14,8 @@
 		  RemovePieceHeldFromHand - When a Tetris Piece is dropped onto the grid, remove the piece and update the player's hand.
 		  ArrayShiftFowardFrom - Used by RemovePieceHeldFromHand to shift the pieces to the right of the piece used leftwards.
 		  FreeIconImages - Needs to be called on the exit of game level, frees the icons for the attack and defend pieces.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "ColorTable.h"		// For Tetris colors
@@ -45,7 +47,7 @@ void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end);
 @brief Needs to be called at the start of the game level (and after the Tetris Pieces
 	   has been initialized) so that the player has pieces to play with.
 */
-void TPlayerInit(void) {
+void TPlayerInit(void){
 	//______________________________________________________________
 	// Fill the player's hand and peek queue
 	// First, fill the player's hand
@@ -80,7 +82,7 @@ void TPlayerInit(void) {
 @brief Needs to be called in update, checks for player clicks, if the player clicks on a piece,
 	   it updates TPlayerHeld to render the held piece accordingly.
 */
-void TPlayerProcessInput(void) {
+void TPlayerProcessInput(void){
 	// When the player first clicks
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_1)) {
 		CP_Vector mouse_pos = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
@@ -108,7 +110,7 @@ void TPlayerProcessInput(void) {
 @brief Renders the panel at the bottom of the panel, consisting of the player's hand, peek queue, and
 	   supporting text like "< NEXT <"
 */
-void RenderHand(void) {
+void RenderHand(void){
 	PlayerHandSlot* current;
 
 	CP_Settings_RectMode(CP_POSITION_CORNER);
@@ -192,7 +194,7 @@ void RenderHand(void) {
 /*______________________________________________________________
 @brief Recalculate the positions for rendering based on screen size and stores the new values
 */
-void RecalculateHandRenderPositions(void) {
+void RecalculateHandRenderPositions(void){
 	//______________________________________________________________
 	// Initialize player hand factors
 	hand_total_height = (float)CP_System_GetWindowHeight() * .175f; // The hand queue takes up 17.5% of the height
@@ -270,7 +272,7 @@ void RecalculateHandRenderPositions(void) {
 /*______________________________________________________________
 @brief When a Tetris Piece is dropped onto the grid, remove the piece and update the player's hand
 */
-void RemovePieceHeldFromHand(void) {
+void RemovePieceHeldFromHand(void){
 	PlayerHandSlot* current;
 	int played_index = 0;
 	for (; played_index < HAND_SIZE; ++played_index) {
@@ -314,7 +316,7 @@ void RemovePieceHeldFromHand(void) {
 /*______________________________________________________________
 @brief Used by RemovePieceHeldFromHand to shift the pieces to the right of the piece used leftwards
 */
-void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end) {
+void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end){
 	for (int index = start; index < end; ++index) {
 		array[index].piece = array[index + 1].piece;
 	}
@@ -323,7 +325,7 @@ void ArrayShiftFowardFrom(PlayerHandSlot* array, int start, int end) {
 /*______________________________________________________________
 @brief Frees the images used for icon rendering, should be called on game level exit
 */
-void FreeIconImages(void) {
+void FreeIconImages(void){
 	CP_Image_Free(&attack_icon);
 	CP_Image_Free(&shield_icon);
 }

@@ -4,6 +4,8 @@
 @date     17/11/2022
 @brief    This header file contains the information about Tetris pieces, e.g. the types and shapes of all Tetris Pieces 
 		  as well as the actual Tetris Piece struct.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -14,7 +16,7 @@ ________________________________________________________________________________
 @brief All possible Tetris Piece types
 */
 #define TOTAL_PIECES 7
-typedef enum {
+typedef enum{
 	I_PIECE,
 	O_PIECE,
 	T_PIECE,
@@ -28,7 +30,7 @@ typedef enum {
 @brief Tetris Piece information, like shape, length in terms of index and screen, etc.
 */
 #define SHAPE_BOUNDS 6 // The maximum size of pieces (e.g. if set to 5, maximum size of a piece is a 5x5 block)
-typedef struct {
+typedef struct{
 	PieceType type;
 
 	int shape[SHAPE_BOUNDS][SHAPE_BOUNDS];

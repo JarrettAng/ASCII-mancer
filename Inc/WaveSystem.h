@@ -3,16 +3,15 @@
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @date     21/11/2022
 @brief    This header file contains the information about the wavesystem and the functions that can be called for it. The specifics of the wavesystem algorithm is detailed in WaveSystem.c
-*/
 
-/*
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________*/
+
 #pragma once
+
 #include <cprocessing.h>
 #include "EnemyStats.h"
 #include "Grid.h"
-
-
 
 //Total count of all possible enemies in the grid with a bit extra as a buffer
 #define WAVEOBJECTCOUNT (TOTAL_XGRID*TOTAL_YGRID*3)
@@ -60,7 +59,7 @@ EnemyInfo* GetAliveEnemyFromGrid(int x, int y);
 @brief Checks if there is a live enemy in the specified cell
 @param[in] x,y Index of cell to check
 */
-BOOL HasLiveEnemyInCell(int x, int y);
+_Bool HasLiveEnemyInCell(int x, int y);
 /*____________________________________________________________________*/
 
 /*
@@ -115,7 +114,7 @@ void SpawnEnemyInCell(int x, int y,EnemyInfo* enemy);
 /*
 @brief Checks if all the enemies in the grid are dead.
 */
-BOOL IsAllEnemiesDead(void);
+_Bool IsAllEnemiesDead(void);
 /*____________________________________________________________________*/
 
 /*

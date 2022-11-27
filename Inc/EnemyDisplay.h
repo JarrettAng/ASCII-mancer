@@ -12,6 +12,8 @@
 		  DisplayEnemyInfo - Renders the floating information box on enemy hover
 
 		  FreeEnemyDisplayIcon - Frees the attack icons used for enemy attack stat displaying
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -22,7 +24,7 @@ ________________________________________________________________________________
 /*______________________________________________________________
 @brief Anchors for the four corners of the enemy cell
 */
-typedef enum {
+typedef enum{
 	TOP_RIGHT,
 	BOTTOM_RIGHT,
 	BOTTOM_LEFT,
@@ -32,7 +34,7 @@ typedef enum {
 /*______________________________________________________________
 @brief Anchors for the four corners of the enemy cell
 */
-typedef struct {
+typedef struct{
 	EnemyInfo *type;
 	char *description;
 	int char_count;
@@ -41,7 +43,7 @@ typedef struct {
 /*______________________________________________________________
 @brief Struct for the show enemy information on hover
 */
-typedef struct {
+typedef struct{
 	CP_Vector offset;
 	float size;
 	float stroke;

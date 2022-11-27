@@ -1,11 +1,14 @@
-#pragma once
 /*!
 @file	  GameOver.h
 @author	  Justine Ilao (justine.c@digipen.edu)
 @date     23/11/2022
 @brief    This source file declares the GameOver states and all the function definitions to render all the
-text in the Game Over screen
+		  text in the Game Over screen
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
+
+#pragma once // Only include this header file once
 
 #include "cprocessing.h"
 #define HEADER_FONT_SIZE 120.f
@@ -17,7 +20,7 @@ ________________________________________________________________________________
 //------------------------------
 
 // Making the struct of text
-typedef struct TextOnly {
+typedef struct TextOnly{
 	float font_size;
 	float xpos;
 	float ypos;

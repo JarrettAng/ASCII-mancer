@@ -3,7 +3,10 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This header file contains the declarations for Utils.c
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
+
 #pragma once
 
 // Base screen size.
@@ -54,7 +57,7 @@ typedef void(*Callback)(void);
 typedef struct Timer{
 	float time;
 	float elaspedTime;
-}Timer;
+} Timer;
 
 /*
 @brief Check if given point is within a given area. Returns True/False.

@@ -6,6 +6,8 @@
 
 		  TutorialInit - Should be called on game level load, sets up the text, other UI elements, and event subscriptions.
 		  TutorialUpdate - Renders all the tutorial UI elements like the arrows & text, should be called in an update loop.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -15,7 +17,7 @@ ________________________________________________________________________________
 /*______________________________________________________________
 @brief Contains information for rendering text, like colors, position, size.
 */
-typedef struct {
+typedef struct{
 	char* text;
 	CP_Vector pos;
 	CP_Color color;
@@ -29,7 +31,7 @@ typedef struct {
 /*______________________________________________________________
 @brief Contains information for rendering arrows, like line thickness, start & end position.
 */
-typedef struct {
+typedef struct{
 	CP_Vector pos_start;
 	CP_Vector pos_end;
 	CP_Color color;

@@ -1,16 +1,17 @@
 /*!
-@file	  Enemy.h
+@file	  EnemyStats.h
 @author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
 @date     21/11/2022
 @brief    1.Creation and declaration of enemy types
 		  2.Keep track of enemy movement and status
 		  3.Render enemy in the grid
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
-#pragma once
+#pragma once // Only include this header file once
 
 #define ENEMYPOOL 10
-
 
 typedef enum ZombieType{
     ZOMBIE,
@@ -20,9 +21,9 @@ typedef enum ZombieType{
     GRAVE,
 	WALL,
 	ZOMBIE_TYPE_LENGTH
-}ZombieType;
-typedef struct EnemyInfo
-{
+} ZombieType;
+
+typedef struct EnemyInfo{
 	//Position 
 	int x;
 	int y;
@@ -38,11 +39,11 @@ typedef struct EnemyInfo
 	char* CharSprite;
 	CP_Color Color;
 	ZombieType type;
-	BOOL moveCooldown;	//IUsed for grave spawn cooldowns
+	_Bool moveCooldown;	//IUsed for grave spawn cooldowns
 	//Helps check if the enemy needs to be rendered or not
-	BOOL is_Alive;
+	_Bool isAlive;
 
-}EnemyInfo;
+} EnemyInfo;
 
 void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,ZombieType type,CP_Color color);
 void InitEnemyPool(void);

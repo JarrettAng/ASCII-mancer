@@ -3,7 +3,9 @@
 @author	  Justine Ilao (justine.c@digipen.edu)
 @date     23/11/2022
 @brief    This source file defines the GameOver states and all the function definitions to render all the
-text in the Game Over screen
+		  text in the Game Over screen
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "cprocessing.h"

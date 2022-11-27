@@ -1,3 +1,12 @@
+/*!
+@file	  Win.h
+@author	  Justine Ilao (justine.c@digipen.edu)
+@date     27/11/2022
+@brief    This header file handles the game win screen. 
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
+________________________________________________________________________________________________________*/
+
 #pragma once
 #include "cprocessing.h"
 

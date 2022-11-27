@@ -3,7 +3,9 @@
 @author	  Justine Ilao (justine.c@digipen.edu)
 @date     26/11/2022
 @brief    This source file defines the GameOver states and all the function definitions to render all the
-text in the Game Over screen
+		  text in the Game Over screen
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "cprocessing.h"
@@ -75,7 +77,7 @@ void UpdateWizard(void) {
 /*----------------------------------------------------------------------------
 @brief Get's the Wizard's x-pos and y-pos
 ------------------------------------------------------------------------------*/
-CP_Vector GetWizardPosition(){
+CP_Vector GetWizardPosition(void){
 	return CP_Vector_Set(wiz_body.xpos,wiz_body.ypos);
 }
 

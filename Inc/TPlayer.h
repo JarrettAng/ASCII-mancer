@@ -12,6 +12,8 @@
           RemovePieceHeldFromHand - When a Tetris Piece is dropped onto the grid, remove it from the player's hand
 
           FreeIconImages - Needs to be called on the exit of game level, frees the icons for the attack and defend pieces
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -21,7 +23,7 @@ ________________________________________________________________________________
 /*______________________________________________________________
 @brief Struct containing positions for rendering as well as piece information, like shape and size
 */
-typedef struct {
+typedef struct{
     CP_Vector pos;
     CP_Vector icon_pos;
     TetrisPiece piece;

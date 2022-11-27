@@ -5,6 +5,8 @@
 @brief    1.Creation and declaration of enemy types
 		  2.Keep track of enemy movement and status
 		  3.Render enemy in the grid
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include <cprocessing.h>
@@ -36,7 +38,7 @@ int enemyPoolIndex = 0;
 /*______________________________________________________________
 @brief Initialises the enemy pool. Edit this to add more enemy types
 ______________________________________________________________*/
-void InitEnemyPool(){
+void InitEnemyPool(void){
 	enemyPoolIndex = 0;
 	//Create zombie type to spawn
 	CreateEnemy(WALL,MENU_GRAY);
@@ -69,7 +71,7 @@ void CreateEnemy(int cost, int speed, int health,int damage, const char* sprite,
 /*______________________________________________________________
 @brief Returns the total count of enemies in the enemy array
 ______________________________________________________________*/
-int GetEnemyCount(){
+int GetEnemyCount(void){
 	return enemyPoolIndex;
 }
 
@@ -99,7 +101,7 @@ void MoveEnemy(EnemyInfo* enemy){
 		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)==NULL){//if no enemy or tombstone, will continue movement
 			continue;
 		}
-		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->is_Alive){	//if its a live enemy
+		if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->isAlive){	//if its a live enemy
 
 			if(GetAliveEnemyFromGrid(enemy->x-i,enemy->y)->y == enemy->y){	//if they are in the same row
 
@@ -126,11 +128,11 @@ void MoveEnemy(EnemyInfo* enemy){
 
 	enemy->x -= enemy->MovementSpeed;//enemy position in next turn
 
-	if (enemy->x < 0 && enemy->is_Alive)
+	if (enemy->x < 0 && enemy->isAlive)
 	{
 		//Special despawn animation over here
 		ZombieToPlayerParticle(GridXToPosX(enemy->x),GridYToPosY(enemy->y));
-		enemy->is_Alive = FALSE;//enemy is ded(LOLXD)
+		enemy->isAlive = FALSE;//enemy is ded(LOLXD)
 		LoseLife(1); // LOSE ONE LIFE FOR EACH ENEMY ENTERING THE WALL
 	}
 

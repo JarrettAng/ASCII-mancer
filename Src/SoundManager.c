@@ -1,9 +1,12 @@
 /*!
-@file	  SoundManager.h
+@file	  SoundManager.c
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @date     24/11/2022
 @brief    This header file contains the information about the SoundManger and the functions that can be called for it. 
-*/
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
+________________________________________________________________________________________________*/
+
 #include "SoundManager.h"
 
 //Sound Array 
@@ -116,12 +119,12 @@ void ToggleMuteBGM(void){
 }
 
 //Function that stops all sounds from playing
-void StopAllSounds(){
+void StopAllSounds(void){
     CP_Sound_StopAll();
 }
 
 //Stops all sounds and frees them. Remember to call on exit.
-void KillSoundManager(){
+void KillSoundManager(void){
     CP_Sound_StopAll();
     SoundIndex = 0;
     memset(SoundArray, 0, sizeof(SoundClip) * SOUNDCOUNT);

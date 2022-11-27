@@ -3,6 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file for displaying the main menu screen.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 #include <stdio.h>
 #include <cprocessing.h>
@@ -59,7 +61,7 @@ Timer buttonBlink = {
 // 13 Frame animation.
 CP_Image logoAnim[13];
 CP_Image logo;
-CP_BOOL isShining = FALSE;
+_Bool isShining = FALSE;
 
 int frameLength = sizeof(logoAnim) / sizeof(logoAnim[0]);
 int currentAnimFrame = 0;
@@ -132,7 +134,7 @@ void MainMenuExit(void) {
 	FreeUIManager();
 }
 
-void InitLogoAnim(){
+void InitLogoAnim(void){
 	// Initalize animation per frame.
 	// Buffer to store converted integer value.
 	char str[3];
@@ -150,7 +152,7 @@ void InitLogoAnim(){
 	}
 }
 
-void HandleLogoAnim(){
+void HandleLogoAnim(void){
 	// Currently animating.
 	if (isShining){
 		// End of animation.
@@ -268,7 +270,7 @@ void InitMenuButtons(void) {
 	InitializeButton(&exitBtn, quitBtnRect, graphicData, textData, ExitGame);
 }
 
-void InitSelectPointer(){
+void InitSelectPointer(void){
 	unsigned char menuPointerData[] = {
 		MENU_LOGO_RED_CODE,TRANSPERANT_CODE,
 		MENU_LOGO_RED_CODE,MENU_LOGO_RED_CODE,
@@ -305,7 +307,7 @@ void DrawSelectPointer(){
 	CP_Image_Draw(selectPointer, GetBtnHovered()->transform.cachedPos.x - (pointerOffset * GetWidthScale()), GetBtnHovered()->transform.cachedPos.y + (pointerOffset * GetHeightScale()), 2 * pointerScale * GetWidthScale(), 3 * pointerScale * GetHeightScale(), alpha);
 }
 
-void HandleCarouselButton(){
+void HandleCarouselButton(void){
 	// Don't move button if transitioning.
 	if (GetBtnClicked() != NULL){
 		// Return early to prevent further checks.
@@ -326,7 +328,7 @@ void HandleCarouselButton(){
 	}
 }
 
-void HandleMenuButtonClick(){
+void HandleMenuButtonClick(void){
 	// Cache the first button clicked.
 	if (transitionBtn == NULL){
 		transitionBtn = GetBtnClicked();

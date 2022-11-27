@@ -3,10 +3,12 @@
 @author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
 @date     21/11/2022
 @brief    1.Drawing of the grid
-*		  2.Calculate,set and send info about each in the cell
+		  2.Calculate,set and send info about each in the cell
+ 
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
-#pragma once
+#pragma once // Only include this header file once
 
 #include <cprocessing.h>
 
@@ -16,18 +18,17 @@ ________________________________________________________________________________
 #define	TOTAL_YGRID 7
 #define TOTAL_XGRID 13
 
-typedef struct SpaceInfo
-{
+typedef struct SpaceInfo{
 	float x_pos;
 	float y_pos;
-}SpaceInfo;
-typedef struct CurrentGridPos
-{
+} SpaceInfo;
+
+typedef struct CurrentGridPos{
 	int x_Index;
 	int y_Index;
 	float x_CenterPos;
 	float y_CenterPos;
-}CurrentGridPos;
+} CurrentGridPos;
 
 float GetCellSize(void);
 float GetGridTopBuffer(void);

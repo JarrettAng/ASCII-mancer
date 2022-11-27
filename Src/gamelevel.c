@@ -7,7 +7,9 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file handles the rendering and the gameplay of the game. Essentially the main game scene.
-*/
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
+________________________________________________________________________________________________________*/
 
 //Header files here
 #include <stdio.h>
@@ -33,7 +35,7 @@
 
 #include "MainMenu.h" // For exiting to main menu.
 
-BOOL debugMode = FALSE;
+_Bool debugMode = FALSE;
 
 
 void gameLevelInit(void){
@@ -141,6 +143,13 @@ void gameLevelUpdate(void){
 		//INSTANT WIN
 		if(CP_Input_KeyTriggered(KEY_W)){
 			SetWave(30);
+		}
+		//GAIN LIFE AND LOSE LIFE
+		if (CP_Input_KeyReleased(KEY_O) == 1) {
+			LoseLife(1);
+		}
+		if (CP_Input_KeyReleased(KEY_P) == 1) {
+			GainLife(1);
 		}
 	}
 }

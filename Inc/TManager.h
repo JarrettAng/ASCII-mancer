@@ -10,6 +10,8 @@
 
           TManagerInit - Needs to be initialized at the start of the game level so that the Tetris queue and player's hand can be filled.
           DrawFromBag - Draws the next piece from the Tetris queue into the player's hand.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once

@@ -3,6 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file contains utilities function that is used in the project.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 #include <cprocessing.h>
 #include "Utils.h"
@@ -13,41 +15,41 @@ float heightScale = BASE_WINDOW_HEIGHT;
 #pragma region USER_INTERFACE
 // Update scaling multiplier for UI element.
 // Use this when changing window size.
-void UpdateUIScale(){
+void UpdateUIScale(void){
 	widthScale = GetWindowWidth() / BASE_WINDOW_WIDTH;
 	heightScale = GetWindowHeight() / BASE_WINDOW_HEIGHT;
 }
 
 // Returns the current width of the screen.
-float GetDisplayWidth(){
+float GetDisplayWidth(void){
 	return (float)CP_System_GetDisplayWidth();
 }
 
 // Returns the current height of the screen.
-float GetDisplayHeight(){
+float GetDisplayHeight(void){
 	return (float)CP_System_GetDisplayHeight();
 }
 
 // Returns the current width of the window.
-float GetWindowWidth()
+float GetWindowWidth(void)
 {
 	return (float)CP_System_GetWindowWidth();
 }
 
 // Returns the current height of the window.
-float GetWindowHeight()
+float GetWindowHeight(void)
 {
 	return (float)CP_System_GetWindowHeight();
 }
 
 // Get height scaling for UI elements.
-float GetHeightScale()
+float GetHeightScale(void)
 {
 	return heightScale;
 }
 
 // Get width scaling for UI elements.
-float GetWidthScale()
+float GetWidthScale(void)
 {
 	return widthScale;
 }

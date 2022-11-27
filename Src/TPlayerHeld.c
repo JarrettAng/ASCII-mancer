@@ -22,6 +22,8 @@
 		  GridToIndex - Using a system where 0 is the origin (e.g. -3 to 3) covert it to index in shape array
 		  IndexToShapeX - Converts a 1D array index into the x index in the 2D shape array
 		  IndexToShapeY - Converts a 1D array index into the y index in the 2D shape array
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "ColorTable.h"		// For tetris colors
@@ -72,7 +74,7 @@ CP_Image attack_icon, shield_icon;
 /*______________________________________________________________
 @brief Called by TPlayer during it's initialization, this function will load the values needed for rendering and such.
 */
-void TPlayerHeldInit(void) {
+void TPlayerHeldInit(void){
 	piece_held.piece = NULL;
 
 	// Initialize Piece on grid rendering information & the render color & size to match the grid
@@ -114,7 +116,7 @@ void TPlayerHeldInit(void) {
 @param[in] attack - Attack icon (For pieces that do damage)
 @param[in] shield - Defend icon (For pieces that build walls)
 */
-void LoadIconImages(CP_Image attack, CP_Image shield) {
+void LoadIconImages(CP_Image attack, CP_Image shield){
 	attack_icon = attack;
 	shield_icon = shield;
 }
@@ -124,7 +126,7 @@ void LoadIconImages(CP_Image attack, CP_Image shield) {
 
 @return _Bool - Returns true if any piece is currently held by the player.
 */
-_Bool IsPieceHeld(void) {
+_Bool IsPieceHeld(void){
 	return piece_held.piece != NULL;
 }
 
@@ -136,7 +138,7 @@ _Bool IsPieceHeld(void) {
 
 @return _Bool - Returns true if the piece compared is the same as the piece held.
 */
-_Bool IsThisPieceHeld(TetrisPiece const *piece_to_compare) {
+_Bool IsThisPieceHeld(TetrisPiece const *piece_to_compare){
 	return piece_held.piece == piece_to_compare;
 }
 
@@ -147,7 +149,7 @@ _Bool IsThisPieceHeld(TetrisPiece const *piece_to_compare) {
 @param[in] new_piece - Pointer to the information of the new piece held
 @param[in] slot_index - Which slot was this piece taken from?
 */
-void NewPieceHeld(TetrisPiece const *new_piece, int slot_index) {
+void NewPieceHeld(TetrisPiece const *new_piece, int slot_index){
 	// We found the slot clicked! Set the flags to true
 	piece_held.piece = new_piece;
 
@@ -216,7 +218,7 @@ void TPlayerHeldProcessInput(void) {
 /*______________________________________________________________
 @brief Render the piece held by the player, if any.
 */
-void RenderPieceHeld(void) {
+void RenderPieceHeld(void){
 	if (!IsPieceHeld()) return;
 
 	// Settings for tile rendering
@@ -302,7 +304,7 @@ void RenderPieceHeld(void) {
 /*______________________________________________________________
 @brief When a Tetris Piece is dropped onto the grid, it has been played.
 */
-void PieceHeldPlayed(int mouse_x, int mouse_y) {
+void PieceHeldPlayed(int mouse_x, int mouse_y){
 	// Do damage to zombies covered by the piece
 	PieceHeldCell* current = &piece_held_shapeCurrent->grid[0];
 	for (int index = 0; index < SHAPE_BOUNDS * SHAPE_BOUNDS; ++index) {
@@ -345,7 +347,7 @@ void PieceHeldPlayed(int mouse_x, int mouse_y) {
 /*______________________________________________________________
 @brief Applies a 90 degree rotation to the right on the shape array (matrix) for the piece 
 */
-void PieceHeldRotateRight(void) {
+void PieceHeldRotateRight(void){
 	PieceHeldShape* previous = piece_held_shapeCurrent;
 	piece_held_shapeCurrent = (piece_held_shapeCurrent == &piece_held_shapeA) ? &piece_held_shapeB : &piece_held_shapeA;
 
@@ -389,14 +391,14 @@ void PieceHeldRotateRight(void) {
 /*______________________________________________________________
 @brief Converts a 2D array index into a 1D array index in shape array
 */
-int ShapeToIndex(int shape_x, int shape_y) {
+int ShapeToIndex(int shape_x, int shape_y){
 	return shape_x + shape_y * SHAPE_BOUNDS;
 }
 
 /*______________________________________________________________
 @brief Using a system where 0 is the origin (e.g. -3 to 3) covert it to index in shape array
 */
-int GridToIndex(int grid_x, int grid_y) {
+int GridToIndex(int grid_x, int grid_y){
 	int shape_x = grid_x + piece_held_shape_centre - 1;
 	int shape_y = piece_held_shape_centre - (piece_held_shape_centre - (piece_held_shape_centre - grid_y));
 	return ShapeToIndex(shape_x, shape_y);
@@ -405,13 +407,13 @@ int GridToIndex(int grid_x, int grid_y) {
 /*______________________________________________________________
 @brief Converts a 1D array index into the x index in the 2D shape array
 */
-int IndexToShapeX(int index) {
+int IndexToShapeX(int index){
 	return index % SHAPE_BOUNDS;
 }
 
 /*______________________________________________________________
 @brief Converts a 1D array index into the y index in the 2D shape array
 */
-int IndexToShapeY(int index) {
+int IndexToShapeY(int index){
 	return index / SHAPE_BOUNDS;
 }

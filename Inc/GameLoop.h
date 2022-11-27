@@ -13,6 +13,8 @@
 		  GameLoopInit - Needs to be called at the start of the game level to handle the turns between the player and the zombies.
 		  GameLoopSwitch - Call this to swap between turns. The functions subscribed to the end of current turn and start of next turn will be called.
 		  GameLoopUpdate - Every update, calls all functions subscribed to the turn's update array.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once

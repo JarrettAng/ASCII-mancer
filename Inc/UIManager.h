@@ -3,6 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This header file contains function declartion that handles UI rendering and interactions.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once
@@ -14,55 +16,55 @@ ________________________________________________________________________________
 #define MAX_UI_TEXT 20
 #define MAX_UI_TEXTBOX 20
 
-typedef struct Rect {
+typedef struct Rect{
 	float x;
 	float y;
 	CP_Vector cachedPos;
 	float width;
 	float heigth;
 	CP_Vector cachedSize;
-}Rect;
+} Rect;
 
-typedef struct Line {
+typedef struct Line{
 	CP_Vector start;
 	CP_Vector end;
-}Line;
+} Line;
 
-typedef struct GraphicData {
+typedef struct GraphicData{
 	CP_POSITION_MODE imagePosMode;
 	CP_IMAGE_FILTER_MODE imageFilterMode;
 	CP_Color color;
 	CP_Color strokeColor;
 	float strokeWeight;
 	CP_Image img;
-}GraphicData;
+} GraphicData;
 
-typedef struct TextData {
+typedef struct TextData{
 	CP_Font font;
 	float textSize;
 	CP_Color color;
 	CP_TEXT_ALIGN_HORIZONTAL hAlign;
 	CP_TEXT_ALIGN_VERTICAL vAlign;
 	char* text;
-}TextData;
+} TextData;
 
-typedef struct Button {
+typedef struct Button{
 	Rect transform;
 	GraphicData graphicData;
 	TextData textData;
 	Callback callBack;
-}Button;
+} Button;
 
-typedef struct Text {
+typedef struct Text{
 	Rect transform;
 	TextData textData;
-}Text;
+} Text;
 
 typedef struct SliderKnob{
 	Rect transform;
 	float radius;
 	CP_Image img;
-}SliderKnob;
+} SliderKnob;
 
 typedef struct Slider{
 	Rect transform;
@@ -70,7 +72,7 @@ typedef struct Slider{
 	float lerpFactor;
 	CP_Image img;
 	SliderKnob knob;
-}Slider;
+} Slider;
 
 /*
 @brief InitializeButton will initialize the given button with the data and cache the button.

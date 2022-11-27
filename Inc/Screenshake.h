@@ -3,7 +3,10 @@
 @author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
 @date     24/11/2022
 @brief    This header file contains the information about the screenshake and the functions that can be called for it.
-*/
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
+________________________________________________________________________________________________________*/
+
 #pragma once
 #include <cprocessing.h>            //CP_Vector, CP_Random_Noise
 

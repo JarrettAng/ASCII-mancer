@@ -3,7 +3,9 @@
 @author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
 @date     21/11/2022
 @brief    1.Drawing of the grid
-*		  2.Calculate,set and send info about each in the cell
+		  2.Calculate,set and send info about each in the cell
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include <cprocessing.h>
@@ -77,7 +79,7 @@ void grid_init(void) {
 /*______________________________________________________________
 @brief Create the cell for player to place their piece and enemy to move in
 ______________________________________________________________*/
-void CreatePlayingSpace() {
+void CreatePlayingSpace(void) {
 	/*
 	* NOTE:
 	* DOES NOT DRAW THE GRID LINE, ONLY SET UP CELL
@@ -92,13 +94,13 @@ void CreatePlayingSpace() {
 /*______________________________________________________________
 @brief Returns the size of the grid cell
 ______________________________________________________________*/
-float GetCellSize(){
+float GetCellSize(void){
 	return cellLength;
 }
-float GetGridTopBuffer(){
+float GetGridTopBuffer(void){
 	return gridTop;
 }
-float GetGridPlayingArea(){
+float GetGridPlayingArea(void){
 	return grid_PlayArea;
 }
 /*______________________________________________________________
@@ -157,7 +159,7 @@ struct CurrentGridPos CurrentPos(int x,int y){
 /*______________________________________________________________
 @brief Draw grid line
 ______________________________________________________________*/
-void DrawLineGrid(){
+void DrawLineGrid(void){
 	CP_Settings_Stroke(BLACK);
 	float grid_CurrentIndex = 0;
 	/*

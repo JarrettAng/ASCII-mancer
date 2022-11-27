@@ -16,6 +16,8 @@
 		  DrawTextTopLeft - Renders the text with its anchor point on the top left.
 		  DrawTextCentre - Renders the text with its anchor point in the center.
 		  DrawTextBox - Renders the background box for the text.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "ColorTable.h" // For text colors

@@ -1,11 +1,15 @@
-#pragma once
 /*!
-@file	  GameOver.c
+@file	  Hearts.h
 @author	  Justine Ilao (justine.c@digipen.edu)
 @date     26/11/2022
-@brief    This source file declares the GameOver states and all the function definitions to render all the
-text in the Game Over screen
+@brief    This header file declares the GameOver states and all the function definitions to render all the
+		  text in the Game Over screen
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
+
+#pragma once // Only include this header file once
+
 #define MAX_HEART_COUNT 3
 #define IMAGE_HEART_LENGTH 263
 #define HEART_SPACING 0.35f
@@ -13,16 +17,16 @@ ________________________________________________________________________________
 #define HEART_ALPHA 255
 #define HEART_ROTATION 0.f
 
-typedef struct HeartContainer {
+typedef struct HeartContainer{
 	int heartAlive;
 	float xpos;
 	float ypos;
 	float size;
 	int alpha;
 	float rotation;
-}HeartContainer;
+} HeartContainer;
 
-typedef struct TextOnlyHearts {
+typedef struct TextOnlyHearts{
 	float font_size;
 	float xpos;
 	float ypos;
@@ -30,7 +34,7 @@ typedef struct TextOnlyHearts {
 	char* words;
 } TextOnlyHearts;
 
-typedef struct RectHearts {
+typedef struct RectHearts{
 	float xpos;
 	float ypos;
 	float height;

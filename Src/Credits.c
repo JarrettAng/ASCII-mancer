@@ -3,6 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file for displaying the credits.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "Credits.h"
@@ -58,7 +60,7 @@ void CreditsExit(void){
 	FreeUIManager();
 }
 
-void InitCreditsTexts(){
+void InitCreditsTexts(void){
 	/*==============================Text Settings========================*/
 	Text* p_headerText = creditHeaders;
 	Text* p_namesText = creditNames;
@@ -228,7 +230,7 @@ void InitCreditsTexts(){
 	InitializeTextBox(p_namesText, namesRect, licenseNames);
 }
 
-void InitCreditsButtons(){
+void InitCreditsButtons(void){
 	/*========================Back Button===========================*/
 	GraphicData backBtnGraphicsData = {
 		.color = TRANSPERANT,
@@ -265,7 +267,7 @@ void RenderCreditsCutoff(){
 	CP_Graphics_DrawRect(GetWindowWidth() / 2, GetWindowHeight(), GetWindowWidth(), GetWindowHeight() / 3);
 }
 
-void ScrollCreditTexts(){
+void ScrollCreditTexts(void){
 	// Scroll the headers and names up.
 	for (short i = 0; i < NUM_OF_CREDITS; ++i){
 		creditHeaders[i].transform.y -= scrollSpeed * GetHeightScale() * CP_System_GetDt();
@@ -281,7 +283,7 @@ void ScrollCreditTexts(){
 	}
 }
 
-void LoadMainMenu(){
+void LoadMainMenu(void){
 	// Transition back to menu.
 	CP_Engine_SetNextGameState(MainMenuInit, MainMenuUpdate, MainMenuExit);
 }

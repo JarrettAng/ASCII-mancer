@@ -14,6 +14,8 @@
 
           TPlayerHeldProcessInput - Called by TPlayer during its process input, handles all input related to the piece held
           RenderPieceHeld - Render the piece held by the player, if any.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #pragma once // Only include this header file once
@@ -23,7 +25,7 @@ ________________________________________________________________________________
 /*______________________________________________________________
 @brief Information about piece held by the player, like color, size, etc.
 */
-typedef struct {
+typedef struct{
     TetrisPiece const* piece;
 
     CP_Vector draw_pos;
@@ -39,7 +41,7 @@ typedef struct {
 /*______________________________________________________________
 @brief Each cell in the piece's shape holds an index based on the origin (middle of array).
 */
-typedef struct {
+typedef struct{
     int grid_x, grid_y;
     int cell;
 } PieceHeldCell;
@@ -47,14 +49,14 @@ typedef struct {
 /*______________________________________________________________
 @brief Holds all the cells in a SHAPE_BOUNDS by SHAPE_BOUNDS sized grid, used for rotation and rendering.
 */
-typedef struct {
+typedef struct{
     PieceHeldCell grid[SHAPE_BOUNDS * SHAPE_BOUNDS];
 } PieceHeldShape;
 
 /*______________________________________________________________
 @brief Indicators to tell which orientation the Tetris piece is in right now.
 */
-typedef enum {
+typedef enum{
     UP,
     RIGHT,
     DOWN,

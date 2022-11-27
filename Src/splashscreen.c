@@ -3,6 +3,8 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file for displaying the splash screen screen.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include "cprocessing.h"
@@ -25,7 +27,7 @@ void InitTexts(void);
 void FadeInLogo(void);
 #pragma endregion
 
-void SplashScreenInit() {
+void SplashScreenInit(void) {
 	// Intialize logo
 	logo = CP_Image_Load("Assets/DigiPen_WHITE.png");
 
@@ -45,7 +47,7 @@ void SplashScreenInit() {
 	InitTexts();
 }
 
-void SplashScreenUpdate() {
+void SplashScreenUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
 	// Fade in the digipen logo
@@ -54,13 +56,13 @@ void SplashScreenUpdate() {
 	RenderTextBoxes();
 }
 
-void SplashScreenExit() {
+void SplashScreenExit(void) {
 	// Free image and text.
 	CP_Image_Free(&logo);
 	FreeUI();
 }
 
-void InitTexts(){
+void InitTexts(void){
 	Rect copyrightRectData = {
 		.x = 0,
 		.y = GetWindowHeight() - GetWindowHeight() / 5,
@@ -81,7 +83,7 @@ void InitTexts(){
 	InitializeTextBox(&copyRight, copyrightRectData, copyRightTextData);
 }
 
-void FadeInLogo() {
+void FadeInLogo(void) {
 	// Draw logo to be fade in.
 	CP_Image_Draw(logo, (float)(CP_System_GetWindowWidth() / 2), (float)(CP_System_GetWindowHeight() / 2), (float)CP_Image_GetWidth(logo), (float)CP_Image_GetHeight(logo), (int)(fade * 255));
 	// Fade in copyright text.

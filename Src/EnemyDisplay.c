@@ -14,6 +14,8 @@
 
 		  FreeEnemyDisplayIcon - Upon exit of game level, free the image since it no longer used.
 		  ResetDisplayEnemyInfoTime - Resets the timing of the elapsed hover time to 0.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________________*/
 
 #include <stdio.h>		// For converting ints to strings
@@ -70,7 +72,7 @@ void ResetDisplayEnemyInfoTime(void);
 @brief Called by Gamelevel during its initialization, this function will load
 	   the values needed for rendering and such.
 */
-void EnemyDisplayInit(void) {
+void EnemyDisplayInit(void){
 	cell_size = GetCellSize();
 
 	// Size of text is 20% of cell size
@@ -145,7 +147,7 @@ void EnemyDisplayInit(void) {
 /*______________________________________________________________
 @brief Subscribed to the player update event, increments the time trackers for the different animations
 */
-void EnemyDisplayTimeIncrement(void) {
+void EnemyDisplayTimeIncrement(void){
 	// Update the timing for the zombie move indicator flicker
 	move_elapsed_time += CP_System_GetDt();
 
@@ -193,7 +195,7 @@ void EnemyDisplayTimeIncrement(void) {
 @param[in] max_health - The maximum health of the enemy
 @param[in] wall_damage - The amount of damage the enemy does to walls
 */
-void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, int wall_damage) {
+void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, int wall_damage){
 	CP_Settings_RectMode(CP_POSITION_CORNER);
 
 	// Render health
@@ -240,7 +242,7 @@ void RenderEnemyDisplay(float pos_x, float pos_y, int health, int max_health, in
 @param[in] pos_y - The y position of the cell center
 @param[in] movement - The amount of cells the enemy can move per turn
 */
-void RenderEnemyMovement(float pos_x, float pos_y, int movement) {
+void RenderEnemyMovement(float pos_x, float pos_y, int movement){
 	if (!movement || !move_draw) return;
 
 	CP_Settings_Fill(ENEMY_MOVEMENT);
@@ -311,14 +313,14 @@ void RenderEnemyMovement(float pos_x, float pos_y, int movement) {
 /*______________________________________________________________
 @brief Upon exit of game level, free the image since it no longer used.
 */
-void FreeEnemyDisplayIcon(void) {
+void FreeEnemyDisplayIcon(void){
 	CP_Image_Free(&attack_icon);
 }
 
 /*______________________________________________________________
 @brief Renders the information box for the enemy in the grid after hovering after a while.
 */
-void DisplayEnemyInfo(void) {
+void DisplayEnemyInfo(void){
 	if (!hovered_zombie) return;
 
 	// Text box
@@ -345,6 +347,6 @@ void DisplayEnemyInfo(void) {
 /*______________________________________________________________
 @brief Resets the timing of the elapsed hover time to 0.
 */
-void ResetDisplayEnemyInfoTime(void) {
+void ResetDisplayEnemyInfoTime(void){
 	hover_elapsed_time = 0.0f;
 }

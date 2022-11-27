@@ -6,10 +6,12 @@
   ____) | |____| | \ \| |____| |____| |\  |____) | |  | |/ ____ \| . \| |____ 
  |_____/ \_____|_|  \_\______|______|_| \_|_____/|_|  |_/_/    \_\_|\_\______|
                                                                               
-  @author Amadeus Chia amadeusjinhan.chia@digipen.edu
-  @brief Contains the implementation and logic of screenshaking. Note that you MUST include the UpdateCameraShaker function into the update loop in order to use it. 
+@author Amadeus Chia amadeusjinhan.chia@digipen.edu
+@brief Contains the implementation and logic of screenshaking. Note that you MUST include the UpdateCameraShaker function into the update loop in order to use it. 
   
-  Increment Trauma by any value between 0 to 1 to induce screen shaking.
+       Increment Trauma by any value between 0 to 1 to induce screen shaking.
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
 ________________________________________________________________________________________________*/
 
 #include "Screenshake.h" 

@@ -1,3 +1,18 @@
+/*!
+@file	  ColorTable.h
+@author	  Amadeus Chia (amadeusjinhan.chia@digipen.edu)
+@author	  Ang Jiawei Jarrett (a.jiaweijarrett@digipen.edu)
+@author	  Justine Carlo Villa Ilao (justine.c@digipen.edu)
+@author	  Muhammad Farhan Bin Ahmad (b.muhammadfarhan@digipen.edu)
+@author	  Tan Jun Rong (t.junrong@digipen.edu)
+@date     27/11/2022
+@brief    This header file contains codes and CP_Colors for various colors
+
+@license  Copyright © 2022 DigiPen, All rights reserved.
+________________________________________________________________________________________________________*/
+
+#pragma once // Only include this header file once
+
 #include <cprocessing.h>
 
 #define WHITE CP_Color_Create(255, 255, 255, 255)
