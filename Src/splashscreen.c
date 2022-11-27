@@ -30,7 +30,7 @@ void SplashScreenInit() {
 	logo = CP_Image_Load("Assets/DigiPen_WHITE.png");
 
 	CP_System_Fullscreen();
-	//CP_System_SetWindowSize(1920, 1080);
+	// CP_System_SetWindowSize(1920, 1080);
 
 	// Update the scale for the UI elements based on window size.
 	UpdateUIScale();
@@ -85,7 +85,7 @@ void FadeInLogo() {
 	// Draw logo to be fade in.
 	CP_Image_Draw(logo, (float)(CP_System_GetWindowWidth() / 2), (float)(CP_System_GetWindowHeight() / 2), (float)CP_Image_GetWidth(logo), (float)CP_Image_GetHeight(logo), (int)(fade * 255));
 	// Fade in copyright text.
-	copyRight.textData.color.a = fade * 255;
+	copyRight.textData.color.a = (unsigned char)(fade * 255);
 
 	// Increment timer.
 	fade += CP_System_GetDt() / FADE_IN_DURATION;

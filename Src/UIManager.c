@@ -3,6 +3,7 @@
 @author	  Tan Jun Rong (t.junrong@digipen.edu)
 @date     21/11/2022
 @brief    This source file for handling UI elements and UI interactions.
+@license  ©
 ________________________________________________________________________________________________________*/
 
 #include <cprocessing.h>
@@ -37,10 +38,10 @@ Slider* prevSliderHeld = NULL;
 #pragma endregion
 
 #pragma region FORWARD_DECLARTIONS
-void RenderButtons(void);
+
 void RenderTexts(void);
-void RenderTextBoxes(void);
-void RenderSliders(Void);
+
+void RenderSliders(void);
 
 void SetGraphicSetting(GraphicData data);
 void SetTextSetting(TextData data);
@@ -49,11 +50,11 @@ void UpdateButtonClick(void);
 void UpdateButtonHover(void);
 void UpdateSliderHeld(void);
 
-void FreeUI(void);
+
 void FreeText(void);
 void FreeButton(void);
 void FreeSlider(void);
-void ClearInteractCache(void);
+
 #pragma endregion
 
 
@@ -156,7 +157,7 @@ void RenderButton(Button* btn){
 }
 
 // Render all buttons cached in btns array.
-void RenderButtons() {
+void RenderButtons(void) {
 	for (int i = 0; i < btnsCount; ++i) {
 		// Draw rect
 		SetGraphicSetting(btns[i]->graphicData);
@@ -182,7 +183,7 @@ void RenderText(Text* txt){
 }
 
 // Render all texts cached in texts array.
-void RenderTexts(){
+void RenderTexts(void){
 	// Loop through every text initialized.
 	for (int i = 0; i < textsCount; ++i) {
 		// Draw text
@@ -199,7 +200,7 @@ void RenderTextBox(Text* txt){
 }
 
 // Render all texts cached in texts array.
-void RenderTextBoxes(){
+void RenderTextBoxes(void){
 	// Loop through every text boxes initialized.
 	for (int i = 0; i < textBoxesCount; ++i) {
 		// Draw text
@@ -216,7 +217,7 @@ void RenderSlider(Slider* slider){
 
 
 // Render all sliders cached in slider array.
-void RenderSliders(Void){
+void RenderSliders(void){
 	// Loop through every slider initialized.
 	for (int i = 0; i < sliderCount; ++i) {
 		CP_Image_Draw(sliders[i]->img, sliders[i]->transform.x, sliders[i]->transform.y, sliders[i]->transform.width, sliders[i]->transform.heigth, 255);
@@ -244,32 +245,32 @@ void SetTextSetting(TextData data) {
 #pragma endregion
 
 #pragma region UI_INTERACTION
-Button* GetBtnClicked(){
+Button* GetBtnClicked(void){
 	return btnClicked;
 }
 
-Button* GetPrevBtnClicked(){
+Button* GetPrevBtnClicked(void){
 	return prevBtnClicked;
 }
 
-Button* GetBtnHovered(){
+Button* GetBtnHovered(void){
 	return btnHovered;
 }
 
-Button* GetPrevBtnHovered(){
+Button* GetPrevBtnHovered(void){
 	return prevBtnHovered;
 }
 
-Slider* GetSliderHeld(){
+Slider* GetSliderHeld(void){
 	return sliderHeld;
 }
 
-Slider* GetPrevSliderHeld(){
+Slider* GetPrevSliderHeld(void){
 	return prevSliderHeld;
 }
 
 // Triggers button's callback when player click on it.
-void HandleButtonClick() {
+void HandleButtonClick(void) {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
 		float xPos = CP_Input_GetMouseX();
@@ -303,7 +304,7 @@ void HandleButtonClick() {
 }
 
 // Cache the previous and current button clicked.
-void UpdateButtonClick() {
+void UpdateButtonClick(void) {
 	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT))
 	{
 		float xPos = CP_Input_GetMouseX();
@@ -331,10 +332,10 @@ void UpdateButtonClick() {
 }
 
 // Cache the previous and current button hovered.
-void UpdateButtonHover(){
+void UpdateButtonHover(void){
 	if (btnHovered != NULL && !CP_Input_MouseMoved()){
 		// If already hovering and player did not move his mouse, just return to save resource.
-		return btnHovered;
+		return;
 	}
 
 	float xPos = CP_Input_GetMouseX();
@@ -361,12 +362,12 @@ void UpdateButtonHover(){
 }
 
 // Cache the previous and current slider held.
-void UpdateSliderHeld(){
+void UpdateSliderHeld(void){
 	if (CP_Input_MouseDown(MOUSE_BUTTON_LEFT)){
 		// If player is already holding a slider, return it to save resources.
 		// Only when player let go of the current slider, allow to hold another slider.
 		if (sliderHeld != NULL){
-			return sliderHeld;
+			return;
 		}
 
 		float xPos = CP_Input_GetMouseX();
@@ -399,12 +400,12 @@ void UpdateSliderHeld(){
 
 #pragma region MISC
 // Clear all caches and free UI elements.
-void FreeUIManager(){
+void FreeUIManager(void){
 	ClearInteractCache();
 	FreeUI();
 }
 
-void ClearInteractCache(){
+void ClearInteractCache(void){
 	btnClicked = NULL;
 	prevBtnClicked = NULL;
 	btnHovered = NULL;
@@ -414,21 +415,21 @@ void ClearInteractCache(){
 }
 
 // Empty all UI arrays when exiting a scene, so that next scene can reuse the arrays.
-void FreeUI(){
+void FreeUI(void){
 	FreeButton();
 	FreeText();
 	FreeSlider();
 }
 
 // Empty button array when exiting a scene, so that next scene can reuse the array.
-void FreeButton(){
+void FreeButton(void){
 	// Empty array so next scene can use.
 	memset(btns, 0, sizeof(btns));
 	btnsCount = 0;
 }
 
 // Empty text array when exiting a scene, so that next scene can reuse the array.
-void FreeText(){
+void FreeText(void){
 	// Empty array so next scene can use.
 	memset(texts, 0, sizeof(texts));
 	textsCount = 0;
@@ -437,7 +438,7 @@ void FreeText(){
 }
 
 // Empty slider array when exiting a scene, so that next scene can reuse the array.
-void FreeSlider(){
+void FreeSlider(void){
 	// Empty array so next scene can use.
 	memset(sliders, 0, sizeof(sliders));
 	sliderCount = 0;

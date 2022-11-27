@@ -330,8 +330,8 @@ void HandleVolumeControl(){
 	GetSliderHeld()->lerpFactor = (xPos - GetSliderHeld()->line.start.x) / (GetSliderHeld()->line.end.x - GetSliderHeld()->line.start.x);
 
 	// Enlarge current slider knob held.
-	GetSliderHeld()->knob.transform.width = GetSliderHeld()->knob.transform.cachedSize.x * 1.2;
-	GetSliderHeld()->knob.transform.heigth = GetSliderHeld()->knob.transform.cachedSize.y * 1.2;
+	GetSliderHeld()->knob.transform.width = GetSliderHeld()->knob.transform.cachedSize.x * 1.2f;
+	GetSliderHeld()->knob.transform.heigth = GetSliderHeld()->knob.transform.cachedSize.y * 1.2f;
 
 	// Update position of knob on slider based on lerp factor.
 	UpdateKnobs();
@@ -359,8 +359,8 @@ void HandleWindowSizeHover(){
 		return;
 	}
 	// Enlarge current hovered button.
-	GetBtnHovered()->transform.width = GetBtnHovered()->transform.cachedSize.x * 1.3;
-	GetBtnHovered()->transform.heigth = GetBtnHovered()->transform.cachedSize.y * 1.3;
+	GetBtnHovered()->transform.width = GetBtnHovered()->transform.cachedSize.x * 1.3f;
+	GetBtnHovered()->transform.heigth = GetBtnHovered()->transform.cachedSize.y * 1.3f;
 }
 
 void WindowSizeScrollDown(){

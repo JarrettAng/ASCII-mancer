@@ -32,7 +32,7 @@ char* ZombieAnim = "ZzZzZzZzZzZzZzZz";
 char* ZombieSpawnAnimString = "@Oo*\'";
 
 //Particle delay used for the lerped particle
-float particleDelay = 0.1f;
+float particleDelay = 0;
 
 //Function that handles creating of particle. Calling this will add the particle to the array
 void CreateParticle(float xPos, float yPos, float lifeTime, float size,float gravityScale, CP_Color color,CP_Vector force,const char* animString,BOOL isRGB,float timeBeforeActive){

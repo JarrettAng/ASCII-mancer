@@ -44,7 +44,7 @@ int alpha = 255;
 Button* transitionBtn = NULL;
 // Timer for transition to next scene.
 Timer transitionTimer = {
-	.time = .5,
+	.time = .5f,
 	.elaspedTime = 0,
 };
 
@@ -70,7 +70,7 @@ Timer animIntervalTimer = {
 };
 
 Timer frameIntervalTimer = {
-	.time = .075,
+	.time = .075f,
 	.elaspedTime = 0
 };
 #pragma endregion
@@ -110,7 +110,7 @@ void MainMenuUpdate(void) {
 	CP_Graphics_ClearBackground(MENU_BLACK);
 
 	// Drawn 25% from top.
-	CP_Image_Draw(logo, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(logo) * GetWidthScale() * .8, (float)CP_Image_GetHeight(logo) * GetHeightScale() * .8, 255);
+	CP_Image_Draw(logo, GetWindowWidth() / 2, GetWindowHeight() / 4, (float)CP_Image_GetWidth(logo) * GetWidthScale() * .8f, (float)CP_Image_GetHeight(logo) * GetHeightScale() * .8f, 255);
 
 	// Render UI elements and handling UI interactions.
 	UIManagerUpdate();
@@ -126,7 +126,7 @@ void MainMenuUpdate(void) {
 
 void MainMenuExit(void) {
 	CP_Image_Free(&logo);
-	CP_Image_Free(&logoAnim);
+	CP_Image_Free(*&logoAnim);
 	CP_Image_Free(&selectPointer);
 	transitionBtn = NULL;
 	FreeUIManager();

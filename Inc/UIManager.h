@@ -111,11 +111,12 @@ void RenderTextBox(Text* txt);
 @brief RenderSlider will render the given slider on screen if it is initialized.
 */
 void RenderSlider(Slider* slider);
-
+void RenderButtons(void);
+void RenderTextBoxes(void);
 /*
 @brief Draws and handle interaction of UI elements.
 */
-void UIManagerUpdate();
+void UIManagerUpdate(void);
 
 /*
 @brief Invoke callback function of button if clicked.
@@ -156,3 +157,5 @@ Slider* GetPrevSliderHeld(void);
 @brief Free all UI elements.
 */
 void FreeUIManager(void);
+void FreeUI(void);
+void ClearInteractCache(void);

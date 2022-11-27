@@ -103,7 +103,7 @@ void gameLevelUpdate(void){
 	if(CP_Input_KeyDown(KEY_LEFT_SHIFT))
 	{
 		if(CP_Input_KeyTriggered(KEY_D)){
-			debugMode = TRUE;
+			debugMode = !debugMode;
 		}
 	}
 
